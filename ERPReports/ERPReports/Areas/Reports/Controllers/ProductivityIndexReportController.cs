@@ -133,6 +133,8 @@ namespace ERPReports.Areas.Reports.Controllers
                     SummaryWorkSheet.Cells[6, 9].Value = R3;
                     for (int row = 8; row < rowCountTotal; row++)
                     {
+                        SummaryWorkSheet.InsertRow((row + 1), 1);
+                        SummaryWorkSheet.Cells[row, 1, row, 100].Copy(SummaryWorkSheet.Cells[(row + 1), 1, (row + 1), 1]);
                         SummaryWorkSheet.Cells[row, 1].Value = SummarySheetData[SummaryCounter].A;
                         SummaryWorkSheet.Cells[row, 1].Style.WrapText = false;
                         SummaryWorkSheet.Cells[row, 2].Value = Convert.ToDecimal(SummarySheetData[SummaryCounter].B);
@@ -151,8 +153,6 @@ namespace ERPReports.Areas.Reports.Controllers
                         SummaryWorkSheet.Cells[row, 10].Style.WrapText = false;
                         SummaryWorkSheet.Cells[row, 11].Value = Convert.ToDecimal(SummarySheetData[SummaryCounter].K);
                         SummaryWorkSheet.Cells[row, 11].Style.WrapText = false;
-                        SummaryWorkSheet.InsertRow((row + 1), 1);
-                        SummaryWorkSheet.Cells[row, 1, row, 100].Copy(SummaryWorkSheet.Cells[(row + 1), 1, (row + 1), 1]);
 
                         std_labor_min_1stTOTAL = std_labor_min_1stTOTAL + Convert.ToDecimal(SummarySheetData[SummaryCounter].B);
                         actl_labor_min_1stTOTAL = actl_labor_min_1stTOTAL + Convert.ToDecimal(SummarySheetData[SummaryCounter].C);

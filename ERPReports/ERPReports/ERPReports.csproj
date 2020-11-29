@@ -3227,8 +3227,8 @@
     <Content Include="Areas\Reports\Views\web.config" />
     <Content Include="Areas\Reports\Views\LSPDirectMaterial\LSPDirectMaterial.cshtml" />
     <Content Include="Areas\Reports\Views\ProductivityIndexReport\ProductivityIndexReport.cshtml" />
-    <Content Include="Areas\Reports\Templates\ProductivityIndexReport.xls" />
     <Content Include="Areas\Reports\Templates\ProductivityIndexReport.xlsx" />
+    <None Include="Properties\PublishProfiles\ERPReports.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
