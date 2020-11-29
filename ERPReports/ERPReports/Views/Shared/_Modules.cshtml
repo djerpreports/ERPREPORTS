@@ -1,0 +1,45 @@
+﻿<!DOCTYPE html>
+<!--[if IE 8]> <html lang="en" class="ie8"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title | ERP Reports</title>
+    <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport" />
+    @RenderSection("css", required: false)
+    <link href="/Content/assets/css/default/theme/blue.css" rel="stylesheet" id="theme" />
+    <link rel="icon" href="~/Content/assets/img/ERPReports.ico" type="image/x-icon">
+    @*@if (Session["ID"].ToString() == "")
+        {*@
+    <script type="text/javascript">
+        function preventBack() { window.history.forward(); }
+        setTimeout("preventBack()", 0);
+        window.onunload = function () { null };
+    </script>
+    @*}*@
+</head>
+<body>
+    <div id="page-loader" class="fade show"><span class="spinner"></span></div>
+    @Html.Partial("~/Views/Shared/_Dialog.cshtml")
+    <div id="page-container" class="page-container fade page-sidebar-fixed page-header-fixed ">
+        @Html.Partial("~/Views/Shared/_Header.cshtml")
+        <div id="content" class="content" style="margin-left:0px !important;">
+            @RenderBody()
+        </div>
+        @Html.Partial("~/Views/Shared/_Theme.cshtml")
+        <a href="javascript:;" class="btn btn-icon btn-circle btn-success btn-scroll-to-top fade" data-click="scroll-top"><i class="fa fa-angle-up"></i></a>
+    </div>
+    @RenderSection("scripts", required: false)
+    <!--[if lt IE 9]>
+        <script src="/Content/assets/crossbrowserjs/html5shiv.js"></script>
+        <script src="/Content/assets/crossbrowserjs/respond.min.js"></script>
+        <script src="/Content/assets/crossbrowserjs/excanvas.min.js"></script>
+    <![endif]-->
+    <script>
+        $(document).ready(function () {
+            App.init();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,60 @@
+﻿<input type="hidden" id="hdnMenu" value="@Session["Menu"]" data-currurl="@Request.RawUrl" />
+<div id="sidebar" class="sidebar">
+    <div data-scrollbar="true" data-height="100%">
+        <ul class="nav">
+            <li class="nav-profile">
+                <a href="javascript:;" data-toggle="nav-profile">
+                    <div class="cover with-shadow" style="background:none;"></div>
+                    <div class="image">
+                        <img src="/Content/assets/img/user/user-13.jpg" alt="" />
+                    </div>
+                    <div class="info">
+                        <b class="caret pull-right"></b>
+                        @Session["UserName"].ToString()
+                        @*<small>@Session["Position"].ToString()</small>*@
+                    </div>
+                </a>
+            </li>
+            @*<li>
+                    <ul class="nav nav-profile">
+                        <li><a href="javascript:;"><i class="fa fa-cog"></i> Settings</a></li>
+                        <li><a href="javascript:;"><i class="fa fa-pencil-alt"></i> Send Feedback</a></li>
+                        <li><a href="javascript:;"><i class="fa fa-question-circle"></i> Helps</a></li>
+                    </ul>
+                </li>*@
+        </ul>
+        <ul class="nav" id="menuBar">
+            <li><a id="liMinSideBar" href="javascript:;" class="sidebar-minify-btn" data-click="sidebar-minify"><i class="fa fa-angle-double-left"></i></a></li>
+            <li class="nav-header">Navigation</li>
+            <li class="li-menu @(Request.RawUrl.ToString() == "/" ? "active" : "")">
+                <a href="/"><i class="fa fa-th-large"></i> <span>Dashboard</span></a>
+            </li>
+            @*<li class="li-menu @(Request.RawUrl.Contains("/Price/")  ? "active" : "")">
+                    <a href="/Price/Estimation"><i class="fa fa-calculator"></i> <span>Price Estimation</span></a>
+                </li>
+                <li class="li-menu @(Request.RawUrl.Contains("/Quotation/")  ? "active" : "")">
+                    <a href="/Quotation/DetailsOfQuotation"><i class="fa fa-list-alt"></i> <span>Details Of Quotation</span></a>
+                </li>
+                <li class="has-sub @(Request.RawUrl.Contains("/MasterMaintenance") ? "active" : "")">
+                    <a href="javascript:;">
+                        <b class="caret"></b>
+                        <i class="fa fa-cogs"></i>
+                        <span>Master</span>
+                    </a>
+                    <ul class="sub-menu">
+                        <li class="@(Request.RawUrl.Contains("/MasterMaintenance/ItemMaster") ? "active" : "")">
+                            <a href="/MasterMaintenance/ItemMaster">Item Master</a>
+                        </li>
+                        <li class="@(Request.RawUrl.Contains("/MasterMaintenance/UserMaster") ? "active" : "")">
+                            <a href="/MasterMaintenance/UserMaster">User Master</a>
+                        </li>
+                        <li class="@(Request.RawUrl.Contains("/MasterMaintenance/PageMaster") ? "active" : "")">
+                            <a href="/MasterMaintenance/PageMaster">Page Master</a>
+                        </li>
+                    </ul>
+                </li>*@
+        </ul>
+    </div>
+</div>
+<div class="sidebar-bg"></div>
+

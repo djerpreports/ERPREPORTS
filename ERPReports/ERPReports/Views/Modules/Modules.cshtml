@@ -1,0 +1,39 @@
+﻿@{
+    ViewBag.Title = "Modules";
+    Layout = "~/Views/Shared/_Modules.cshtml";
+}
+@section css{
+    @Styles.Render("~/Home-CSS")
+}
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="panel panel-inverse">
+            <div class="panel-heading">
+                <div class="panel-heading-btn">
+                    <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand"><i class="fa fa-expand"></i></a>
+                </div>
+                <h4 class="panel-title"><span class="fa fa-th-large"></span> @ViewBag.Title</h4>
+            </div>
+            <div class="panel-body">
+                <div class="row">
+                    <div class="col-md-8 offset-md-2" id="divModules" data-modules="@Session["ModuleList"]">
+                        <button type="button" class="btn btn-success btn-block">Modules</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<form id="frmIDMLogin" action="http://santechsvr:9001/Redirect/CheckSession" method="post" target="_blank">
+    @if (Session["username"] != null)
+    {
+        @Html.AntiForgeryToken()
+    }
+    <input type="hidden" id="hdnUserName" name="UserName" value="@(Session["username"]== null ? "" : Session["username"].ToString())" />
+    <input type="hidden" id="hdnPassword" name="Password" value="@(Session["password"]== null ? "" : Session["password"].ToString())" />
+    <input type="hidden" id="SourceFlag" name="IsFromNew" value="True" />
+    <input type="hidden" id="Module" name="Module" value="" />
+</form>
+@section scripts{
+    @Scripts.Render("~/Home-JS")
+}

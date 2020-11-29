@@ -1,0 +1,190 @@
+﻿
+@{
+    ViewBag.Title = "Page Master";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section css{
+    @Styles.Render("~/PageMaster-CSS")
+}
+<div class="panel panel-inverse" id="main-panel">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand">
+                <i class="fa fa-expand"></i>
+            </a>
+        </div>
+        <h4 class="panel-title"><span class="fa fa-file"></span>  @ViewBag.Title</h4>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-lg-6">
+                <div class="row">
+                    <div class="col-md-4 m-b-5">
+                        <button type="button" id="btnNewPage" class="btn btn-sm btn-primary btn-block ReadAndWrite"><span class="fa fa-file"></span><span class="btnLabel"> New</span></button>
+                    </div>
+                    <div class="col-md-4 m-b-5">
+                        <button type="button" id="btnEditPage" class="btn btn-sm btn-info btn-block ReadAndWrite" disabled><span class="fa fa-edit"></span><span class="btnLabel"> Edit</span></button>
+                    </div>
+                    <div class="col-md-4 m-b-5">
+                        <button type="button" id="btnDeletePage" class="btn btn-sm btn-danger btn-block DeleteEnabled" disabled><span class="fa fa-trash-alt"></span><span class="btnLabel"> Delete</span></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="hljs-wrapper">
+        <table id="tblPage" class="table zebraStyle  table-bordered tbl-100p tbl-no-wrap" data-adjust="0">
+            <thead>
+                <tr>
+                    <th>Group Label</th>
+                    <th>Page Name</th>
+                    <th>Page Label</th>
+                    <th>URL</th>
+                    <th>Has Sub</th>
+                    <th>Parent Menu</th>
+                    <th>ParentOrder</th>
+                    <th>Order</th>
+                    <th>Icon</th>
+                </tr>
+            </thead>
+            @*
+                For Footer Search
+                <tfoot>
+                    <tr>
+                        <th>Group Label</th>
+                        <th>Page Name</th>
+                        <th>Page Label</th>
+                        <th>URL</th>
+                        <th>Has Sub</th>
+                        <th>Parent Menu</th>
+                        <th>ParentOrder</th>
+                        <th>Order</th>
+                        <th>Icon</th>
+                    </tr>
+                </tfoot>
+                End For Footer Search*@
+        </table>
+    </div>
+</div>
+<div class="modal fade " id="mdlPage" role="dialog" aria-hidden="true" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog modal-lg" id="" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="mdlPageTitle"> Create Page</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form data-parsley-validate id="frmPage">
+                    <div class="row ">
+                        <div class="col-md-6">
+                            <div class="input-group input-group-sm m-b-5">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" style="width:100px;" for="GroupLabel">Group Label <span class="text-danger">*</span></label>
+                                </div>
+                                <input type="text" id="GroupLabel" name="GroupLabel" class="form-control input" data-parsley-errors-container="#err-GroupLabel" autocomplete="off">
+                            </div>
+                            <div id="err-GroupLabel"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-group input-group-sm m-b-5">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" style="width:100px;" for="PageName">Page Name <span class="text-danger">*</span></label>
+                                </div>
+                                <input type="text" id="PageName" name="PageName" class="form-control input" data-parsley-required data-parsley-errors-container="#err-PageName" autocomplete="off">
+                            </div>
+                            <div id="err-PageName"></div>
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="col-md-6">
+                            <div class="input-group input-group-sm m-b-5">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" style="width:100px;" for="HasSub">Has Sub <span class="text-danger">*</span></label>
+                                </div>
+                                <select id="HasSub" name="HasSub" class="form-control input" data-parsley-required data-parsley-errors-container="#err-HasSub">
+                                    <option value="">--Please Select--</option>
+                                    <option value="1">True</option>
+                                    <option value="0">False</option>
+                                </select>
+                            </div>
+                            <div id="err-HasSub"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-group input-group-sm m-b-5">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" style="width:100px;" for="URL">URL <span class="text-danger">*</span></label>
+                                </div>
+                                <input type="text" id="URL" name="URL" class="form-control input" placeholder="URL('#' if none)" data-parsley-required data-parsley-maxlength="100" data-parsley-errors-container="#err-URL" autocomplete="off">
+                            </div>
+                            <div id="err-URL"></div>
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="col-md-6">
+                            <div class="input-group input-group-sm m-b-5">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" style="width:100px;" for="Icon">Icon <span class="text-danger">*</span></label>
+                                </div>
+                                <input type="text" id="Icon" name="Icon" class="form-control input" placeholder="Icon('0' if none)" data-parsley-required data-parsley-maxlength="50" data-parsley-errors-container="#err-Icon" autocomplete="off">
+                                <span class="input-group-append">
+                                    <span class="input-group-text"><span id="lblIcon" class="float-right"></span></span>
+                                </span>
+                            </div>
+                            <div id="err-Icon"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-group input-group-sm m-b-5">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" style="width:100px;" for="Order">Order <span class="text-danger">*</span></label>
+                                </div>
+                                <input type="number" id="Order" name="Order" class="form-control input" data-parsley-required data-parsley-maxlength="20" data-parsley-errors-container="#err-Order" autocomplete="off">
+                            </div>
+                            <div id="err-Order"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="input-group input-group-sm m-b-5">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" style="width:100px;" for="ParentMenu">Parent Menu <span class="text-danger">*</span></label>
+                                </div>
+                                <input type="text" id="ParentMenu" name="ParentMenu" class="form-control input" placeholder="Parent Menu(Same as Page Name if None)" data-parsley-required data-parsley-maxlength="50" data-parsley-errors-container="#err-ParentMenu" autocomplete="off">
+                            </div>
+                            <div id="err-ParentMenu"></div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="input-group input-group-sm m-b-5">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" style="width:100px;" for="ParentOrder">Parent Order <span class="text-danger">*</span></label>
+                                </div>
+                                <input type="number" id="ParentOrder" name="ParentOrder" class="form-control input" data-parsley-required data-parsley-maxlength="20" data-parsley-errors-container="#err-Order" autocomplete="off">
+                            </div>
+                            <div id="err-Order"></div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="input-group input-group-sm m-b-5">
+                                <div class="input-group-prepend">
+                                    <label class="input-group-text" style="width:100px;" for="PageLabel">Page Label <span class="text-danger">*</span></label>
+                                </div>
+                                <input type="text" id="PageLabel" name="PageLabel" class="form-control input" data-parsley-errors-container="#err-PageLabel" autocomplete="off">
+                            </div>
+                            <div id="err-PageLabel"></div>
+                        </div>
+                    </div>
+                    <input type="hidden" name="ID" id="PageID" class="input" value="0" />
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-sm btn-primary ReadAndWrite" id="btnSavePage"> <span class="fa fa-save"></span> <span class="btnLabel"> Save</span></button>
+                <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal" id="btnCancelPage"><span class="fa fa-times"></span> Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    @Scripts.Render("~/PageMaster-JS")
+}
