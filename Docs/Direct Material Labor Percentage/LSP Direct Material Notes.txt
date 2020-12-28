@@ -1,0 +1,10 @@
+Server: SYTELINEERP803
+Database: LSPI803_App
+Username: sa
+Password: P@$$w0rd
+
+1. Direct Material and Labor Percentage Report
+  Stored Procedure:LSP_Rpt_NewDM_DirectMaterialLaborPercentageReportSp
+  Parameters: @StartDate, @EndDate, @StartProdCode, @EndProdCode, @StartModel, @EndModel
+  ** @StartProdCode and @EndProdCode = SELECT product_code, description FROM prodcode WHERE product_code LIKE 'FG-%'
+  ** @StartModel and @EndModel = LSP_GetFGItemListPerProdCodeWihtNullSp @StartProdCode, @EndProdCode
