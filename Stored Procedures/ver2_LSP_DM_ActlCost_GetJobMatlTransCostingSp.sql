@@ -5,6 +5,11 @@ DECLARE
   , @Item					ItemType	= 'FG-MZ712-D24-156'
   , @JobTransDate			DateType	= '01/18/2020'
   , @QtyTrans				QtyUnitType	= 5200
+ 	--@Job					JobType		= '20-0000864'
+  --, @Suffix					SuffixType	= 0
+  --, @Item					ItemType	= 'FG-3RS2024'
+  --, @JobTransDate			DateType	= '05/29/2020'
+  --, @QtyTrans				QtyUnitType	= 10
  	--@Job					JobType		= '19-0002265'
   --, @Suffix					SuffixType	= 0
   --, @Item					ItemType	= 'FG-E21-211'
