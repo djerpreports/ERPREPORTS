@@ -7,4 +7,4 @@ Password: P@$$w0rd
   Stored Procedure:LSP_Rpt_NewDM_DirectMaterialLaborPercentageReportSp
   Parameters: @StartDate, @EndDate, @StartProdCode, @EndProdCode, @StartModel, @EndModel
   ** @StartProdCode and @EndProdCode = SELECT product_code, description FROM prodcode WHERE product_code LIKE 'FG-%'
-  ** @StartModel and @EndModel = LSP_GetFGItemListPerProdCodeWihtNullSp @StartProdCode, @EndProdCode
+  ** @StartModel and @EndModel = LSP_ERPReport_GetFGItemListPerProdCodeWihtNullSp @StartProdCode, @EndProdCode
