@@ -180,14 +180,14 @@ BEGIN
 			ORDER BY effective_date DESC  
 			  
 			SELECT @LaborCost = (SUM(js.run_lbr_hrs) * 60 * @LaborRate)
-			FROM jrt_sch AS js
-			WHERE js.job = @matl_lot
-			  AND js.suffix = 0
-			--FROM item AS i 
-			--	JOIN jrt_sch AS js
-			--		ON i.job = js.job  
-			--		  AND i.suffix = js.suffix
-			--WHERE i.item = @matl_item			  
+			--FROM jrt_sch AS js
+			--WHERE js.job = @matl_lot
+			--  AND js.suffix = 0
+			FROM item AS i 
+				JOIN jrt_sch AS js
+					ON i.job = js.job  
+					  AND i.suffix = js.suffix
+			WHERE i.item = @matl_item			  
 			         
 			SET @OverhdCost = @LaborCost * @OvhdRate
 			
@@ -243,13 +243,13 @@ BEGIN
 			ORDER BY effective_date DESC  
 			  
 			SELECT @LaborCost = (SUM(js.run_lbr_hrs) * 60 * @LaborRate)
-			FROM jrt_sch AS js
-			WHERE js.job = @matl_lot
-			--FROM item AS i 
-			--	JOIN jrt_sch AS js
-			--		ON i.job = js.job  
-			--		  AND i.suffix = js.suffix
-			--WHERE i.item = @matl_item 
+			--FROM jrt_sch AS js
+			--WHERE js.job = @matl_lot
+			FROM item AS i 
+				JOIN jrt_sch AS js
+					ON i.job = js.job  
+					  AND i.suffix = js.suffix
+			WHERE i.item = @matl_item 
 			         
 			SET @OverhdCost = @LaborCost * @OvhdRate
 			
