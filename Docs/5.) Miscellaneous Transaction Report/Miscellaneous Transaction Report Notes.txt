@@ -1,0 +1,26 @@
+Stored Procedure Name: LSP_Rpt_NewDM_MiscellaneousTransactionReportSp
+Parameters: @StartDate and @EndDate
+Returned Columns: 
+
+
+
+Report Notes:
+
+1. Summary Sheet:
+   > Group by:
+     1. TransType and MiscTransClass
+     2. ReasonDesc
+     3. If ReasonDesc = "SF Scrap", Group again by [wc]
+   > Order by: TransType, MiscTransClass, ReasonDesc
+
+2. TransType sheets (one or more sheets depends on result of grouping)
+  > Group By: TransDesc
+  > Order By: TransDate
+
+3. SF Scrap Summary
+  > Get details where [TransDesc] = "SF Scrap Data"
+  > Upper Table Group: Group by [Wc], Order by [WC] =getting total per group then the grand total
+  > Lower Table Group: merging of cells Group by [Wc], [Item]
+
+4. SF Scrap Data
+  > Get details where [TransDesc] = "SF Scrap Data"

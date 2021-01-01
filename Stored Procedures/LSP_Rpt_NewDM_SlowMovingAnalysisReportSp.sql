@@ -1,9 +1,9 @@
 --EXEC dbo.LSP_Rpt_NewDM_SlowMovingAnalysisReportSp 12
 
-ALTER PROCEDURE LSP_Rpt_NewDM_SlowMovingAnalysisReportSp (
---DECLARE
-	@Months					INT	--= 12
-) AS
+--ALTER PROCEDURE LSP_Rpt_NewDM_SlowMovingAnalysisReportSp (
+DECLARE
+	@Months					INT	= 12
+--) AS
 BEGIN
 
 	IF OBJECT_ID('tempdb..#itemSM') IS NOT NULL
@@ -71,7 +71,7 @@ BEGIN
 	SELECT @StartDate = DATEADD(S, 0, DATEADD(M, DATEDIFF(m, 0, GETDATE())- @Months,0))  
 		 , @EndDate =  DATEADD(S, -1, DATEADD(mm, DATEDIFF(m, 0, GETDATE()),0))  
 
-	SELECT i.item  
+	SELECT i.item 
 		 , i.description  
 		 , i.Uf_location  
 		 , i.stat  
@@ -167,6 +167,8 @@ BEGIN
 				
 				EXEC dbo.LSP_GetSlowMovingAnalysisReportRemarks @item, @Remarks OUTPUT
 				
+				PRINT @Lot+'_'+@Item
+				
 				INSERT INTO #ItemLotLocCosts
 				SELECT @item
 					 , @Lot
@@ -251,8 +253,34 @@ BEGIN
 				 , ISNULL(@Remarks, '')
 			
 		END
-		
-		SET @Remarks = ''
+				
+		SELECT @JobQty = 0
+			 , @matl_unit_cost_usd = 0
+			 , @matl_landed_cost_usd = 0
+			 , @pi_fg_process_usd = 0
+			 , @pi_resin_usd = 0
+			 , @pi_vend_cost_usd = 0
+			 , @pi_hidden_profit_usd = 0
+			 , @sf_lbr_cost_usd = 0
+			 , @sf_ovhd_cost_usd = 0
+			 , @fg_lbr_cost_usd = 0
+			 , @fg_ovhd_cost_usd = 0
+			 , @matl_unit_cost_php = 0
+			 , @matl_landed_cost_php = 0
+			 , @pi_fg_process_php = 0
+			 , @pi_resin_php = 0
+			 , @pi_vend_cost_php = 0
+			 , @pi_hidden_profit_php = 0
+			 , @sf_lbr_cost_php = 0
+			 , @sf_ovhd_cost_php = 0
+			 , @fg_lbr_cost_php = 0
+			 , @fg_ovhd_cost_php = 0
+			  
+			 , @ItemPricingCost = 0
+			 , @CurrCode = ''
+			 , @ExchRate = 0
+			 
+			 , @Remarks = ''
 
 		FETCH NEXT FROM itemLotCrsr INTO
 			@Item

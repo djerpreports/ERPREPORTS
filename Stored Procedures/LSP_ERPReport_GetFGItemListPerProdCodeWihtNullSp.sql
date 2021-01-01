@@ -1,4 +1,4 @@
---EXEC dbo.LSP_ERPReport_GetFGItemListPerProdCodeWihtNullSp '',''
+--EXEC dbo.LSP_ERPReport_GetFGItemListPerProdCodeWihtNullSp '','', ''
 
 ALTER PROCEDURE LSP_ERPReport_GetFGItemListPerProdCodeWihtNullSp (  
 --DECLARE  

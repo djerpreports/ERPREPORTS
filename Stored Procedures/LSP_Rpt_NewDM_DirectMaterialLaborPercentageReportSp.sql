@@ -1,16 +1,16 @@
---EXEC dbo.LSP_Rpt_NewDM_DirectMaterialLaborPercentageReportSp '05/01/2020', '05/31/2020', 'FG-RS204', 'FG-RS204', '',''
+--EXEC dbo.LSP_Rpt_NewDM_DirectMaterialLaborPercentageReportSp '05/01/2020', '05/31/2020', '', '', '',''
 
---CREATE PROCEDURE LSP_Rpt_NewDM_DirectMaterialLaborPercentageReportSp (  
-DECLARE
-	@StartDate			DateType		= '05/01/2020'
-  , @EndDate			DateType		= '05/31/2020'
-  , @StartProdCode		ProductCodeType = 'FG-RS204'
-  , @EndProdCode		ProductCodeType = 'FG-RS204'
-  , @StartModel			ItemType		= ''
-  , @EndModel			ItemType		= ''
---) AS
+ALTER PROCEDURE LSP_Rpt_NewDM_DirectMaterialLaborPercentageReportSp (  
+--DECLARE
+	@StartDate			DateType		--= '05/01/2020'
+  , @EndDate			DateType		--= '05/31/2020'
+  , @StartProdCode		ProductCodeType --= 'FG-RS204'
+  , @EndProdCode		ProductCodeType --= 'FG-RS204'
+  , @StartModel			ItemType		--= ''
+  , @EndModel			ItemType		--= ''
+) AS
   
-BEGIN
+BEGIN TRANSACTION
 	IF OBJECT_ID('tempdb..#itemPrice') IS NOT NULL
 		DROP TABLE #itemPrice
 	
@@ -66,14 +66,15 @@ BEGIN
 	  , actl_lbr_cost		AmountType  
 	)  
 	  
-	SELECT @StartDate = ISNULL(@StartDate, GETDATE())
-		 , @EndDate = ISNULL(@EndDate, GETDATE())
+	SELECT @StartDate = dbo.MidnightOf(ISNULL(@StartDate, GETDATE()))
+		 , @EndDate = dbo.DayEndOf(ISNULL(@EndDate, GETDATE()))
 		 , @StartProdCode = ISNULL(NULLIF(@StartProdCode,''), (SELECT TOP(1) product_code FROM prodcode WHERE product_code LIKE 'FG-%' ORDER BY product_code ASC))
 		 , @EndProdCode = ISNULL(NULLIF(@EndProdCode,''), (SELECT TOP(1) product_code FROM prodcode WHERE product_code LIKE 'FG-%' ORDER BY product_code DESC))
 		 
 	SELECT @StartModel = ISNULL(NULLIF(@StartModel,''), (SELECT TOP(1) item FROM item WHERE product_code BETWEEN @StartProdCode AND @EndProdCode ORDER BY item ASC))
 		 , @EndModel = ISNULL(NULLIF(@EndModel,''), (SELECT TOP(1) item FROM item WHERE product_code BETWEEN @StartProdCode AND @EndProdCode ORDER BY item DESC))
-		
+	
+	
 	EXEC dbo.LSP_NewDM_GetFilteredFinishedGoodsTransactionSp @StartDate, @EndDate, @StartProdCode, @EndProdCode, @StartModel, @EndModel  
 	
 	SELECT TOP(1) WITH TIES
@@ -220,4 +221,4 @@ BEGIN
 	SELECT * FROM @report_set  
 	--SELECT * FROM @FinishedTrans  
   
-END
+COMMIT TRANSACTION
