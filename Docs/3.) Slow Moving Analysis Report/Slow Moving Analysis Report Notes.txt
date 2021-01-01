@@ -1,0 +1,19 @@
+Stored Procedure Name: LSP_Rpt_NewDM_SlowMovingAnalysisReportSp
+Paramaters: @Month, values: 12 or 24
+Returned Columns:
+  item
+, description
+, Uf_location
+, matl_stat
+, product_code
+, QtyOnHand
+, TotalMatlCostPHP
+, TotalLandedCostPHP
+, TotalPIFGProcessCostPHP
+, TotalPIResinCostPHP
+, TotalPIHiddenPHP
+, TotalSFLbrCostPHP
+, TotalCostPHP
+, LatestPODate
+, LatestIssueDate
+, ItemRemarks

@@ -1,6 +1,8 @@
-CREATE PROCEDURE LSP_Rpt_NewDM_SlowMovingAnalysisReportSp (
+--EXEC dbo.LSP_Rpt_NewDM_SlowMovingAnalysisReportSp 12
+
+ALTER PROCEDURE LSP_Rpt_NewDM_SlowMovingAnalysisReportSp (
 --DECLARE
-	@Months					INT	= 12
+	@Months					INT	--= 12
 ) AS
 BEGIN
 

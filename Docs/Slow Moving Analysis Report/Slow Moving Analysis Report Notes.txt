@@ -1,3 +1,0 @@
-Stored Procedure Name: LSP_Rpt_NewDM_SlowMovingAnalysisReportSp
-Paramaters: @Month, values: 12 or 24
-

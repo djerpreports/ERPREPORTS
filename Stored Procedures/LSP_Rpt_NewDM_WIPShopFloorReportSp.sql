@@ -1,6 +1,6 @@
---CREATE PROCEDURE LSP_Rpt_NewDM_WIPShopFloorReportSp
+ALTER PROCEDURE LSP_Rpt_NewDM_WIPShopFloorReportSp
 
---AS
+AS
 BEGIN
 
 	IF OBJECT_ID('tempdb..#WIPShopFloor') IS NOT NULL
@@ -55,7 +55,7 @@ BEGIN
 			  AND j.suffix = js.suffix
 	WHERE j.stat = 'R'  
 	 AND (j.qty_complete + j.qty_scrapped) <> j.qty_released  
-	 AND j.qty_complete > 0
+--	 AND j.qty_complete > 0
 
 	OPEN wipJobCrsr
 	FETCH FROM wipJobCrsr INTO
@@ -124,6 +124,14 @@ BEGIN
 
 
 	SELECT *
+		 , (MatlUnit_PHP + LandedUnit_PHP 
+				+ PIFGProcessUnit_PHP + PIResinUnit_PHP + PIHiddenUnit_PHP 
+				+ SFAddedUnit_PHP + FGAddedUnit_PHP) 
+			* WIPQty AS TotalWIPCost_PHP
+		 , (MatlUnit_USD + LandedUnit_USD 
+				+ PIFGProcessUnit_USD + PIResinUnit_USD + PIHiddenUnit_USD 
+				+ SFAddedUnit_USD + FGAddedUnit_USD) 
+			* WIPQty AS TotalWIPCost_USD
 	FROM #WIPShopFloor
 	
 	
