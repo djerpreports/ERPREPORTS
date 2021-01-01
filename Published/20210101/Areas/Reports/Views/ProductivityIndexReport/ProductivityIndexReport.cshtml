@@ -1,0 +1,48 @@
+﻿@{
+    ViewBag.Title = "Productivity Index Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@section css{
+    @Styles.Render("~/ProductivityIndexReport-CSS")
+}
+<div class="panel panel-inverse" id="main-panel">
+    <div class="panel-heading">
+        <div class="panel-heading-btn">
+            <a href="javascript:;" class="btn btn-xs btn-icon btn-circle btn-default" data-click="panel-expand">
+                <i class="fa fa-expand"></i>
+            </a>
+        </div>
+        <h4 class="panel-title"><span class="fa fa-list-alt"></span>  @ViewBag.Title</h4>
+    </div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-lg-12 col-xl-8 offset-xl-2">
+                <form id="frmProductivityIndexReport" target="_blank" method="post" action="/Reports/ProductivityIndexReport/DownloadProductivityIndexReport">
+                    <fieldset class="m-b-10">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="input-group input-group-sm m-b-5">
+                                    <div class="input-group-prepend">
+                                        <label class="input-group-text" style="width:120px;" for="MonthYear"> Month & Year</label>
+                                    </div>
+                                    <input type="text" id="MonthYear" name="MonthYear" class="form-control input" placeholder="Month & Year" autocomplete="off">
+                                </div>
+                                <div id="err-MonthYear"></div>
+                            </div>
+                            <div class="col-sm-6">
+                                <button type="submit" class="btn btn-sm btn-success btn-block" id="btnDownloadProductivityIndexReport" disabled><span class="fa fa-file-excel"></span> Download</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+    @Scripts.Render("~/ProductivityIndexReport-JS")
+}
+
+
+
+

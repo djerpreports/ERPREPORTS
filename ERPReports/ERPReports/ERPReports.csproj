@@ -214,6 +214,7 @@
     <Compile Include="Areas\MasterMaintenance\Models\mUserPageAccess.cs" />
     <Compile Include="Areas\Reports\Controllers\LSPDirectMaterialController.cs" />
     <Compile Include="Areas\Reports\Controllers\ProductivityIndexReportController.cs" />
+    <Compile Include="Areas\Reports\Models\LSPDirectMaterial.cs" />
     <Compile Include="Areas\Reports\Models\ProductivityIndex_Summary.cs" />
     <Compile Include="Areas\Reports\ReportsAreaRegistration.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -3228,6 +3229,7 @@
     <Content Include="Areas\Reports\Views\LSPDirectMaterial\LSPDirectMaterial.cshtml" />
     <Content Include="Areas\Reports\Views\ProductivityIndexReport\ProductivityIndexReport.cshtml" />
     <Content Include="Areas\Reports\Templates\ProductivityIndexReport.xlsx" />
+    <Content Include="Areas\Reports\Templates\LSP_Rpt_NewDM_DirectMaterialLaborPercentageReport.xlsx" />
     <None Include="Properties\PublishProfiles\ERPReports.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
