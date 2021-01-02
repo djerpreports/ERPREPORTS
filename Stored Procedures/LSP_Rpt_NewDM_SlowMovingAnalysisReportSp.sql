@@ -1,10 +1,10 @@
 --EXEC dbo.LSP_Rpt_NewDM_SlowMovingAnalysisReportSp 12
 
---ALTER PROCEDURE LSP_Rpt_NewDM_SlowMovingAnalysisReportSp (
-DECLARE
-	@Months					INT	= 12
---) AS
-BEGIN
+ALTER PROCEDURE LSP_Rpt_NewDM_SlowMovingAnalysisReportSp (
+--DECLARE
+	@Months					INT	--= 12
+) AS
+BEGIN TRANSACTION
 
 	IF OBJECT_ID('tempdb..#itemSM') IS NOT NULL
 		DROP TABLE #itemSM
@@ -14,6 +14,8 @@ BEGIN
 		DROP TABLE #LatestIssueDate
 	IF OBJECT_ID('tempdb..#ItemLotLocCosts') IS NOT NULL
 		DROP TABLE #ItemLotLocCosts
+	IF OBJECT_ID('tempdb..#DMActualCost') IS NOT NULL
+		DROP TABLE #DMActualCost		
 
 	DECLARE   
 		@StartDate				DateType
@@ -49,7 +51,41 @@ BEGIN
 	  , @ItemPricingCost		DECIMAL(18,8)
 	  , @CurrCode				NVARCHAR(10)
 	  , @ExchRate				ExchRateType
-	  
+	 
+	CREATE TABLE #DMActualCost (
+		item						NVARCHAR(60)
+	  , [Level]						INT
+	  , Parent						NVARCHAR(20)
+	  , oper_num					INT
+	  , sequence					INT
+	  , subsequence					NVARCHAR(50)
+	  , matl						NVARCHAR(60)
+	  , matl_qty					DECIMAL(18,8)
+	  , lot_no						NVARCHAR(50)
+	  , trans_date					DATETIME
+	  , job_qty						BIGINT
+	  , matl_unit_cost_usd			DECIMAL(18,8)
+	  , matl_landed_cost_usd		DECIMAL(18,8)
+	  , pi_fg_process_usd			DECIMAL(18,8)
+	  , pi_resin_usd				DECIMAL(18,8)
+	  , pi_vend_cost_usd			DECIMAL(18,8)
+	  , pi_hidden_profit_usd		DECIMAL(18,8)
+	  , sf_lbr_cost_usd				DECIMAL(18,8)
+	  , sf_ovhd_cost_usd			DECIMAL(18,8)
+	  , fg_lbr_cost_usd				DECIMAL(18,8)
+	  , fg_ovhd_cost_usd			DECIMAL(18,8)
+	  , matl_unit_cost_php			DECIMAL(18,8)
+	  , matl_landed_cost_php		DECIMAL(18,8)
+	  , pi_fg_process_php			DECIMAL(18,8)
+	  , pi_resin_php				DECIMAL(18,8)
+	  , pi_vend_cost_php			DECIMAL(18,8)
+	  , pi_hidden_profit_php		DECIMAL(18,8)
+	  , sf_lbr_cost_php				DECIMAL(18,8)
+	  , sf_ovhd_cost_php			DECIMAL(18,8)
+	  , fg_lbr_cost_php				DECIMAL(18,8)
+	  , fg_ovhd_cost_php			DECIMAL(18,8)
+	) 
+	
 	CREATE TABLE #ItemLotLocCosts (
 		item						NVARCHAR(60)
 	  , lot_no						NVARCHAR(30)
@@ -163,6 +199,10 @@ BEGIN
 			
 			IF EXISTS(SELECT * FROM job WHERE job = @Lot)
 			BEGIN			
+				
+				TRUNCATE TABLE #DMActualCost
+				
+				INSERT INTO #DMActualCost
 				EXEC dbo.LSP_DM_ActlCost_GetJobMatlTransCostingSp @Lot, 0, @Item, @LotCreateDate, @QtyOnHand
 				
 				EXEC dbo.LSP_GetSlowMovingAnalysisReportRemarks @item, @Remarks OUTPUT
@@ -183,7 +223,7 @@ BEGIN
 					 , sf_lbr_cost_php / job_qty
 					 , sf_ovhd_cost_php / job_qty
 					 , @Remarks
-				FROM ##ActualCost
+				FROM #DMActualCost
 				WHERE [Level] = 0
 				
 			END
@@ -335,4 +375,4 @@ BEGIN
 		 , i.issue_date
 		 , ll.ItemRemarks
 
-END
+COMMIT TRANSACTION

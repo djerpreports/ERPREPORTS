@@ -10,9 +10,13 @@ ALTER PROCEDURE LSP_Rpt_NewDM_DirectMaterialLaborPercentageReportSp (
   , @EndModel			ItemType		--= ''
 ) AS
   
-BEGIN TRANSACTION
+BEGIN
 	IF OBJECT_ID('tempdb..#itemPrice') IS NOT NULL
 		DROP TABLE #itemPrice
+	IF OBJECT_ID('tempdb..#BOMStdCost') IS NOT NULL
+		DROP TABLE #BOMStdCost	
+	IF OBJECT_ID('tempdb..#DMActualCost') IS NOT NULL
+		DROP TABLE #DMActualCost
 	
 	DECLARE  
 		@TransDate		DateType
@@ -47,7 +51,60 @@ BEGIN TRANSACTION
 	  , @ActlSFOvhd			AmountType
 	  , @ActlFGLbr			AmountType
 	  , @ActlFGOvhd			AmountType
-	  	  
+	 
+	CREATE TABLE #BOMStdCost (
+		item				NVARCHAR(60)
+	  , [Level]				INT
+	  , Parent				NVARCHAR(20)
+	  , oper_num			INT
+	  , sequence			INT
+	  , subsequence			NVARCHAR(50)
+	  , matl				NVARCHAR(60)
+	  , matl_qty			DECIMAL(18,10)
+	  , matl_unit_cost		DECIMAL(18,10)
+	  , pi_process_cost		DECIMAL(18,10)
+	  , pi_resin_cost		DECIMAL(18,10)
+	  , pi_hidden_profit	DECIMAL(18,10)
+	  , sf_labr_cost		DECIMAL(18,10)
+	  , sf_ovhd_cost		DECIMAL(18,10)
+	  , fg_labr_cost		DECIMAL(18,10)
+	  , fg_ovhd_cost		DECIMAL(18,10)
+	)
+	
+	CREATE TABLE #DMActualCost (
+		item						NVARCHAR(60)
+	  , [Level]						INT
+	  , Parent						NVARCHAR(20)
+	  , oper_num					INT
+	  , sequence					INT
+	  , subsequence					NVARCHAR(50)
+	  , matl						NVARCHAR(60)
+	  , matl_qty					DECIMAL(18,8)
+	  , lot_no						NVARCHAR(50)
+	  , trans_date					DATETIME
+	  , job_qty						BIGINT
+	  , matl_unit_cost_usd			DECIMAL(18,8)
+	  , matl_landed_cost_usd		DECIMAL(18,8)
+	  , pi_fg_process_usd			DECIMAL(18,8)
+	  , pi_resin_usd				DECIMAL(18,8)
+	  , pi_vend_cost_usd			DECIMAL(18,8)
+	  , pi_hidden_profit_usd		DECIMAL(18,8)
+	  , sf_lbr_cost_usd				DECIMAL(18,8)
+	  , sf_ovhd_cost_usd			DECIMAL(18,8)
+	  , fg_lbr_cost_usd				DECIMAL(18,8)
+	  , fg_ovhd_cost_usd			DECIMAL(18,8)
+	  , matl_unit_cost_php			DECIMAL(18,8)
+	  , matl_landed_cost_php		DECIMAL(18,8)
+	  , pi_fg_process_php			DECIMAL(18,8)
+	  , pi_resin_php				DECIMAL(18,8)
+	  , pi_vend_cost_php			DECIMAL(18,8)
+	  , pi_hidden_profit_php		DECIMAL(18,8)
+	  , sf_lbr_cost_php				DECIMAL(18,8)
+	  , sf_ovhd_cost_php			DECIMAL(18,8)
+	  , fg_lbr_cost_php				DECIMAL(18,8)
+	  , fg_ovhd_cost_php			DECIMAL(18,8)
+	)
+	
 	DECLARE @report_set AS TABLE (  
 		trans_date			DateType  
 	  , item				ItemType  
@@ -107,7 +164,10 @@ BEGIN TRANSACTION
 	WHILE (@@FETCH_STATUS = 0)  
 	BEGIN  
 	  
-		EXEC dbo.LSP_DM_StdCost_GetCurrentMatlCostingSp @Item, @TransDate
+		TRUNCATE TABLE #BOMStdCost
+	  
+		INSERT INTO #BOMStdCost
+		EXEC dbo.LSP_DM_StdCost_GetCurrentMatlCostingSp @Item, @TransDate		
 		
 		SELECT @StdMatlCost	= matl_unit_cost * @QtyCompleted
 			 , @StdLandedCost = 0
@@ -118,9 +178,12 @@ BEGIN TRANSACTION
 			 , @StdSFOvhd = sf_ovhd_cost * @QtyCompleted
 			 , @StdFGLbr = fg_labr_cost * @QtyCompleted
 			 , @StdFGOvhd = fg_ovhd_cost * @QtyCompleted
-		FROM ##BOMCost
+		FROM #BOMStdCost
 		WHERE [Level] = 0
 		
+		TRUNCATE TABLE #DMActualCost
+		
+		INSERT INTO #DMActualCost
 		EXEC dbo.LSP_DM_ActlCost_GetJobMatlTransCostingSp @JobOrder, @JobSuffix, @Item, @TransDate, @QtyCompleted
 	  
 		SELECT @ActlMatlCost	= matl_unit_cost_php
@@ -132,7 +195,7 @@ BEGIN TRANSACTION
 			 , @ActlSFOvhd		= sf_ovhd_cost_php
 			 , @ActlFGLbr		= fg_lbr_cost_php
 			 , @ActlFGOvhd		= fg_ovhd_cost_php
-		FROM ##ActualCost
+		FROM #DMActualCost
 		WHERE [Level] = 0	  
 		 
 		SELECT @EXWUnitCost = unit_price1 / 1.2
@@ -221,4 +284,4 @@ BEGIN TRANSACTION
 	SELECT * FROM @report_set  
 	--SELECT * FROM @FinishedTrans  
   
-COMMIT TRANSACTION
+END

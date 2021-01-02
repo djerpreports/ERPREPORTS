@@ -1,0 +1,50 @@
+Stored Procedure Name: LSP_Rpt_NewDM_InventoryTurnOverReportSP
+Parameter: @IsShowDetail BIT
+Returned fields:
+	   trans_date		DATETIME
+	  , trans_type		NVARCHAR(25)  	NULLABLE
+	  , reason_code		NVARCHAR	NULLABLE
+	  , reason_desc		NVARCHAR	NULLABLE
+	  , qty			DECIMAL		NULLABLE
+	  , usage_matl		DECIMAL  
+	  , usage_landed	DECIMAL  
+	  , item		NVARCHAR	NULLABLE
+	  , item_desc		NVARCHAR	NULLABLE
+	  , product_code	NVARCHAR	
+	  , lot			NVARCHAR	NULLABLE
+	  , ref_num		NVARCHAR	NULLABLE
+	  , ref_line		INT		NULLABLE
+	  , invty_matl_cost	DECIMAL  	
+	  , invty_landed_cost	DECIMAL  
+	  , safety_matl_cost	DECIMAL  
+	  , report_group	NVARCHAR(10)  
+	  , M1			DECIMAL  	NULLABLE
+	  , L1			DECIMAL  	NULLABLE
+	  , M2			DECIMAL  	NULLABLE
+	  , L2			DECIMAL  	NULLABLE
+	  , M3			DECIMAL  	NULLABLE
+	  , L3			DECIMAL  	NULLABLE
+	  , M4			DECIMAL  	NULLABLE
+	  , L4			DECIMAL  	NULLABLE
+	  , M5			DECIMAL  	NULLABLE
+	  , L5			DECIMAL  	NULLABLE
+	  , M6			DECIMAL  	NULLABLE
+	  , L6			DECIMAL  	NULLABLE
+	  , M7			DECIMAL  	NULLABLE
+	  , L7			DECIMAL  	NULLABLE
+	  , M8			DECIMAL  	NULLABLE
+	  , L8			DECIMAL  	NULLABLE
+	  , M9			DECIMAL  	NULLABLE
+	  , L9			DECIMAL  	NULLABLE
+	  , M10			DECIMAL  	NULLABLE
+	  , L10			DECIMAL  	NULLABLE
+	  , MAX_3Months		DECIMAL  	NULLABLE
+	  , L_MAX_3Months	DECIMAL 	NULLABLE
+
+Report Notes:
+
+1. [Usage] sheet = returned data "WHERE [report_group] = "USAGE"
+  > Row group by ProductCode, column group by Month and Year of [trans_date]
+  > [M1] is equal to Month1-3, [M2] equal to Month 2-4, etc.
+2. [Detailed] sheet = returned data WHERE [report_group] = "DETAILED"
+  > Plain Plotting of Data

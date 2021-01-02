@@ -1,10 +1,13 @@
 ALTER PROCEDURE LSP_Rpt_NewDM_WIPShopFloorReportSp
 
 AS
-BEGIN
+BEGIN 
 
 	IF OBJECT_ID('tempdb..#WIPShopFloor') IS NOT NULL
 		DROP TABLE #WIPShopFloor
+		
+	IF OBJECT_ID('tempdb..#DMActualCost') IS NOT NULL
+		DROP TABLE #DMActualCost		
 	
 	DECLARE
 		@Job					JobType
@@ -16,7 +19,41 @@ BEGIN
 	  , @QtyScrapped			QtyUnitType
 	  , @JobStartDate			DateType
 	  , @QtyWip					QtyUnitType
-	 
+	
+	CREATE TABLE #DMActualCost (
+		item						NVARCHAR(60)
+	  , [Level]						INT
+	  , Parent						NVARCHAR(20)
+	  , oper_num					INT
+	  , sequence					INT
+	  , subsequence					NVARCHAR(50)
+	  , matl						NVARCHAR(60)
+	  , matl_qty					DECIMAL(18,8)
+	  , lot_no						NVARCHAR(50)
+	  , trans_date					DATETIME
+	  , job_qty						BIGINT
+	  , matl_unit_cost_usd			DECIMAL(18,8)
+	  , matl_landed_cost_usd		DECIMAL(18,8)
+	  , pi_fg_process_usd			DECIMAL(18,8)
+	  , pi_resin_usd				DECIMAL(18,8)
+	  , pi_vend_cost_usd			DECIMAL(18,8)
+	  , pi_hidden_profit_usd		DECIMAL(18,8)
+	  , sf_lbr_cost_usd				DECIMAL(18,8)
+	  , sf_ovhd_cost_usd			DECIMAL(18,8)
+	  , fg_lbr_cost_usd				DECIMAL(18,8)
+	  , fg_ovhd_cost_usd			DECIMAL(18,8)
+	  , matl_unit_cost_php			DECIMAL(18,8)
+	  , matl_landed_cost_php		DECIMAL(18,8)
+	  , pi_fg_process_php			DECIMAL(18,8)
+	  , pi_resin_php				DECIMAL(18,8)
+	  , pi_vend_cost_php			DECIMAL(18,8)
+	  , pi_hidden_profit_php		DECIMAL(18,8)
+	  , sf_lbr_cost_php				DECIMAL(18,8)
+	  , sf_ovhd_cost_php			DECIMAL(18,8)
+	  , fg_lbr_cost_php				DECIMAL(18,8)
+	  , fg_ovhd_cost_php			DECIMAL(18,8)
+	) 
+	
 	CREATE TABLE #WIPShopFloor(
 		TransDate				DATETIME
 	  , Item					NVARCHAR(100)
@@ -56,6 +93,7 @@ BEGIN
 	WHERE j.stat = 'R'  
 	 AND (j.qty_complete + j.qty_scrapped) <> j.qty_released  
 --	 AND j.qty_complete > 0
+--AND j.job = '19S-000115'
 
 	OPEN wipJobCrsr
 	FETCH FROM wipJobCrsr INTO
@@ -73,9 +111,10 @@ BEGIN
 	
 		SET @QtyWip = (@QtyReleased - (@QtyCompleted + @QtyScrapped) )
 	
+		TRUNCATE TABLE #DMActualCost
+	
+		INSERT INTO #DMActualCost
 		EXEC dbo.LSP_DM_ActlCost_GetJobMatlTransCostingSp @job, @Suffix, @Item, @JobStartDate, @QtyWip
-		
-		PRINT (@job+ @Item)
 		
 		INSERT INTO #WIPShopFloor
 		SELECT ac.trans_date
@@ -83,25 +122,25 @@ BEGIN
 			 , i.[description]
 			 , @Job + ' - ' + RIGHT( ('00' +CAST(@Suffix AS NVARCHAR(5))),2 )
 			 , ac.matl_qty - ((ac.matl_qty / @QtyReleased) * (@QtyCompleted + @QtyScrapped))--@QtyWip
-			 , ac.lot_no
+			 , ISNULL(ac.lot_no, '')
 			 
-			 , ac.matl_unit_cost_php / ac.matl_qty AS MatlUnit_PHP
-			 , ac.matl_landed_cost_php / ac.matl_qty 
-			 , ac.pi_fg_process_php / ac.matl_qty 
-			 , ac.pi_resin_php / ac.matl_qty 
-			 , ac.pi_hidden_profit_php / ac.matl_qty 
-			 , (ac.sf_lbr_cost_php / ac.matl_qty) + (ac.sf_ovhd_cost_php / ac.matl_qty)
-			 , (ac.fg_lbr_cost_php / ac.matl_qty) + (ac.fg_ovhd_cost_php / ac.matl_qty)
+			 , ISNULL(ac.matl_unit_cost_php,0) / ISNULL(ac.matl_qty,0) AS MatlUnit_PHP
+			 , ISNULL(ac.matl_landed_cost_php,0) / ISNULL(ac.matl_qty,0) 
+			 , ISNULL(ac.pi_fg_process_php,0) / ISNULL(ac.matl_qty,0) 
+			 , ISNULL(ac.pi_resin_php,0) / ISNULL(ac.matl_qty,0) 
+			 , ISNULL(ac.pi_hidden_profit_php,0) / ISNULL(ac.matl_qty,0) 
+			 , (ISNULL(ac.sf_lbr_cost_php,0) / ISNULL(ac.matl_qty,0)) + (ISNULL(ac.sf_ovhd_cost_php,0) / ISNULL(ac.matl_qty,0))
+			 , (ISNULL(ac.fg_lbr_cost_php,0) / ISNULL(ac.matl_qty,0)) + (ISNULL(ac.fg_ovhd_cost_php,0) / ISNULL(ac.matl_qty,0))
 			 
-			 , ac.matl_unit_cost_usd / ac.matl_qty AS MatlUnit_usd
-			 , ac.matl_landed_cost_usd / ac.matl_qty 
-			 , ac.pi_fg_process_usd / ac.matl_qty 
-			 , ac.pi_resin_usd / ac.matl_qty 
-			 , ac.pi_hidden_profit_usd / ac.matl_qty 
-			 , (ac.sf_lbr_cost_usd / ac.matl_qty) + (ac.sf_ovhd_cost_usd / ac.matl_qty)
-			 , (ac.fg_lbr_cost_usd / ac.matl_qty) + (ac.fg_ovhd_cost_usd / ac.matl_qty)
+			 , ISNULL(ac.matl_unit_cost_usd,0) / ISNULL(ac.matl_qty,0) AS MatlUnit_usd
+			 , ISNULL(ac.matl_landed_cost_usd,0) / ISNULL(ac.matl_qty,0) 
+			 , ISNULL(ac.pi_fg_process_usd,0) / ISNULL(ac.matl_qty,0) 
+			 , ISNULL(ac.pi_resin_usd,0) / ISNULL(ac.matl_qty,0) 
+			 , ISNULL(ac.pi_hidden_profit_usd,0) / ISNULL(ac.matl_qty,0) 
+			 , (ISNULL(ac.sf_lbr_cost_usd,0) / ISNULL(ac.matl_qty,0)) + (ISNULL(ac.sf_ovhd_cost_usd,0) / ISNULL(ac.matl_qty,0))
+			 , (ISNULL(ac.fg_lbr_cost_usd,0) / ISNULL(ac.matl_qty,0)) + (ISNULL(ac.fg_ovhd_cost_usd,0) / ISNULL(ac.matl_qty,0))
 			 
-		FROM ##ActualCost AS ac
+		FROM #DMActualCost AS ac
 			LEFT OUTER JOIN item AS i
 				ON ac.matl = i.item
 		WHERE [Level] = 1
