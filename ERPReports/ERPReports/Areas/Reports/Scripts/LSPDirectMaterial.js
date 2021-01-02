@@ -55,6 +55,7 @@
         LSPDM.drawDatatables();
 
         $(".ReportType").click(function () {
+            $("#btnPrint").prop("disabled", true);
             if ($('.ReportTypeG1:checked').length) {
                 //$("#StartDate,#EndDate").attr("required",true);
                 if ($("#StartDate").val() && $("#EndDate").val()) {
@@ -62,10 +63,15 @@
                 } else {
                     $("#btnPrint").prop("disabled", true);
                 }
-            } else if ($('.ReportTypeG2:checked').length) {
+            } 
+            if ($('.ReportTypeG2:checked').length) {
                 $("#btnPrint").prop("disabled", false);
-            } else {
-                $("#btnPrint").prop("disabled", true);
+            } 
+            if ($('.ReportTypeG3:checked').length) {
+                if ($('#Month').val())
+                    $("#btnPrint").prop("disabled", false);
+                else
+                    $("#btnPrint").prop("disabled", true);
             }
         });
         $("#StartDate,#EndDate").change(function () {
@@ -107,7 +113,7 @@
         });
         $("#btnPrint").click(function (e) {
             var checkedCount = $(".ReportType:checked").length;
-            var myInterval = setInterval(submitForm, 1000);
+            var myInterval = setInterval(submitForm, 1);
             var arrSubmittedURL = [];
             var intervalCounter = 0;
             function submitForm() {
@@ -126,6 +132,13 @@
                         }
                     }
                 })
+            }
+        });
+        $("#Month").change(function () {
+            if ($("#SlowMonitoringAnalysisReport").is(":checked") && $("#Month").val()) {
+                $("#btnPrint").prop("disabled", false);
+            }else{
+                $("#btnPrint").prop("disabled", true);
             }
         });
         $("#StartDate,#EndDate").prop("disabled", true);

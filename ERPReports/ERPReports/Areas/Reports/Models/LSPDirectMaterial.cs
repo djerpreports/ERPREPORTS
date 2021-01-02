@@ -18,4 +18,24 @@ namespace ERPReports.Areas.Reports.Models
         public decimal actl_lbr_cost { get; set; }
         public decimal std_lbr_cost { get; set; }
     }
+    public class SlowMonitoringAnalysisReport
+    {
+        public string item { get; set; }
+        public string description { get; set; }
+        public string product_code { get; set; }
+        public string Uf_location { get; set; }
+        public string matl_stat { get; set; }
+        public decimal QtyOnHand { get; set; }
+        public decimal TotalMatlCostPHP { get; set; }
+        public decimal TotalLandedCostPHP { get; set; }
+        public decimal TotalPIFGProcessCostPHP { get; set; }
+        public decimal TotalPIResinCostPHP { get; set; }
+        public decimal TotalPIHiddenPHP { get; set; }
+        public decimal TotalSFLbrCostPHP { get; set; }
+        public decimal TotalCostPHP { get; set; }
+        public decimal LatestPODate { get; set; }
+        public decimal LatestIssueDate { get; set; }
+        public string ItemRemarks { get; set; }
+
+    }
 }

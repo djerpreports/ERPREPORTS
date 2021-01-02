@@ -64,7 +64,7 @@
                             <div class="col-sm-6">
                                 <div class="input-group input-group-sm m-b-5">
                                     <div class="input-group-prepend">
-                                        <label class="input-group-text" style="width:120px;" for="Start Date"> Start Date </label>
+                                        <label class="input-group-text" style="width:120px;" for="Start Date"> Start Date <span class="text-danger">*</span></label>
                                     </div>
                                     <input type="text" id="StartDate" name="StartDate" class="form-control input" placeholder="Start Date" autocomplete="off">
                                 </div>
@@ -73,7 +73,7 @@
                             <div class="col-sm-6">
                                 <div class="input-group input-group-sm m-b-5">
                                     <div class="input-group-prepend">
-                                        <label class="input-group-text" style="width:120px;" for="EndDate"> End Date </label>
+                                        <label class="input-group-text" style="width:120px;" for="EndDate"> End Date <span class="text-danger">*</span></label>
                                     </div>
                                     <input type="text" id="EndDate" name="EndDate" class="form-control input" placeholder="End Date" autocomplete="off">
                                 </div>
@@ -103,6 +103,28 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <div class="checkbox checkbox-css">
+                                    <input type="checkbox" data-url="/Reports/LSPDirectMaterial/SlowMonitoringAnalysisReport" class="ReportType ReportTypeG3" id="SlowMonitoringAnalysisReport" name="SlowMonitoringAnalysisReport" value="Slow Monitoring Analysis Report">
+                                    <label for="SlowMonitoringAnalysisReport">Slow Monitoring Analysis Report</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="input-group input-group-sm m-b-5">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" style="width:105px;">Month <span class="text-danger">*</span></span>
+                                    </div>
+                                    <select id="Month" name="Month" class="form-control form-control-sm ReportTypeG3">
+                                        <option value="">--Please Select--</option>
+                                        <option value="12">12</option>
+                                        <option value="24">24</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset class="m-b-10">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="checkbox checkbox-css">
                                     <input type="checkbox" data-url="/Reports/LSPDirectMaterial/GenerateInventoryTurnoverReport" class="ReportType ReportTypeG2" id="InventoryTurnoverReport" name="InventoryTurnoverReport" value="Inventory Turnover Report">
                                     <label for="InventoryTurnoverReport">Inventory Turnover Report</label>
                                 </div>
@@ -111,6 +133,16 @@
                                 <div class="checkbox checkbox-css">
                                     <input type="checkbox" data-url="/Reports/LSPDirectMaterial/GenerateShowDetailedTransaction" class="ReportType ReportTypeG2" id="ShowDetailedTransaction" name="ShowDetailedTransaction" value="Show Detailed Transaction">
                                     <label for="ShowDetailedTransaction">Show Detailed Transactions</label>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset class="m-b-10">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="checkbox checkbox-css">
+                                    <input type="checkbox" data-url="/Reports/LSPDirectMaterial/GenerateWIPShopFloorReport" class="ReportType ReportTypeG2" id="WIPShopFloorReport" name="WIPShopFloorReport" value="Inventory Turnover Report">
+                                    <label for="WIPShopFloorReport">WIP Shop Floor Report</label>
                                 </div>
                             </div>
                         </div>
