@@ -1,10 +1,10 @@
 --LSP_DM_StdCost_GetCurrentMatlCostingSp 'FG-DK-100D'
 
---ALTER PROCEDURE LSP_DM_StdCost_GetCurrentMatlCostingSp (
-DECLARE
-	@Item				ItemType = 'FG-3RS2024'
-  , @TransDate			DateType = '05/29/2020'
---) AS 
+ALTER PROCEDURE LSP_DM_StdCost_GetCurrentMatlCostingSp (
+--DECLARE
+	@Item				ItemType --= 'FG-3RS2024'
+  , @TransDate			DateType --= '05/29/2020'
+) AS 
 BEGIN
 
 	IF OBJECT_ID('tempdb..#itemMatl') IS NOT NULL
@@ -13,8 +13,8 @@ BEGIN
 		DROP TABLE #subMatl
 	IF OBJECT_ID('tempdb..#SFMatl') IS NOT NULL
 		DROP TABLE #SFMatl
-	IF OBJECT_ID('tempdb..##BOMCost') IS NOT NULL
-		DROP TABLE ##BOMCost
+	IF OBJECT_ID('tempdb..#BOMCost') IS NOT NULL
+		DROP TABLE #BOMCost
 		
 	CREATE TABLE #itemMatl (
 		item				NVARCHAR(60)
@@ -257,7 +257,7 @@ BEGIN
 	FROM #itemMatl
 	
 	SELECT * 
-	INTO ##BOMCost
+	INTO #BOMCost
 	FROM #itemMatl
 	WHERE [Level] = @LevelCtr
 	
@@ -287,11 +287,11 @@ BEGIN
 			, SUM(matl_qty * sf_ovhd_cost)  AS child_sf_ovhd
 			, SUM(matl_qty * fg_labr_cost)  AS child_fg_lbr
 			, SUM(matl_qty * fg_ovhd_cost)  AS child_fg_ovhd
-		FROM ##BOMCost
+		FROM #BOMCost
 		WHERE [Level] = @LevelCtr
 		GROUP BY Parent, REVERSE(SUBSTRING(REVERSE(subsequence), CHARINDEX('.', REVERSE(subsequence))+1, 100)))
 		
-		INSERT INTO ##BOMCost
+		INSERT INTO #BOMCost
 		SELECT m.item
 			 , m.[Level]
 			 , m.Parent
@@ -324,19 +324,19 @@ BEGIN
 		
 	END
 		UPDATE B
-		SET matl_unit_cost = matl_unit_cost + (SELECT SUM(B2.matl_qty * B2.matl_unit_cost) FROM ##BOMCost B2 WHERE B2.[Level] = 1)
-		  , pi_process_cost = pi_process_cost + (SELECT SUM(B2.matl_qty * B2.pi_process_cost) FROM ##BOMCost B2 WHERE B2.[Level] = 1)
-		  , pi_resin_cost = pi_resin_cost + (SELECT SUM(B2.matl_qty * B2.pi_resin_cost) FROM ##BOMCost B2 WHERE B2.[Level] = 1)
-		  , pi_hidden_profit = pi_hidden_profit + (SELECT SUM(B2.matl_qty * B2.pi_hidden_profit) FROM ##BOMCost B2 WHERE B2.[Level] = 1)
-		  , sf_labr_cost = sf_labr_cost + (SELECT SUM(B2.matl_qty * B2.sf_labr_cost) FROM ##BOMCost B2 WHERE B2.[Level] = 1)
-		  , sf_ovhd_cost = sf_ovhd_cost + (SELECT SUM(B2.matl_qty * B2.sf_ovhd_cost) FROM ##BOMCost B2 WHERE B2.[Level] = 1)
-		  , fg_labr_cost = fg_labr_cost + (SELECT SUM(B2.matl_qty * B2.fg_labr_cost) FROM ##BOMCost B2 WHERE B2.[Level] = 1)
-		  , fg_ovhd_cost = fg_ovhd_cost + (SELECT SUM(B2.matl_qty * B2.fg_ovhd_cost) FROM ##BOMCost B2 WHERE B2.[Level] = 1)
-		FROM ##BOMCost AS B
+		SET matl_unit_cost = matl_unit_cost + (SELECT SUM(B2.matl_qty * B2.matl_unit_cost) FROM #BOMCost B2 WHERE B2.[Level] = 1)
+		  , pi_process_cost = pi_process_cost + (SELECT SUM(B2.matl_qty * B2.pi_process_cost) FROM #BOMCost B2 WHERE B2.[Level] = 1)
+		  , pi_resin_cost = pi_resin_cost + (SELECT SUM(B2.matl_qty * B2.pi_resin_cost) FROM #BOMCost B2 WHERE B2.[Level] = 1)
+		  , pi_hidden_profit = pi_hidden_profit + (SELECT SUM(B2.matl_qty * B2.pi_hidden_profit) FROM #BOMCost B2 WHERE B2.[Level] = 1)
+		  , sf_labr_cost = sf_labr_cost + (SELECT SUM(B2.matl_qty * B2.sf_labr_cost) FROM #BOMCost B2 WHERE B2.[Level] = 1)
+		  , sf_ovhd_cost = sf_ovhd_cost + (SELECT SUM(B2.matl_qty * B2.sf_ovhd_cost) FROM #BOMCost B2 WHERE B2.[Level] = 1)
+		  , fg_labr_cost = fg_labr_cost + (SELECT SUM(B2.matl_qty * B2.fg_labr_cost) FROM #BOMCost B2 WHERE B2.[Level] = 1)
+		  , fg_ovhd_cost = fg_ovhd_cost + (SELECT SUM(B2.matl_qty * B2.fg_ovhd_cost) FROM #BOMCost B2 WHERE B2.[Level] = 1)
+		FROM #BOMCost AS B
 		WHERE b.[Level] = 0 AND Parent = 0
 		
 		SELECT *
-		FROM ##BOMCost
+		FROM #BOMCost
 		ORDER BY subsequence, sequence, [Level]
 
 	--SELECT @Item
@@ -350,7 +350,7 @@ BEGIN
 	--	, SUM(matl_qty * fg_labr_cost)  AS fg_lbr
 	--	, SUM(matl_qty * fg_ovhd_cost)  AS fg_ovhd
 
-	--FROM ##BOMCost
+	--FROM #BOMCost
 	--WHERE [Level] = 1	
 	
 

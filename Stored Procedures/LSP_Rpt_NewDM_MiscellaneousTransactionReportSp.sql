@@ -1,15 +1,17 @@
 --EXEC dbo.LSP_Rpt_NewDM_MiscellaneousTransactionReportSp '05/01/2020', '05/31/2020'
 
-CREATE PROCEDURE LSP_Rpt_NewDM_MiscellaneousTransactionReportSp (
+ALTER PROCEDURE LSP_Rpt_NewDM_MiscellaneousTransactionReportSp (
 --DECLARE
 	@StartDate					DateType	--= '05/01/2020'
   , @EndDate					DateType	--= '05/31/2020'
 ) AS
 BEGIN
 
+	IF OBJECT_ID('tempdb..#DMActualCost') IS NOT NULL
+		DROP TABLE #DMActualCost
 	IF OBJECT_ID('tempdb..#MiscTransReport') IS NOT NULL
 		DROP TABLE #MiscTransReport
-
+	
 	DECLARE
 		@TransDate				DATETIME
 	  , @TransType				NVARCHAR(2)
@@ -53,6 +55,40 @@ BEGIN
 	  , @ItemPricingCost		DECIMAL(18,8)
 	  , @CurrCode				NVARCHAR(10)
 	  , @ExchRate				ExchRateType
+
+	CREATE TABLE #DMActualCost (
+		item						NVARCHAR(60)
+	  , [Level]						INT
+	  , Parent						NVARCHAR(20)
+	  , oper_num					INT
+	  , sequence					INT
+	  , subsequence					NVARCHAR(50)
+	  , matl						NVARCHAR(60)
+	  , matl_qty					DECIMAL(18,8)
+	  , lot_no						NVARCHAR(50)
+	  , trans_date					DATETIME
+	  , job_qty						BIGINT
+	  , matl_unit_cost_usd			DECIMAL(18,8)
+	  , matl_landed_cost_usd		DECIMAL(18,8)
+	  , pi_fg_process_usd			DECIMAL(18,8)
+	  , pi_resin_usd				DECIMAL(18,8)
+	  , pi_vend_cost_usd			DECIMAL(18,8)
+	  , pi_hidden_profit_usd		DECIMAL(18,8)
+	  , sf_lbr_cost_usd				DECIMAL(18,8)
+	  , sf_ovhd_cost_usd			DECIMAL(18,8)
+	  , fg_lbr_cost_usd				DECIMAL(18,8)
+	  , fg_ovhd_cost_usd			DECIMAL(18,8)
+	  , matl_unit_cost_php			DECIMAL(18,8)
+	  , matl_landed_cost_php		DECIMAL(18,8)
+	  , pi_fg_process_php			DECIMAL(18,8)
+	  , pi_resin_php				DECIMAL(18,8)
+	  , pi_vend_cost_php			DECIMAL(18,8)
+	  , pi_hidden_profit_php		DECIMAL(18,8)
+	  , sf_lbr_cost_php				DECIMAL(18,8)
+	  , sf_ovhd_cost_php			DECIMAL(18,8)
+	  , fg_lbr_cost_php				DECIMAL(18,8)
+	  , fg_ovhd_cost_php			DECIMAL(18,8)
+	)
 
 	CREATE TABLE #MiscTransReport (
 		TransDate				DATETIME
@@ -258,6 +294,9 @@ BEGIN
 			IF EXISTS(SELECT * FROM job WHERE job = @JobOrLot AND item = @Item)
 			BEGIN
 				
+				TRUNCATE TABLE #DMActualCost
+				
+				INSERT INTO #DMActualCost
 				EXEC dbo.LSP_DM_ActlCost_GetJobMatlTransCostingSp @JobOrLot, 0, @Item, @TransDate, @TransQty
 						
 				INSERT INTO #MiscTransReport
@@ -285,7 +324,7 @@ BEGIN
 					 , (sf_lbr_cost_php + sf_ovhd_cost_php) / job_qty
 					 , (fg_lbr_cost_php + fg_ovhd_cost_php) / job_qty
 					 
-				FROM ##ActualCost
+				FROM #DMActualCost
 				WHERE [Level] = 0
 				
 			END
@@ -336,7 +375,7 @@ BEGIN
 		END
 		ELSE
 		BEGIN
-		
+					
 			EXEC dbo.LSP_ActlCost_GetMatlCostingSp @Item, @JobOrLot, @TransDate
 					  , @JobQty OUTPUT
 					  , @matl_unit_cost_usd OUTPUT, @matl_landed_cost_usd OUTPUT
@@ -429,7 +468,7 @@ BEGIN
 		 , TransQty * (MatlCost_PHP + MatlLandedCost_PHP 
 						+ PIFGProcess_PHP + PIResin_PHP + PIHiddenProfit_PHP 
 						+ SFAddedCost_PHP + FGAddedCost_PHP)
-		   AS TotalCost_PHP	
+		   AS TotalCost_PHP
 	FROM #MiscTransReport
 	UNION ALL
 	SELECT @EndDate

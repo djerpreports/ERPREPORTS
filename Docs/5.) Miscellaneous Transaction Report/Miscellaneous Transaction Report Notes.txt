@@ -1,10 +1,32 @@
 Stored Procedure Name: LSP_Rpt_NewDM_MiscellaneousTransactionReportSp
 Parameters: @StartDate and @EndDate
 Returned Columns: 
+	    TransDate				DATETIME
+	  , TransType				NVARCHAR(2)
+	  , TransDesc				NVARCHAR(50)
+	  , JobOrLot				NVARCHAR(50)
+	  , Suffix				NVARCHAR(5)
+	  , Item				NVARCHAR(40)
+	  , ItemDesc				NVARCHAR(100)
+	  , QtyCompleted			DECIMAL(18,8)
+	  , QtyScrapped				DECIMAL(18,8)
+	  , OperNum				NVARCHAR(10)
+	  , Wc					NVARCHAR(50)
+	  , Employee				NVARCHAR(20)
+	  , MiscTransClass			NVARCHAR(5)
+	  , ReasonCode				NVARCHAR(20)
+	  , ReasonDesc				NVARCHAR(100)
+	  , TransQty				DECIMAL(18,8)
+	  , MatlCost_PHP			DECIMAL(18,8)
+	  , MatlLandedCost_PHP			DECIMAL(18,8)
+	  , PIFGProcess_PHP			DECIMAL(18,8)
+	  , PIResin_PHP				DECIMAL(18,8)
+	  , PIHiddenProfit_PHP			DECIMAL(18,8)
+	  , SFAddedCost_PHP			DECIMAL(18,8)	  
+	  , FGAddedCost_PHP			DECIMAL(18,8)
 
 
-
-Report Notes:
+Report Layout Notes:
 
 1. Summary Sheet:
    > Group by:
@@ -13,7 +35,7 @@ Report Notes:
      3. If ReasonDesc = "SF Scrap", Group again by [wc]
    > Order by: TransType, MiscTransClass, ReasonDesc
 
-2. TransType sheets (one or more sheets depends on result of grouping)
+2. TransType sheets (one or more sheets depends on result of grouping usually includes CycleCount, Miscellaneous Issues and Miscellaneous Receipts)
   > Group By: TransDesc
   > Order By: TransDate
 
