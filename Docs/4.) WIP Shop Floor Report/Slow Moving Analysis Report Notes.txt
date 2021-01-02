@@ -1,0 +1,24 @@
+Stored Procedure Name: LSP_Rpt_NewDM_WIPShopFloorReportSp
+Return Columns:
+	TransDate
+	  , Item
+	  , ItemDesc
+	  , JOReference
+	  , WIPQty
+	  , ItemLot
+	  , MatlUnit_PHP
+	  , LandedUnit_PHP
+	  , PIFGProcessUnit_PHP
+	  , PIResinUnit_PHP
+	  , PIHiddenUnit_PHP
+	  , SFAddedUnit_PHP
+	  , FGAddedUnit_PHP
+	  , MatlUnit_USD
+	  , LandedUnit_USD
+	  , PIFGProcessUnit_USD
+	  , PIResinUnit_USD
+	  , PIHiddenUnit_USD
+	  , SFAddedUnit_USD
+	  , FGAddedUnit_USD
+	  , TotalWIPCost_PHP
+	  , TotalWIPCost_USD

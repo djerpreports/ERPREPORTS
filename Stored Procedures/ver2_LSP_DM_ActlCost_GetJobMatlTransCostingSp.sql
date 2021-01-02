@@ -1,10 +1,17 @@
---CREATE PROCEDURE LSP_DM_ActlCost_GetJobMatlTransCostingSp (
+--LSP_DM_ActlCost_GetJobMatlTransCostingSp '20RF-00086',0,'SF-1F90019','06/17/2020',39
+
+--ALTER PROCEDURE LSP_DM_ActlCost_GetJobMatlTransCostingSp (
 DECLARE  
-	@Job					JobType		= '19-0002492'
+	@Job					JobType		= '20HS-00015'
   , @Suffix					SuffixType	= 0
-  , @Item					ItemType	= 'FG-MZ712-D24-156'
-  , @JobTransDate			DateType	= '01/18/2020'
-  , @QtyTrans				QtyUnitType	= 5200
+  , @Item					ItemType	= 'SF-PH017'
+  , @JobTransDate			DateType	= '2020-05-11 13:31:08.683'
+  , @QtyTrans				QtyUnitType	= -3351
+ 	--@Job					JobType		= '20-0000864'
+  --, @Suffix					SuffixType	= 0
+  --, @Item					ItemType	= 'FG-3RS2024'
+  --, @JobTransDate			DateType	= '05/29/2020'
+  --, @QtyTrans				QtyUnitType	= 10
  	--@Job					JobType		= '19-0002265'
   --, @Suffix					SuffixType	= 0
   --, @Item					ItemType	= 'FG-E21-211'
@@ -109,9 +116,9 @@ BEGIN
 		 , row_number() OVER (PARTITION BY j.item, m.ref_release ORDER BY m.ref_release ASC)
 		 , CAST(m.ref_release AS NVARCHAR(5)) + '_' + CAST((row_number() OVER (PARTITION BY j.item, m.ref_release ORDER BY m.ref_release ASC)) AS NVARCHAR(50)) AS subsequence
 		 , m.item
-		 , m.qty * -1
+		 , SUM(m.qty * -1)
 		 , m.lot
-		 , m.trans_date
+		 , MAX(m.trans_date)
 		 , NULL
 	FROM job AS j
 		JOIN matltran AS m
@@ -122,6 +129,9 @@ BEGIN
 	WHERE j.job = @job
 	  AND j.suffix = @Suffix
 	  AND j.item = @Item	
+	GROUP BY j.item, m.ref_release, m.item, m.lot
+	HAVING SUM(m.qty * -1) <> 0.00
+	
 	UNION ALL
 	SELECT @Item
 		 , 0
@@ -140,6 +150,27 @@ BEGIN
 	  AND j2.item = @item
 	ORDER BY m.ref_release
 	
+	SELECT j.item
+		 , @CurrLevel AS [Level]
+		 , CAST(0 AS NVARCHAR(20)) AS Parent
+		 , m.ref_release
+		 , row_number() OVER (PARTITION BY j.item, m.ref_release ORDER BY m.ref_release ASC)
+		 , CAST(m.ref_release AS NVARCHAR(5)) + '_' + CAST((row_number() OVER (PARTITION BY j.item, m.ref_release ORDER BY m.ref_release ASC)) AS NVARCHAR(50)) AS subsequence
+		 , m.item
+		 , SUM(m.qty * -1)
+		 , m.lot
+		 , MAX(m.trans_date)
+		 , NULL
+	FROM job AS j
+		JOIN matltran AS m
+			ON j.job = m.ref_num
+			  AND j.suffix = m.ref_line_suf
+			  AND m.ref_type = 'J'
+			  AND m.trans_type IN ('I', 'W')
+	WHERE j.job = @job
+	  AND j.suffix = @Suffix
+	  AND j.item = @Item
+	GROUP BY j.item, m.ref_release, m.item, m.lot	
 	--SELECT * FROM job WHERE job = @Job AND suffix = @Suffix AND item = @item
 	
 	SELECT item
@@ -379,7 +410,8 @@ BEGIN
 				  , @pi_fg_process_php OUTPUT, @pi_resin_php OUTPUT, @pi_vend_cost_php OUTPUT, @pi_hidden_profit_php OUTPUT
 				  , @sf_lbr_cost_php OUTPUT, @sf_ovhd_cost_php OUTPUT
 				  , @fg_lbr_cost_php OUTPUT, @fg_ovhd_cost_php OUTPUT
-					
+		
+		
 		UPDATE #itemMatl
 		SET job_qty = ISNULL(@JobQty, 0)
 		  , matl_unit_cost_usd = ISNULL(@matl_unit_cost_usd, 0) * matl_qty
@@ -542,6 +574,7 @@ BEGIN
 		 A.* 
 	FROM ##ActualCost AS A
 		LEFT OUTER JOIN #itemMatl AS m ON a.item = m.item AND A.[Level] = m.[Level] AND A.matl = m.matl AND A.subsequence = m.subsequence
+	--WHERE a.Level = 1 --AND a.matl = 'SF-MMU003'
 	ORDER BY subsequence, sequence, [Level]
 	--****/
 

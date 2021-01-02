@@ -180,24 +180,27 @@ BEGIN
 			ORDER BY effective_date DESC  
 			  
 			SELECT @LaborCost = (SUM(js.run_lbr_hrs) * 60 * @LaborRate)
+			--FROM jrt_sch AS js
+			--WHERE js.job = @matl_lot
+			--  AND js.suffix = 0
 			FROM item AS i 
 				JOIN jrt_sch AS js
 					ON i.job = js.job  
 					  AND i.suffix = js.suffix
-			WHERE i.item = @matl_item 
+			WHERE i.item = @matl_item			  
 			         
 			SET @OverhdCost = @LaborCost * @OvhdRate
 			
-			SELECT @fg_lbr_cost_usd = @LaborCost
-				 , @fg_ovhd_cost_usd = @OverhdCost
+			SELECT @fg_lbr_cost_php = @LaborCost
+				 , @fg_ovhd_cost_php = @OverhdCost
 			
 			SELECT @jobQty = qty_released
 			FROM job
 			WHERE job = @matl_lot
 			  AND suffix = 0
 			
-			EXEC dbo.LSP_CurrencyConversionModSp @matlTransDate, 'USD', 'PHP', @fg_lbr_cost_usd, @fg_lbr_cost_php OUTPUT, @ExchRate OUTPUT
-			EXEC dbo.LSP_CurrencyConversionModSp @matlTransDate, 'USD', 'PHP', @fg_ovhd_cost_usd, @fg_ovhd_cost_php OUTPUT, @ExchRate OUTPUT	
+			EXEC dbo.LSP_CurrencyConversionModSp @matlTransDate, 'PHP', 'USD', @fg_lbr_cost_php, @fg_lbr_cost_usd OUTPUT, @ExchRate OUTPUT
+			EXEC dbo.LSP_CurrencyConversionModSp @matlTransDate, 'PHP', 'USD', @fg_ovhd_cost_php, @fg_ovhd_cost_usd OUTPUT, @ExchRate OUTPUT	
 			
 	
 		END
@@ -240,6 +243,8 @@ BEGIN
 			ORDER BY effective_date DESC  
 			  
 			SELECT @LaborCost = (SUM(js.run_lbr_hrs) * 60 * @LaborRate)
+			--FROM jrt_sch AS js
+			--WHERE js.job = @matl_lot
 			FROM item AS i 
 				JOIN jrt_sch AS js
 					ON i.job = js.job  
@@ -248,16 +253,16 @@ BEGIN
 			         
 			SET @OverhdCost = @LaborCost * @OvhdRate
 			
-			SELECT @sf_lbr_cost_usd = @LaborCost
-				 , @sf_ovhd_cost_usd = @OverhdCost
+			SELECT @sf_lbr_cost_php = @LaborCost
+				 , @sf_ovhd_cost_php = @OverhdCost
 			
 			SELECT @jobQty = qty_released
 			FROM job
 			WHERE job = @matl_lot
 			  AND suffix = 0
 			
-			EXEC dbo.LSP_CurrencyConversionModSp @matlTransDate, 'USD', 'PHP', @sf_lbr_cost_usd, @sf_lbr_cost_php OUTPUT, @ExchRate OUTPUT
-			EXEC dbo.LSP_CurrencyConversionModSp @matlTransDate, 'USD', 'PHP', @sf_ovhd_cost_usd, @sf_ovhd_cost_php OUTPUT, @ExchRate OUTPUT			
+			EXEC dbo.LSP_CurrencyConversionModSp @matlTransDate, 'PHP', 'USD', @sf_lbr_cost_php, @sf_lbr_cost_usd OUTPUT, @ExchRate OUTPUT
+			EXEC dbo.LSP_CurrencyConversionModSp @matlTransDate, 'PHP', 'USD', @sf_ovhd_cost_php, @sf_ovhd_cost_usd OUTPUT, @ExchRate OUTPUT			
 	
 		END		
 		ELSE IF EXISTS(SELECT * FROM matltran WHERE lot = @matl_lot AND trans_type = 'H' AND item = @matl_item)
