@@ -1,10 +1,10 @@
 --LSP_DM_StdCost_GetCurrentMatlCostingSp 'FG-DK-100D'
 
-ALTER PROCEDURE LSP_DM_StdCost_GetCurrentMatlCostingSp (
---DECLARE
-	@Item				ItemType --= 'FG-3RS2024'
-  , @TransDate			DateType --= '05/29/2020'
-) AS 
+--ALTER PROCEDURE LSP_DM_StdCost_GetCurrentMatlCostingSp (
+DECLARE
+	@Item				ItemType = 'FG-SR4-017'
+  , @TransDate			DateType = '05/29/2020'
+--) AS 
 BEGIN
 
 	IF OBJECT_ID('tempdb..#itemMatl') IS NOT NULL

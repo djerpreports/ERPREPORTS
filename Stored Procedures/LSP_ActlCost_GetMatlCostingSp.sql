@@ -1,8 +1,29 @@
 ALTER PROCEDURE LSP_ActlCost_GetMatlCostingSp (
 --DECLARE
-	@matl_item					ItemType		--= 'SF-3DK3002'
-  , @matl_lot					LotType			--= '19RF-00070'
-  , @matlTransDate				DateType		--= '2020-02-13 10:44:25.000'
+	@matl_item					ItemType		--= 'PI-FG-MDK3002'
+  , @matl_lot					LotType			--= '180829-18-0172'
+  , @matlTransDate				DateType		--= '2019-03-06 15:30:24.000'
+/*  , @JobQty						BIGINT			
+    , @matl_unit_cost_usd         AmountType = 0
+  , @matl_landed_cost_usd         AmountType = 0
+  , @pi_fg_process_usd          AmountType = 0
+  , @pi_resin_usd         AmountType = 0
+  , @pi_vend_cost_usd         AmountType = 0
+  , @pi_hidden_profit_usd         AmountType = 0
+  , @sf_lbr_cost_usd          AmountType = 0
+  , @sf_ovhd_cost_usd         AmountType = 0
+  , @fg_lbr_cost_usd          AmountType = 0
+  , @fg_ovhd_cost_usd         AmountType = 0
+  , @matl_unit_cost_php         AmountType = 0
+  , @matl_landed_cost_php         AmountType = 0
+  , @pi_fg_process_php          AmountType = 0
+  , @pi_resin_php         AmountType = 0
+  , @pi_vend_cost_php         AmountType = 0
+  , @pi_hidden_profit_php         AmountType = 0
+  , @sf_lbr_cost_php          AmountType = 0
+  , @sf_ovhd_cost_php         AmountType = 0
+  , @fg_lbr_cost_php          AmountType = 0
+  , @fg_ovhd_cost_php         AmountType = 0*/
   , @JobQty						BIGINT			
 										OUTPUT
   , @matl_unit_cost_usd     AmountType --= 0
@@ -58,6 +79,9 @@ BEGIN
 	  , @OvhdRate		CostPrcType  
 	  , @LaborCost		AmountType  
 	  , @OverhdCost		AmountType 
+	  
+	  , @MatlRcptDate			DateType
+	  , @MatlMiscRcptDate		DateType
 	
 	SET @JobQty = 1
 	
@@ -82,6 +106,20 @@ BEGIN
 				ON iv.vend_num = v.vend_num
 		WHERE iv.item = @matl_item
 		
+		SELECT @MatlRcptDate = MAX(trans_date)
+		FROM matltran
+		WHERE item = @matl_item
+		  AND lot = @matl_lot
+		  AND trans_type = 'R'
+		
+		SELECT @MatlMiscRcptDate = MAX(trans_date)
+		FROM matltran
+		WHERE item = @matl_item
+		  AND lot = @matl_lot
+		  AND trans_type = 'H'
+		  
+		--SELECT @MatlRcptDate, @MatlMiscRcptDate, @matlTransDate,		
+		SET @matlTransDate = COALESCE(@MatlRcptDate, @MatlMiscRcptDate, @matlTransDate)
 		
 			EXEC dbo.LSP_CurrencyConversionModSp @matlTransDate, @CurrCode, 'USD', @pi_fg_process, @pi_fg_process_usd OUTPUT, @ExchRate OUTPUT
 			EXEC dbo.LSP_CurrencyConversionModSp @matlTransDate, @CurrCode, 'USD', @pi_resin, @pi_resin_usd OUTPUT, @ExchRate OUTPUT			
@@ -92,7 +130,7 @@ BEGIN
 		FROM matltran AS m
 		WHERE m.trans_type = 'R'
 		  AND m.lot = @matl_lot
-		  AND m.item = @matl_item			
+		  AND m.item = @matl_item
 		
 		EXEC dbo.LSP_CurrencyConversionModSp @matlTransDate, 'PHP', 'USD', @pi_vend_cost_php, @pi_vend_cost_usd OUTPUT, @ExchRate OUTPUT			
 		

@@ -361,7 +361,7 @@ BEGIN
 					 , @ReasonCode
 					 , @ReasonDesc
 					 , @TransQty
-					 , @matl_unit_cost_php
+					 , ISNULL(@matl_unit_cost_php, 0)
 					 , 0
 					 , 0
 					 , 0

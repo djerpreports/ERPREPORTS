@@ -1,0 +1,115 @@
+SHEET NAME: FINISHED GOODS
+
+Stored Procedure Name: LSP_Rpt_NewDM_FinishedGoodsReportSp
+Parameters: @StartDate and @EndDate
+Returned Columns: 
+	    TransDate				DateType
+	  , PONum					NVARCHAR(20)
+	  , JobOrder				JobType
+	  , JobSuffix				SuffixType
+	  , Item					ItemType
+	  , ItemDesc				DescriptionType
+	  , ProductCode				ProductCodeType
+	  , Family					FamilyCodeType
+	  , FamilyDesc				DescriptionType
+	  , CONum					CoNumType
+	  , CustNum					CustNumType
+	  , ShipToCust				CustSeqType
+	  , CustomerName			NameType
+	  , FGTransType				NVARCHAR(25)
+	  , QtyCompleted			QtyUnitType
+	  , StdMatlCost_PHP		AmountType
+	  , StdLandedCost_PHP		AmountType
+	  , StdResinCost_PHP		AmountType
+	  , StdPIProcess_PHP		AmountType
+	  , StdHiddenProfit_PHP		AmountType	  
+	  , StdSFAdded_PHP			AmountType
+	  , StdFGAdded_PHP			AmountType	  
+	  , StdUnitCost_PHP			AmountType
+	  , ActlMatlUnitCost_PHP	AmountType
+	  , ActlLandedCost_PHP		AmountType
+	  , ActlResinCost_PHP		AmountType
+	  , ActlPIProcess_PHP		AmountType
+	  , ActlHiddenProfit_PHP	AmountType	  
+	  , ActlSFAdded_PHP			AmountType
+	  , ActlFGAdded_PHP			AmountType	 
+	  , ActlUnitCost_PHP		AmountType 
+
+Report Layout Notes:
+
+1. Detail: Group by "FGTransType" OrderBy TransDate.
+  * FGTransType = "FINISHED GOODS" group, no Header. Other FGTransType = with Header
+  * FG TOTAL after the last group (Grand Total)
+
+2. Summary Per "Family" with Grand Total
+3. Summary Per Product Code" with Grand Total.
+   *Remove the prefix "FG-" in ProductCode value
+
+
+SHEET NAME: Sales, SampleJO
+Stored Procedure Name: LSP_Rpt_NewDM_FinishedGoodsReportSp
+Parameters: @StartDate and @EndDate
+Returned Columns: 
+	    TransDate				DateType  
+	  , Item					ItemType  
+	  , ItemDesc				DescriptionType  
+	  , ProductCode				ProductCodeType  
+	  , Family					FamilyCodeType  
+	  , FamilyDesc				DescriptionType  
+	  , PONum					NVARCHAR(20)
+	  , LotNo					LotType
+	  , JobOrder				JobType  
+	  , JobSuffix				SuffixType  
+	  , CONum					CoNumType
+	  , COLine					CoLineType  
+	  , CustNum					CustNumType
+	  , ShipToCust				CustSeqType  
+	  , CustomerName			NameType  
+	  , QtyShipped				QtyUnitType  
+	  , SalesPrice				AmountType  
+	  , SalesPriceConv			AmountType  	  
+	  , StdMatlCost_PHP			AmountType
+	  , StdLandedCost_PHP		AmountType
+	  , StdResinCost_PHP		AmountType
+	  , StdPIProcess_PHP		AmountType
+	  , StdHiddenProfit_PHP		AmountType	  
+	  , StdSFAdded_PHP			AmountType
+	  , StdFGAdded_PHP			AmountType	  
+	  , StdUnitCost_PHP			AmountType
+	  , ActlMatlUnitCost_PHP	AmountType
+	  , ActlLandedCost_PHP		AmountType
+	  , ActlResinCost_PHP		AmountType
+	  , ActlPIProcess_PHP		AmountType
+	  , ActlHiddenProfit_PHP	AmountType	  
+	  , ActlSFAdded_PHP			AmountType
+	  , ActlFGAdded_PHP			AmountType	 
+	  , ActlUnitCost_PHP		AmountType 
+	  , ShipCategory			NVARCHAR(10)  
+	  , Recoverable				INT
+	  , JobRemarks				NVARCHAR(200)
+
+Report Layout Notes:
+MAIN GROUPING: Group by "ShipCategory" OrderBy ShipCategory then by TransDate. (One Sheet per group, sheet name is the ShipCategory value)
+1. Detail: Show Total
+2. Summary Per "Family" with Grand Total
+3. Summary Per Product Code" with Grand Total.
+   *Remove the prefix "FG-" in ProductCode value
+
+
+SHEET NAME: SalesSummary
+Stored Procedure Name: LSP_Rpt_SalesSummaryReportSp
+Parameters: @Year = Year of StartDate, @Start_Month = month of StartDate, @End_Month = month of End Date
+Returned Columns
+    inv_date  DateType  
+  , inv_num   NVARCHAR(6)  
+  , ship_to_cust NameType  
+  , inv_desc  DescriptionType  
+  , amount   AmountType  
+  , amount_php  AmountType  
+  , exch_rate  ExchRateType  
+  , eng_design  AmountType  
+  , price   AmountType  
+
+Report Layout Notes:
+ > Order by inv_date
+ > TOTAL, GRAND TOTAL, SALES = see excel file

@@ -1,12 +1,12 @@
 --LSP_DM_ActlCost_GetJobMatlTransCostingSp '19CL-00191',0,'SF-L4336','2020-01-04 06:03:13.000',60
 
-ALTER PROCEDURE LSP_DM_ActlCost_GetJobMatlTransCostingSp (
---DECLARE  
-	@Job					JobType		--= '19CL-00191'
-  , @Suffix					SuffixType	--= 0
-  , @Item					ItemType	--= 'SF-L4336'
-  , @JobTransDate			DateType	--= '01/14/2020'
-  , @QtyTrans				QtyUnitType	--= 100
+--ALTER PROCEDURE LSP_DM_ActlCost_GetJobMatlTransCostingSp (
+DECLARE  
+	@Job					JobType		= '19-0002507'
+  , @Suffix					SuffixType	= 0
+  , @Item					ItemType	= 'FG-DK-100D'
+  , @JobTransDate			DateType	= '05/14/2020'
+  , @QtyTrans				QtyUnitType	= 200
  	--@Job					JobType		= '20-0000864'
   --, @Suffix					SuffixType	= 0
   --, @Item					ItemType	= 'FG-3RS2024'
@@ -15,7 +15,7 @@ ALTER PROCEDURE LSP_DM_ActlCost_GetJobMatlTransCostingSp (
  	--@Job					JobType		= '19-0002265'
   --, @Suffix					SuffixType	= 0
   --, @Item					ItemType	= 'FG-E21-211'
-) AS
+--) AS
 BEGIN
 
 	IF OBJECT_ID('tempdb..#itemMatl') IS NOT NULL
