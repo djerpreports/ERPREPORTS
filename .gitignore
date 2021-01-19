@@ -3126,3 +3126,8 @@ ERPReports/ERPReports/obj/Release/Package/PackageTmp/Areas/Reports/Templates/LSP
 ERPReports/ERPReports/obj/Release/Package/PackageTmp/Areas/Reports/Templates/LSP_Rpt_DM_WIPShopFloorReport.xlsx
 ERPReports/ERPReports/Properties/PublishProfiles/ERPReports.pubxml
 ERPReports/ERPReports/Properties/PublishProfiles/ERPReports.pubxml.user
+ERPReports/ERPReports/bin/ERPReports.dll
+ERPReports/ERPReports/bin/ERPReports.pdb
+ERPReports/ERPReports/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+ERPReports/ERPReports/Properties/PublishProfiles/ERPReports.pubxml
+ERPReports/ERPReports/Properties/PublishProfiles/ERPReports.pubxml.user
