@@ -3119,3 +3119,10 @@ ERPReports/ERPReports/ERPReports.csproj.user
 ERPReports/ERPReports/ERPReports.csproj
 ERPReports/ERPReports/bin/ERPReports.pdb
 ERPReports/ERPReports/bin/ERPReports.dll
+ERPReports/ERPReports/bin/ERPReports.dll
+ERPReports/ERPReports/bin/ERPReports.pdb
+ERPReports/ERPReports/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+ERPReports/ERPReports/obj/Release/Package/PackageTmp/Areas/Reports/Templates/LSP_Rpt_DM_SlowMovingAnalysisReport.xlsx
+ERPReports/ERPReports/obj/Release/Package/PackageTmp/Areas/Reports/Templates/LSP_Rpt_DM_WIPShopFloorReport.xlsx
+ERPReports/ERPReports/Properties/PublishProfiles/ERPReports.pubxml
+ERPReports/ERPReports/Properties/PublishProfiles/ERPReports.pubxml.user
