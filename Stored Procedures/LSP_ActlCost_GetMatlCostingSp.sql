@@ -1,9 +1,9 @@
 ALTER PROCEDURE LSP_ActlCost_GetMatlCostingSp (
 --DECLARE
-	@matl_item					ItemType		--= 'PI-FG-MDK3002'
-  , @matl_lot					LotType			--= '180829-18-0172'
-  , @matlTransDate				DateType		--= '2019-03-06 15:30:24.000'
-/*  , @JobQty						BIGINT			
+	@matl_item					ItemType		--= 'SF-3LB1001'
+  , @matl_lot					LotType			--= '0stock'
+  , @matlTransDate				DateType		--= '2020-01-01'
+  /*, @JobQty						BIGINT			
     , @matl_unit_cost_usd         AmountType = 0
   , @matl_landed_cost_usd         AmountType = 0
   , @pi_fg_process_usd          AmountType = 0
@@ -236,16 +236,31 @@ BEGIN
 			FROM job
 			WHERE job = @matl_lot
 			  AND suffix = 0
+			  
+			SELECT @MatlRcptDate = MAX(trans_date)
+			FROM matltran
+			WHERE item = @matl_item
+			  AND lot = @matl_lot
+			  AND trans_type = 'F'
+			
+			SELECT @MatlMiscRcptDate = MAX(trans_date)
+			FROM matltran
+			WHERE item = @matl_item
+			  AND lot = @matl_lot
+			  AND trans_type IN ('H', 'B', 'P')
+			  AND trans_date <= @matlTransDate
+			
+			SET @matlTransDate = COALESCE(@MatlRcptDate, @MatlMiscRcptDate, @matlTransDate)
 			
 			EXEC dbo.LSP_CurrencyConversionModSp @matlTransDate, 'PHP', 'USD', @fg_lbr_cost_php, @fg_lbr_cost_usd OUTPUT, @ExchRate OUTPUT
-			EXEC dbo.LSP_CurrencyConversionModSp @matlTransDate, 'PHP', 'USD', @fg_ovhd_cost_php, @fg_ovhd_cost_usd OUTPUT, @ExchRate OUTPUT	
-			
+			EXEC dbo.LSP_CurrencyConversionModSp @matlTransDate, 'PHP', 'USD', @fg_ovhd_cost_php, @fg_ovhd_cost_usd OUTPUT, @ExchRate OUTPUT
 	
 		END
 		ELSE IF EXISTS(SELECT * FROM matltran WHERE lot = @matl_lot AND trans_type = 'R' AND item = @matl_item)
 		BEGIN			
 		
 			SELECT @matl_unit_cost_php = matl_cost
+				 , @matlTransDate = trans_date
 			FROM matltran 
 			WHERE lot = @matl_lot 
 			  AND trans_type = 'R' 
@@ -256,6 +271,16 @@ BEGIN
 		END
 		ELSE
 		BEGIN
+		
+			SELECT @MatlMiscRcptDate = MAX(trans_date)
+			FROM matltran
+			WHERE item = @matl_item
+			  AND lot = @matl_lot
+			  AND trans_type IN ('H', 'B', 'P')
+			  AND trans_date <= @matlTransDate
+			
+			SET @matlTransDate = COALESCE(@MatlMiscRcptDate, @matlTransDate)
+		
 			SELECT TOP(1) @matl_unit_cost_usd = (unit_price1 / 1.2)
 			FROM itemprice
 			WHERE item = @matl_item
@@ -299,6 +324,22 @@ BEGIN
 			WHERE job = @matl_lot
 			  AND suffix = 0
 			
+			SELECT @MatlRcptDate = MAX(trans_date)
+			FROM matltran
+			WHERE item = @matl_item
+			  AND lot = @matl_lot
+			  AND trans_type = 'F'
+			
+			SELECT @MatlMiscRcptDate = MAX(trans_date)
+			FROM matltran
+			WHERE item = @matl_item
+			  AND lot = @matl_lot
+			  AND trans_type IN ('H', 'B', 'P')
+			  AND trans_date <= @matlTransDate
+			  
+			--SELECT @MatlRcptDate, @MatlMiscRcptDate, @matlTransDate,		
+			SET @matlTransDate = COALESCE(@MatlRcptDate, @MatlMiscRcptDate, @matlTransDate)
+			
 			EXEC dbo.LSP_CurrencyConversionModSp @matlTransDate, 'PHP', 'USD', @sf_lbr_cost_php, @sf_lbr_cost_usd OUTPUT, @ExchRate OUTPUT
 			EXEC dbo.LSP_CurrencyConversionModSp @matlTransDate, 'PHP', 'USD', @sf_ovhd_cost_php, @sf_ovhd_cost_usd OUTPUT, @ExchRate OUTPUT			
 	
@@ -307,6 +348,7 @@ BEGIN
 		BEGIN			
 		
 			SELECT TOP(1) @matl_unit_cost_php = matl_cost
+						, @matlTransDate = trans_date
 			FROM matltran 
 			WHERE lot = @matl_lot 
 			  AND trans_type = 'H' 
@@ -324,6 +366,15 @@ BEGIN
 			WHERE item = @matl_item
 			  AND effect_date <= @matlTransDate
 			ORDER BY effect_date DESC
+			
+			SELECT @MatlMiscRcptDate = MAX(trans_date)
+			FROM matltran
+			WHERE item = @matl_item
+			  AND lot = @matl_lot
+			  AND trans_type IN ('H', 'B', 'P')
+			  AND trans_date <= @matlTransDate
+			
+			SET @matlTransDate = COALESCE(@MatlMiscRcptDate, @matlTransDate)
 				
 			EXEC dbo.LSP_CurrencyConversionModSp @matlTransDate, 'USD', 'PHP', @matl_unit_cost_usd, @matl_unit_cost_php OUTPUT, @ExchRate OUTPUT					
 			
@@ -351,4 +402,5 @@ BEGIN
 --  , @fg_lbr_cost_php  AS fg_lbr_cost_php
 --  , @fg_ovhd_cost_php AS fg_ovhd_cost_php
 
+--, @matlTransDate, @ExchRate
 END
