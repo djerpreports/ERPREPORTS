@@ -59,27 +59,27 @@ namespace ERPReports.Controllers
                         {
                             if (rdSql.Read())
                             {
-                                ID = Convert.ToInt32(rdSql["ID"]);
-                                UserName = rdSql["UserName"].ToString();
                                 Password = rdSql["Password"].ToString();
-                                FirstName = rdSql["FirstName"].ToString();
-                                MiddleName = rdSql["MiddleName"].ToString();
-                                LastName = rdSql["LastName"].ToString();
-                                EmailAddress = rdSql["EmailAddress"].ToString();
-
-
-                                Session["ID"] = ID;
-                                Session["UserName"] = UserName;
-                                Session["FirstName"] = FirstName;
-                                Session["MiddleName"] = MiddleName;
-                                Session["LastName"] = LastName;
-                                Session["EmailAddress"] = EmailAddress;
-                                if (!data.IsFromOld)
+                                if (ph.VerifyHashedPassword(Password.ToString(), data.Password.ToString()).ToString() != "Success")
                                 {
-                                    if (ph.VerifyHashedPassword(Password.ToString(), data.Password.ToString()).ToString() != "Success")
-                                    {
-                                        errmsg = "Invalid UserName or Password. Please try again.";
-                                    }
+                                    errmsg = "Invalid UserName or Password. Please try again.";
+                                }else
+                                {
+
+                                    ID = Convert.ToInt32(rdSql["ID"]);
+                                    UserName = rdSql["UserName"].ToString();
+                                    FirstName = rdSql["FirstName"].ToString();
+                                    MiddleName = rdSql["MiddleName"].ToString();
+                                    LastName = rdSql["LastName"].ToString();
+                                    EmailAddress = rdSql["EmailAddress"].ToString();
+
+
+                                    Session["ID"] = ID;
+                                    Session["UserName"] = UserName;
+                                    Session["FirstName"] = FirstName;
+                                    Session["MiddleName"] = MiddleName;
+                                    Session["LastName"] = LastName;
+                                    Session["EmailAddress"] = EmailAddress;
                                 }
                             }
                             else

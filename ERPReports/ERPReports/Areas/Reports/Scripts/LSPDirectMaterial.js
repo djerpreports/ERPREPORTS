@@ -101,7 +101,7 @@
         $("#StartDate").change(function () {
             var minDate = new Date($(this).val());
             var lastDay = new Date(minDate.getFullYear(), minDate.getMonth() + 1, 0);
-            minDate.setDate(minDate.getDate() + 1)
+            minDate.setDate(minDate.getDate())
             $("#EndDate").prop("disabled", false).val('');
             $("#EndDate").datepicker('destroy');
             $("#EndDate").datepicker({
@@ -139,6 +139,13 @@
                 $("#btnPrint").prop("disabled", false);
             }else{
                 $("#btnPrint").prop("disabled", true);
+            }
+        });
+        $("#SlowMonitoringAnalysisReport").change(function () {
+            if ($("#SlowMonitoringAnalysisReport").is(":checked") ) {
+                $("#Month").prop("disabled", false);
+            }else{
+                $("#Month").prop("disabled", true);
             }
         });
         $("#StartDate,#EndDate").prop("disabled", true);

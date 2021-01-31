@@ -38,4 +38,25 @@ namespace ERPReports.Areas.Reports.Models
         public string ItemRemarks { get; set; }
 
     }
+    public class MiscellaneousTransactionReport
+    {
+        public string TransDesc { get; set; }
+        public string JobOrLot { get; set; }
+        public string TransDate { get; set; }
+        public string Item { get; set; }
+        public string ItemDesc { get; set; }
+        public int QtyCompleted { get; set; }
+        public int QtyScrapped { get; set; }
+        public int Employee { get; set; }
+        public string Wc { get; set; }
+        public decimal MatlCost_PHP { get; set; }
+        public decimal MatlLandedCost_PHP { get; set; }
+        public decimal PIResin_PHP { get; set; }
+        public decimal PIFGProcess_PHP { get; set; }
+        public decimal PIHiddenProfit_PHP { get; set; }
+        public decimal SFAddedCost_PHP { get; set; }
+        public decimal FGAddedCost_PHP { get; set; }
+        public decimal TotalCost_PHP { get; set; }
+
+    }
 }
