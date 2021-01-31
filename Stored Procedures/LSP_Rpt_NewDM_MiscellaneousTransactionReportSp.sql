@@ -1,10 +1,10 @@
 --EXEC dbo.LSP_Rpt_NewDM_MiscellaneousTransactionReportSp '05/01/2020', '05/31/2020'
 
-ALTER PROCEDURE LSP_Rpt_NewDM_MiscellaneousTransactionReportSp (
---DECLARE
-	@StartDate					DateType	--= '05/01/2020'
-  , @EndDate					DateType	--= '05/31/2020'
-) AS
+--ALTER PROCEDURE LSP_Rpt_NewDM_MiscellaneousTransactionReportSp (
+DECLARE
+	@StartDate					DateType	= '05/01/2020'
+  , @EndDate					DateType	= '05/31/2020'
+--) AS
 BEGIN
 
 	IF OBJECT_ID('tempdb..#DMActualCost') IS NOT NULL
@@ -29,6 +29,7 @@ BEGIN
 	  , @ReasonCode				NVARCHAR(20)
 	  , @ReasonDesc				NVARCHAR(100)
 	  , @TransQty				DECIMAL(18,8)
+	  , @ABSTransQty			DECIMAL(18,8)
 	  
 	  , @JobQty					BIGINT
 	  , @matl_unit_cost_usd		DECIMAL(18,8)
@@ -122,7 +123,7 @@ BEGIN
 	DECLARE MiscTransCrsr CURSOR FAST_FORWARD FOR
 	SELECT jt.trans_date AS TransDate
 		 , 'G' As TransType
-		 , 'Scrap Data' AS TransDesc
+		 , 'SF Scrap Data' AS TransDesc
 		 , j.job
 		 , j.suffix
 		 , j.item
@@ -294,10 +295,12 @@ BEGIN
 			IF EXISTS(SELECT * FROM job WHERE job = @JobOrLot AND item = @Item)
 			BEGIN
 				
+				SET @ABSTransQty = ABS(@TransQty)
+				
 				TRUNCATE TABLE #DMActualCost
 				
 				INSERT INTO #DMActualCost
-				EXEC dbo.LSP_DM_ActlCost_GetJobMatlTransCostingSp @JobOrLot, 0, @Item, @TransDate, @TransQty
+				EXEC dbo.LSP_DM_ActlCost_GetJobMatlTransCostingSp @JobOrLot, 0, @Item, @TransDate, @ABSTransQty
 						
 				INSERT INTO #MiscTransReport
 				SELECT @TransDate

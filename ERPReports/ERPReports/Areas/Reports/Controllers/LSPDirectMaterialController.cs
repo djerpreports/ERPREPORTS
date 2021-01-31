@@ -668,7 +668,7 @@ namespace ERPReports.Areas.Reports.Controllers
                         L = MiscellaneousTransactionItem.PIFGProcess_PHP.ToString(),
                         M = MiscellaneousTransactionItem.PIHiddenProfit_PHP.ToString(),
                         N = (MiscellaneousTransactionItem.SFAddedCost_PHP + MiscellaneousTransactionItem.FGAddedCost_PHP).ToString(),
-                        O = MiscellaneousTransactionItem.TotalCost_PHP.ToString(),
+                        O = (MiscellaneousTransactionItem.TotalCost_PHP *-1).ToString(),
 
                     });
                 }
@@ -726,22 +726,22 @@ namespace ERPReports.Areas.Reports.Controllers
                             foreach (var ItemData in PerItem)
                             {
                                 TotalWC = ItemData.Wc;
-                                TotalMatlCost_PHP += Convert.ToInt32(ItemData.MatlCost_PHP);
-                                TotalMatlLandedCost_PHP += Convert.ToDecimal(ItemData.MatlLandedCost_PHP);
-                                TotalPIResin_PHP += Convert.ToDecimal(ItemData.PIResin_PHP);
-                                TotalPIFGProcess_PHP += Convert.ToDecimal(ItemData.PIFGProcess_PHP);
-                                TotalPIHiddenProfit_PHP += Convert.ToDecimal(ItemData.PIHiddenProfit_PHP);
-                                TotalFGAddedCost_PHP += Convert.ToDecimal((ItemData.SFAddedCost_PHP + ItemData.FGAddedCost_PHP));
-                                TotalTotalCost_PHP += Convert.ToDecimal(ItemData.TotalCost_PHP);
+                                TotalMatlCost_PHP += Convert.ToDecimal(ItemData.MatlCost_PHP * ItemData.QtyScrapped);
+                                TotalMatlLandedCost_PHP += Convert.ToDecimal(ItemData.MatlLandedCost_PHP * ItemData.QtyScrapped);                                
+                                TotalPIResin_PHP += Convert.ToDecimal(ItemData.PIResin_PHP * ItemData.QtyScrapped);
+                                TotalPIFGProcess_PHP += Convert.ToDecimal(ItemData.PIFGProcess_PHP * ItemData.QtyScrapped);
+                                TotalPIHiddenProfit_PHP += Convert.ToDecimal(ItemData.PIHiddenProfit_PHP * ItemData.QtyScrapped);
+                                TotalFGAddedCost_PHP += Convert.ToDecimal((ItemData.SFAddedCost_PHP + ItemData.FGAddedCost_PHP) * ItemData.QtyScrapped);
+                                TotalTotalCost_PHP += Convert.ToDecimal(ItemData.TotalCost_PHP * -1);
 
 
-                                GrandTotalMatlCost_PHP += Convert.ToInt32(ItemData.MatlCost_PHP);;
-                                GrandTotalMatlLandedCost_PHP += Convert.ToDecimal(ItemData.MatlLandedCost_PHP);;
-                                GrandTotalPIResin_PHP += Convert.ToDecimal(ItemData.PIResin_PHP);;
-                                GrandTotalPIFGProcess_PHP += Convert.ToDecimal(ItemData.PIFGProcess_PHP);;
-                                GrandTotalPIHiddenProfit_PHP += Convert.ToDecimal(ItemData.PIHiddenProfit_PHP);;
-                                GrandTotalFGAddedCost_PHP += Convert.ToDecimal((ItemData.SFAddedCost_PHP + ItemData.FGAddedCost_PHP));;
-                                GrandTotalTotalCost_PHP += Convert.ToDecimal(ItemData.TotalCost_PHP);;
+                                GrandTotalMatlCost_PHP += Convert.ToDecimal(ItemData.MatlCost_PHP * ItemData.QtyScrapped);;
+                                GrandTotalMatlLandedCost_PHP += Convert.ToDecimal(ItemData.MatlLandedCost_PHP * ItemData.QtyScrapped);;
+                                GrandTotalPIResin_PHP += Convert.ToDecimal(ItemData.PIResin_PHP * ItemData.QtyScrapped);;
+                                GrandTotalPIFGProcess_PHP += Convert.ToDecimal(ItemData.PIFGProcess_PHP * ItemData.QtyScrapped);;
+                                GrandTotalPIHiddenProfit_PHP += Convert.ToDecimal(ItemData.PIHiddenProfit_PHP * ItemData.QtyScrapped);;
+                                GrandTotalFGAddedCost_PHP += Convert.ToDecimal((ItemData.SFAddedCost_PHP + ItemData.FGAddedCost_PHP) * ItemData.QtyScrapped);;
+                                GrandTotalTotalCost_PHP += Convert.ToDecimal(ItemData.TotalCost_PHP * -1);;
                                 rowCounter++;
                             }
                         }
@@ -841,22 +841,22 @@ namespace ERPReports.Areas.Reports.Controllers
                                 SummarySheet.Cells[SummarySheetSheetrRow, 9].Style.WrapText = false;
                                 SummarySheet.Cells[SummarySheetSheetrRow, 10].Value = Convert.ToDecimal((ItemData.SFAddedCost_PHP + ItemData.FGAddedCost_PHP));
                                 SummarySheet.Cells[SummarySheetSheetrRow, 10].Style.WrapText = false;
-                                SummarySheet.Cells[SummarySheetSheetrRow, 11].Value = Convert.ToDecimal(ItemData.TotalCost_PHP);
+                                SummarySheet.Cells[SummarySheetSheetrRow, 11].Value = Convert.ToDecimal(ItemData.TotalCost_PHP * -1);
                                 SummarySheet.Cells[SummarySheetSheetrRow, 11].Style.WrapText = false;
 
-                                Sum_TotalCost_PHP += ItemData.TotalCost_PHP;
+                                Sum_TotalCost_PHP += (ItemData.TotalCost_PHP * -1);
                                 sumWCTitle = ItemData.Wc;
                                 endMerge = SummarySheetSheetrRow;
                                 endMergeItem = SummarySheetSheetrRow;
 
                                 TotalWC = ItemData.Wc;
-                                TotalMatlCost_PHP = Convert.ToDecimal(ItemData.MatlCost_PHP);
-                                TotalMatlLandedCost_PHP = Convert.ToDecimal(ItemData.MatlLandedCost_PHP);
-                                TotalPIResin_PHP = Convert.ToDecimal(ItemData.PIResin_PHP);
-                                TotalPIFGProcess_PHP = Convert.ToDecimal(ItemData.PIFGProcess_PHP);
-                                TotalPIHiddenProfit_PHP = Convert.ToDecimal(ItemData.PIHiddenProfit_PHP);
-                                TotalFGAddedCost_PHP = Convert.ToDecimal((ItemData.SFAddedCost_PHP + ItemData.FGAddedCost_PHP));
-                                TotalTotalCost_PHP = Convert.ToDecimal(ItemData.TotalCost_PHP);
+                                TotalMatlCost_PHP = Convert.ToDecimal(ItemData.MatlCost_PHP * ItemData.QtyScrapped);
+                                TotalMatlLandedCost_PHP = Convert.ToDecimal(ItemData.MatlLandedCost_PHP * ItemData.QtyScrapped);
+                                TotalPIResin_PHP = Convert.ToDecimal(ItemData.PIResin_PHP * ItemData.QtyScrapped);
+                                TotalPIFGProcess_PHP = Convert.ToDecimal(ItemData.PIFGProcess_PHP * ItemData.QtyScrapped);
+                                TotalPIHiddenProfit_PHP = Convert.ToDecimal(ItemData.PIHiddenProfit_PHP * ItemData.QtyScrapped);
+                                TotalFGAddedCost_PHP = Convert.ToDecimal((ItemData.SFAddedCost_PHP + ItemData.FGAddedCost_PHP) * ItemData.QtyScrapped);
+                                TotalTotalCost_PHP = Convert.ToDecimal(ItemData.TotalCost_PHP * -1);
 
 
                                 rowCounter++;

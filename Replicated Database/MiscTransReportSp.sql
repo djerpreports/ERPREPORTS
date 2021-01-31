@@ -8,4 +8,6 @@ BEGIN
 	SELECT TOP(20) WITH TIES *
 	FROM Rpt_MiscTransaction
 	ORDER BY ROW_NUMBER() OVER (PARTITION BY TransDesc, Wc ORDER BY TransDate)
+	
+	SELECT * FROM Rpt_MiscTransaction WHERE TransDesc = 'Scrap Data' AND Wc = 'HSTAMP'
 END

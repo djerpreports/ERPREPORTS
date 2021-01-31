@@ -1,8 +1,8 @@
 ALTER PROCEDURE LSP_ActlCost_GetMatlCostingSp (
 --DECLARE
-	@matl_item					ItemType		--= 'SF-3LB1001'
+	@matl_item					ItemType		--= 'RM-BA-CR 1632'
   , @matl_lot					LotType			--= '0stock'
-  , @matlTransDate				DateType		--= '2020-01-01'
+  , @matlTransDate				DateType		--= '2020-01-04 06:03:13.000'
   /*, @JobQty						BIGINT			
     , @matl_unit_cost_usd         AmountType = 0
   , @matl_landed_cost_usd         AmountType = 0
@@ -73,8 +73,9 @@ BEGIN
 		@pi_fg_process			AmountType
 	  , @pi_resin				AmountType
 	  , @ExchRate			ExchRateType
-	  , @CurrCode			CurrCodeType
+	  , @CurrCode			CurrCodeType	  
 	  , @ReceiptCount		BIGINT		= 0
+	  ,	@MiscTransCount		INT			= 0
 	  , @LaborRate		CostPrcType  
 	  , @OvhdRate		CostPrcType  
 	  , @LaborCost		AmountType  
@@ -146,6 +147,7 @@ BEGIN
 		
 			SELECT @CurrCode = MAX(v.curr_code)
 				 , @ReceiptCount = COUNT(*)
+				 , @MatlRcptDate = MAX(trans_date)
 			FROM matltran AS m
 				JOIN poitem AS poi 
 					ON m.ref_num = poi.po_num AND m.ref_line_suf = poi.po_line 
@@ -156,15 +158,27 @@ BEGIN
 			WHERE m.item = @matl_item
 			  AND m.lot = @matl_lot
 			  AND m.trans_type = 'R'
-		
+					
 			IF @ReceiptCount = 0
 			BEGIN
-			
-				IF (@matl_item LIKE 'PDN-%')
+				SELECT @MatlMiscRcptDate = MAX(trans_date)
+					 , @MiscTransCount = COUNT(*)				 
+				FROM matltran
+				WHERE item = @matl_item
+				  AND lot = @matl_lot
+				  AND trans_type IN ('H', 'B', 'P')
+				  AND trans_date <= @matlTransDate
+				
+				SET @matlTransDate = COALESCE(@MatlRcptDate, @MatlMiscRcptDate, @matlTransDate)
+				
+				IF (@MiscTransCount > 0)
 				BEGIN
 					SELECT TOP(1) @matl_unit_cost_php = matl_cost
 					FROM matltran
-					WHERE trans_type = 'H' AND item = @matl_item AND lot = @matl_lot
+					WHERE trans_type IN ('H', 'B', 'P')
+					  AND item = @matl_item 
+					  AND lot = @matl_lot
+					  AND trans_date <= @matlTransDate
 					
 					EXEC dbo.LSP_CurrencyConversionModSp @matlTransDate, 'PHP', 'USD', @matl_unit_cost_php, @matl_unit_cost_usd OUTPUT, @ExchRate OUTPUT
 				END

@@ -5,7 +5,7 @@ DECLARE
 	@Job					JobType		= '19-0002507'
   , @Suffix					SuffixType	= 0
   , @Item					ItemType	= 'FG-DK-100D'
-  , @JobTransDate			DateType	= '05/14/2020'
+  , @JobTransDate			DateType	= '05/05/2020'
   , @QtyTrans				QtyUnitType	= 200
  	--@Job					JobType		= '20-0000864'
   --, @Suffix					SuffixType	= 0
