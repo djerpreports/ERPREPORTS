@@ -295,7 +295,7 @@ BEGIN
 			IF EXISTS(SELECT * FROM job WHERE job = @JobOrLot AND item = @Item)
 			BEGIN
 				
-				SET @ABSTransQty = ABS(@TransQty)
+				SET @ABSTransQty = ABS(@TransQty)				
 				
 				TRUNCATE TABLE #DMActualCost
 				
@@ -489,14 +489,14 @@ BEGIN
 		 , ''
 		 , 'SCRAP'
 		 , 'Scrap'
-		 , SUM(TransQty) AS TransQty
-		 , SUM(MatlCost_PHP) 
-		 , SUM(MatlLandedCost_PHP) 
-		 , SUM(PIFGProcess_PHP) 
-		 , SUM(PIResin_PHP) 
-		 , SUM(PIHiddenProfit_PHP) 
-		 , SUM(SFAddedCost_PHP) 
-		 , SUM(FGAddedCost_PHP)
+		 , 1 AS TransQty
+		 , SUM(MatlCost_PHP * TransQty) 
+		 , SUM(MatlLandedCost_PHP * TransQty) 
+		 , SUM(PIFGProcess_PHP * TransQty) 
+		 , SUM(PIResin_PHP * TransQty) 
+		 , SUM(PIHiddenProfit_PHP * TransQty) 
+		 , SUM(SFAddedCost_PHP * TransQty) 
+		 , SUM(FGAddedCost_PHP * TransQty)
 		 , SUM(TransQty * (MatlCost_PHP + MatlLandedCost_PHP 
 						+ PIFGProcess_PHP + PIResin_PHP + PIHiddenProfit_PHP 
 						+ SFAddedCost_PHP + FGAddedCost_PHP))
@@ -520,14 +520,14 @@ BEGIN
 		 , ''
 		 , 'REQ'
 		 , 'Section Requests'
-		 , SUM(TransQty) AS TransQty
-		 , SUM(MatlCost_PHP) 
-		 , SUM(MatlLandedCost_PHP) 
-		 , SUM(PIFGProcess_PHP) 
-		 , SUM(PIResin_PHP) 
-		 , SUM(PIHiddenProfit_PHP) 
-		 , SUM(SFAddedCost_PHP) 
-		 , SUM(FGAddedCost_PHP)
+		 , 1 AS TransQty
+		 , SUM(MatlCost_PHP * TransQty) 
+		 , SUM(MatlLandedCost_PHP * TransQty) 
+		 , SUM(PIFGProcess_PHP * TransQty) 
+		 , SUM(PIResin_PHP * TransQty) 
+		 , SUM(PIHiddenProfit_PHP * TransQty) 
+		 , SUM(SFAddedCost_PHP * TransQty) 
+		 , SUM(FGAddedCost_PHP * TransQty)
 		 , SUM(TransQty * (MatlCost_PHP + MatlLandedCost_PHP 
 						+ PIFGProcess_PHP + PIResin_PHP + PIHiddenProfit_PHP 
 						+ SFAddedCost_PHP + FGAddedCost_PHP))

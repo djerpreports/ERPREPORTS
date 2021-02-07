@@ -36,6 +36,7 @@ Report Layout Notes:
    > Order by: TransType, MiscTransClass, ReasonDesc
 
 2. TransType sheets (one or more sheets depends on result of grouping usually includes CycleCount, Miscellaneous Issues and Miscellaneous Receipts)
+  > Filter: TransDesc <> "SF Scrap Data", Item <>  "Scrap Item", Item <> "Request Item"
   > Group By: TransDesc
   > Order By: TransDate
 
