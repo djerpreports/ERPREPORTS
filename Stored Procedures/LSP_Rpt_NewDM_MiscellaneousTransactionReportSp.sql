@@ -95,6 +95,7 @@ BEGIN
 		TransDate				DATETIME
 	  , TransType				NVARCHAR(2)
 	  , TransDesc				NVARCHAR(50)
+	  , SummaryGroup			NVARCHAR(50)
 	  , JobOrLot				NVARCHAR(50)
 	  , Suffix					NVARCHAR(5)
 	  , Item					NVARCHAR(40)
@@ -306,6 +307,11 @@ BEGIN
 				SELECT @TransDate
 					 , @TransType
 					 , @TransDesc
+					 , CASE WHEN @MiscTransClass = 'S'
+									THEN 'Breakdown of Scrap'
+							WHEN @MiscTransClass = 'R'
+									THEN 'Breakdown of Request'
+							ELSE @TransDesc END
 					 , @JobOrLot
 					 , @Suffix
 					 , @Item
@@ -351,6 +357,11 @@ BEGIN
 				SELECT @TransDate
 					 , @TransType
 					 , @TransDesc
+					 , CASE WHEN @MiscTransClass = 'S'
+									THEN 'Breakdown of Scrap'
+							WHEN @MiscTransClass = 'R'
+									THEN 'Breakdown of Request'
+							ELSE @TransDesc END
 					 , @JobOrLot
 					 , @Suffix
 					 , @Item
@@ -395,6 +406,11 @@ BEGIN
 			SELECT @TransDate
 				 , @TransType
 				 , @TransDesc
+				 , CASE WHEN @MiscTransClass = 'S'
+									THEN 'Breakdown of Scrap'
+							WHEN @MiscTransClass = 'R'
+									THEN 'Breakdown of Request'
+							ELSE @TransDesc END
 				 , @JobOrLot
 				 , @Suffix
 				 , @Item
@@ -466,16 +482,19 @@ BEGIN
 	
 	CLOSE MiscTransCrsr
 	DEALLOCATE MiscTransCrsr
+		
 	
 	SELECT *
 		 , TransQty * (MatlCost_PHP + MatlLandedCost_PHP 
 						+ PIFGProcess_PHP + PIResin_PHP + PIHiddenProfit_PHP 
 						+ SFAddedCost_PHP + FGAddedCost_PHP)
 		   AS TotalCost_PHP
+	
 	FROM #MiscTransReport
 	UNION ALL
 	SELECT @EndDate
 		 , 'G'
+		 , 'Miscellaneous Issue'
 		 , 'Miscellaneous Issue'
 		 , ''
 		 , ''
@@ -507,6 +526,7 @@ BEGIN
 	UNION ALL 
 	SELECT @EndDate
 		 , 'G'
+		 , 'Miscellaneous Issue'
 		 , 'Miscellaneous Issue'
 		 , ''
 		 , ''

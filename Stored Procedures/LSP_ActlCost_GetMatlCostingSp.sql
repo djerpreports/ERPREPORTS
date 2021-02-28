@@ -1,9 +1,9 @@
 ALTER PROCEDURE LSP_ActlCost_GetMatlCostingSp (
 --DECLARE
-	@matl_item					ItemType		--= 'RM-BA-CR 1632'
-  , @matl_lot					LotType			--= '0stock'
-  , @matlTransDate				DateType		--= '2020-01-04 06:03:13.000'
-  /*, @JobQty						BIGINT			
+	@matl_item					ItemType		--= 'RM-DD-ERA85-009'
+  , @matl_lot					LotType			--= '180423-670062'
+  , @matlTransDate				DateType		--= '5/11/2018'
+ /* , @JobQty						BIGINT			
     , @matl_unit_cost_usd         AmountType = 0
   , @matl_landed_cost_usd         AmountType = 0
   , @pi_fg_process_usd          AmountType = 0
@@ -200,17 +200,27 @@ BEGIN
 			END
 			ELSE
 			BEGIN
-				SELECT TOP(1) @matl_unit_cost_php = (por.unit_mat_cost * por.exch_rate)
-					 , @matl_landed_cost_php = (por.unit_duty_cost + por.unit_brokerage_cost + por.unit_freight_cost + por.unit_loc_frt_cost) * por.exch_rate				
+				SELECT TOP(1) @matl_unit_cost_php = CASE WHEN v.curr_code = 'JPY'
+															THEN (por.unit_mat_cost / por.exch_rate)
+														ELSE (por.unit_mat_cost * por.exch_rate) END
+					 , @matl_landed_cost_php = CASE WHEN v.curr_code = 'JPY'
+														THEN (por.unit_duty_cost + por.unit_brokerage_cost + por.unit_freight_cost + por.unit_loc_frt_cost) / por.exch_rate
+													ELSE (por.unit_duty_cost + por.unit_brokerage_cost + por.unit_freight_cost + por.unit_loc_frt_cost) * por.exch_rate END
 				FROM matltran AS m
 					JOIN po_rcpt AS por
 						ON m.ref_num = por.po_num 
 						  AND m.ref_line_suf = por.po_line 
 						  AND m.trans_date = por.rcvd_date
+					JOIN poitem AS poi
+						ON por.po_num = poi.po_num
+						  AND por.po_line = poi.po_line
+						  AND por.po_release = poi.po_release
+					JOIN vendor AS v
+						ON poi.po_vend_num = v.vend_num
 				WHERE m.item = @matl_item 
 				  AND m.lot = @matl_lot 
 				  AND m.trans_type = 'R'
-				  
+
 				EXEC dbo.LSP_CurrencyConversionModSp @matlTransDate, 'PHP', 'USD', @matl_unit_cost_php, @matl_unit_cost_usd OUTPUT, @ExchRate OUTPUT
 				EXEC dbo.LSP_CurrencyConversionModSp @matlTransDate, 'PHP', 'USD', @matl_landed_cost_php, @matl_landed_cost_usd OUTPUT, @ExchRate OUTPUT
 
