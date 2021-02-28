@@ -40,7 +40,11 @@ namespace ERPReports.Areas.Reports.Models
     }
     public class MiscellaneousTransactionReport
     {
+        public string SummaryGroup { get; set; }
+        public string TransType { get; set; }
         public string TransDesc { get; set; }
+        public string MiscTransClass { get; set; }
+        public string ReasonDesc { get; set; }
         public string JobOrLot { get; set; }
         public string TransDate { get; set; }
         public string Item { get; set; }
@@ -57,6 +61,7 @@ namespace ERPReports.Areas.Reports.Models
         public decimal SFAddedCost_PHP { get; set; }
         public decimal FGAddedCost_PHP { get; set; }
         public decimal TotalCost_PHP { get; set; }
+        public decimal TransQty { get; set; }
 
     }
 }
