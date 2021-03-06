@@ -5,9 +5,8 @@ ALTER PROCEDURE LSP_Rpt_NewDM_MiscellaneousTransactionReportSp (
 ) AS
 BEGIN
 
-	SELECT TOP(20) WITH TIES *
+	SELECT TOP(50) WITH TIES *
 	FROM Rpt_MiscTransaction
-	ORDER BY ROW_NUMBER() OVER (PARTITION BY TransDesc, Wc ORDER BY TransDate)
-	
-	SELECT * FROM Rpt_MiscTransaction WHERE TransDesc = 'Scrap Data' AND Wc = 'HSTAMP'
+	ORDER BY ROW_NUMBER() OVER (PARTITION BY TransType, MiscTransClass, ReasonDesc ORDER BY TransType, MiscTransClass, ReasonDesc, Wc)
+		
 END

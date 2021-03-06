@@ -5,7 +5,7 @@ DECLARE
 	@Job					JobType		= '19-0002507'
   , @Suffix					SuffixType	= 0
   , @Item					ItemType	= 'FG-DK-100D'
-  , @JobTransDate			DateType	= '05/05/2020'
+  , @JobTransDate			DateType	= '2020-05-20'
   , @QtyTrans				QtyUnitType	= 200
  	--@Job					JobType		= '20-0000864'
   --, @Suffix					SuffixType	= 0
@@ -574,7 +574,7 @@ BEGIN
 	FROM #ActualCost AS A
 		--LEFT OUTER JOIN #itemMatl AS m ON a.item = m.item AND A.[Level] = m.[Level] AND A.matl = m.matl AND A.subsequence = m.subsequence
 	--WHERE a.Level = 1 --AND a.matl = 'SF-MMU003'
-	ORDER BY subsequence, sequence, [Level]
+	ORDER BY subsequence, CAST(sequence AS INT), [Level]
 	--****/
 
 END
