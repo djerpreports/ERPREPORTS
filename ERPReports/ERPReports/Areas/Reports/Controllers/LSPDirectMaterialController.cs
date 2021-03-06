@@ -864,6 +864,7 @@ namespace ERPReports.Areas.Reports.Controllers
                             decimal TOTAL_PIHiddenProfit_PHP_TransQty = 0;
                             decimal TOTAL_SFAddedCost_PHP_FGAddedCost_PHP_TransQty = 0;
                             decimal TOTAL_TotalCost_PHP = 0;
+                            var SFScrapList = ReasonDescList_.Where(x => x.ReasonDesc == "SF Scrap").GroupBy(x => x.Wc).ToList();
                             foreach (var SummarySheetData in ReasonDescList_)
                             {
                                 ReasonDesc = SummarySheetData.ReasonDesc;
@@ -906,6 +907,56 @@ namespace ERPReports.Areas.Reports.Controllers
                             Summary1stSheet.Cells[summary1stSheetRow, 9].Value = TOTAL_TotalCost_PHP ;
                             Summary1stSheet.Cells[summary1stSheetRow, 9].Style.WrapText = false;
                             summary1stSheetRow++;
+
+                            int sfScrapRow = 0;
+                            if(ReasonDesc=="SF Scrap"){
+                                foreach (var SFScrapDataWC in SFScrapList)
+                                {
+                                    decimal SCRAP_MatlCost_PHP_TransQty = 0;
+                                    decimal SCRAP_MatlLandedCost_PHP_TransQty = 0;
+                                    decimal SCRAP_PIResin_PHP_TransQty = 0;
+                                    decimal SCRAP_PIFGProcess_PHP_TransQty = 0;
+                                    decimal SCRAP_PIHiddenProfit_PHP_TransQty = 0;
+                                    decimal SCRAP_SFAddedCost_PHP_FGAddedCost_PHP_TransQty = 0;
+                                    decimal SCRAP_TotalCost_PHP = 0;
+                                    foreach (var SFScrapData in SFScrapDataWC)
+                                    {
+                                        SCRAP_MatlCost_PHP_TransQty += Convert.ToDecimal(SFScrapData.MatlCost_PHP) * Convert.ToDecimal(SFScrapData.TransQty);
+                                        SCRAP_MatlLandedCost_PHP_TransQty += Convert.ToDecimal(SFScrapData.MatlLandedCost_PHP) * Convert.ToDecimal(SFScrapData.TransQty);
+                                        SCRAP_PIResin_PHP_TransQty += Convert.ToDecimal(SFScrapData.PIResin_PHP) * Convert.ToDecimal(SFScrapData.TransQty);
+                                        SCRAP_PIFGProcess_PHP_TransQty += Convert.ToDecimal(SFScrapData.PIFGProcess_PHP) * Convert.ToDecimal(SFScrapData.TransQty);
+                                        SCRAP_PIHiddenProfit_PHP_TransQty += Convert.ToDecimal(SFScrapData.PIHiddenProfit_PHP) * Convert.ToDecimal(SFScrapData.TransQty);
+                                        SCRAP_SFAddedCost_PHP_FGAddedCost_PHP_TransQty += (Convert.ToDecimal(SFScrapData.SFAddedCost_PHP) + Convert.ToDecimal(SFScrapData.FGAddedCost_PHP)) * Convert.ToDecimal(SFScrapData.TransQty);
+                                        SCRAP_TotalCost_PHP += Convert.ToDecimal(SFScrapData.TotalCost_PHP);
+                                    }
+                                    sfScrapRow++;
+                                    if (sfScrapRow <= SFScrapList.Count)
+                                    {
+                                        Summary1stSheet.InsertRow((summary1stSheetRow), 1);
+                                        Summary1stSheet.Cells[summary1stSheetRow - 1, 1, summary1stSheetRow - 1, 100].Copy(Summary1stSheet.Cells[(summary1stSheetRow), 1, (summary1stSheetRow), 1]);
+                                    }
+                                    Summary1stSheet.Cells["A" + summary1stSheetRow + ":B" + summary1stSheetRow].Merge = false;
+                                    Summary1stSheet.Cells[summary1stSheetRow, 1].Value = "";
+                                    Summary1stSheet.Cells[summary1stSheetRow, 1].Style.WrapText = false;
+                                    Summary1stSheet.Cells[summary1stSheetRow, 2].Value = SFScrapDataWC.Key.ToString();
+                                    Summary1stSheet.Cells[summary1stSheetRow, 2].Style.WrapText = false;
+                                    Summary1stSheet.Cells[summary1stSheetRow, 3].Value = SCRAP_MatlCost_PHP_TransQty;
+                                    Summary1stSheet.Cells[summary1stSheetRow, 3].Style.WrapText = false;
+                                    Summary1stSheet.Cells[summary1stSheetRow, 4].Value = SCRAP_MatlLandedCost_PHP_TransQty;
+                                    Summary1stSheet.Cells[summary1stSheetRow, 4].Style.WrapText = false;
+                                    Summary1stSheet.Cells[summary1stSheetRow, 5].Value = SCRAP_PIResin_PHP_TransQty;
+                                    Summary1stSheet.Cells[summary1stSheetRow, 5].Style.WrapText = false;
+                                    Summary1stSheet.Cells[summary1stSheetRow, 6].Value = SCRAP_PIFGProcess_PHP_TransQty;
+                                    Summary1stSheet.Cells[summary1stSheetRow, 6].Style.WrapText = false;
+                                    Summary1stSheet.Cells[summary1stSheetRow, 7].Value = SCRAP_PIHiddenProfit_PHP_TransQty;
+                                    Summary1stSheet.Cells[summary1stSheetRow, 7].Style.WrapText = false;
+                                    Summary1stSheet.Cells[summary1stSheetRow, 8].Value = SCRAP_SFAddedCost_PHP_FGAddedCost_PHP_TransQty;
+                                    Summary1stSheet.Cells[summary1stSheetRow, 8].Style.WrapText = false;
+                                    Summary1stSheet.Cells[summary1stSheetRow, 9].Value = SCRAP_TotalCost_PHP;
+                                    Summary1stSheet.Cells[summary1stSheetRow, 9].Style.WrapText = false;
+                                    summary1stSheetRow++;
+                                }
+                            }
                         }
 
                         Summary1stSheet.Cells[summary1stSheetRow, 3].Value = GRANDTOTAL_MatlCost_PHP_TransQty;

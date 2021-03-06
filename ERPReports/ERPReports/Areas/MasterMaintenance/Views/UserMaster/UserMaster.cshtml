@@ -81,9 +81,9 @@
                         <div class="col-md-6">
                             <div class="input-group input-group-sm m-b-5">
                                 <div class="input-group-prepend">
-                                    <label class="input-group-text" style="width:101px;" for="UserName">UserName </label>
+                                    <label class="input-group-text" style="width:101px;" for="UserName">UserName <span class="text-danger">*</span></label>
                                 </div>
-                                <input type="text" id="UserName" name="UserName"  class="form-control input" data-parsley-errors-container="#err-UserName" autocomplete="off">
+                                <input type="text" id="UserName" name="UserName"  class="form-control input" required data-parsley-errors-container="#err-UserName" autocomplete="off">
                             </div>
                             <div id="err-UserName"></div>
                         </div>
