@@ -690,8 +690,9 @@ namespace ERPReports.Areas.Reports.Controllers
                                     MiscTrxSheetCycleCount.InsertRow((sheetRowMisc + 1), 1);
                                     MiscTrxSheetCycleCount.Cells[sheetRowMisc, 1, sheetRowMisc, 100].Copy(MiscTrxSheetCycleCount.Cells[(sheetRowMisc + 1), 1, (sheetRowMisc + 1), 1]);
                                 }
-                                MiscTrxSheetCycleCount.Cells[sheetRowMisc, 1].Value = SheetData.TransDate;
+                                MiscTrxSheetCycleCount.Cells[sheetRowMisc, 1].Value = Convert.ToDateTime(SheetData.TransDate);
                                 MiscTrxSheetCycleCount.Cells[sheetRowMisc, 1].Style.WrapText = false;
+                                MiscTrxSheetCycleCount.Cells[sheetRowMisc, 1].Style.Numberformat.Format = "m/d/yyyy";
                                 MiscTrxSheetCycleCount.Cells[sheetRowMisc, 2].Value = SheetData.Item;
                                 MiscTrxSheetCycleCount.Cells[sheetRowMisc, 2].Style.WrapText = false;
                                 MiscTrxSheetCycleCount.Cells[sheetRowMisc, 3].Value = SheetData.ItemDesc;
@@ -739,8 +740,9 @@ namespace ERPReports.Areas.Reports.Controllers
                                     MiscTrxSheetMiscellaneousIssue.InsertRow((sheetRowMisc + 1), 1);
                                     MiscTrxSheetMiscellaneousIssue.Cells[sheetRowMisc, 1, sheetRowMisc, 100].Copy(MiscTrxSheetMiscellaneousIssue.Cells[(sheetRowMisc + 1), 1, (sheetRowMisc + 1), 1]);
                                 }
-                                MiscTrxSheetMiscellaneousIssue.Cells[sheetRowMisc, 1].Value = SheetData.TransDate;
+                                MiscTrxSheetMiscellaneousIssue.Cells[sheetRowMisc, 1].Value = Convert.ToDateTime(SheetData.TransDate);
                                 MiscTrxSheetMiscellaneousIssue.Cells[sheetRowMisc, 1].Style.WrapText = false;
+                                MiscTrxSheetMiscellaneousIssue.Cells[sheetRowMisc, 1].Style.Numberformat.Format = "m/d/yyyy";
                                 MiscTrxSheetMiscellaneousIssue.Cells[sheetRowMisc, 2].Value = SheetData.Item;
                                 MiscTrxSheetMiscellaneousIssue.Cells[sheetRowMisc, 2].Style.WrapText = false;
                                 MiscTrxSheetMiscellaneousIssue.Cells[sheetRowMisc, 3].Value = SheetData.ItemDesc;
@@ -787,8 +789,9 @@ namespace ERPReports.Areas.Reports.Controllers
                                     MiscTrxSheetMiscellaneousReceipt.InsertRow((sheetRowMisc + 1), 1);
                                     MiscTrxSheetMiscellaneousReceipt.Cells[sheetRowMisc, 1, sheetRowMisc, 100].Copy(MiscTrxSheetMiscellaneousReceipt.Cells[(sheetRowMisc + 1), 1, (sheetRowMisc + 1), 1]);
                                 }
-                                MiscTrxSheetMiscellaneousReceipt.Cells[sheetRowMisc, 1].Value = SheetData.TransDate;
+                                MiscTrxSheetMiscellaneousReceipt.Cells[sheetRowMisc, 1].Value = Convert.ToDateTime(SheetData.TransDate);
                                 MiscTrxSheetMiscellaneousReceipt.Cells[sheetRowMisc, 1].Style.WrapText = false;
+                                MiscTrxSheetMiscellaneousReceipt.Cells[sheetRowMisc, 1].Style.Numberformat.Format = "m/d/yyyy";
                                 MiscTrxSheetMiscellaneousReceipt.Cells[sheetRowMisc, 2].Value = SheetData.Item;
                                 MiscTrxSheetMiscellaneousReceipt.Cells[sheetRowMisc, 2].Style.WrapText = false;
                                 MiscTrxSheetMiscellaneousReceipt.Cells[sheetRowMisc, 3].Value = SheetData.ItemDesc;
@@ -1230,8 +1233,9 @@ namespace ERPReports.Areas.Reports.Controllers
                         }
                         MiscellaneousTransactionSheet.Cells[sheetrRow, 1].Value = SheetData.A;
                         MiscellaneousTransactionSheet.Cells[sheetrRow, 1].Style.WrapText = false;
-                        MiscellaneousTransactionSheet.Cells[sheetrRow, 2].Value = SheetData.B;
+                        MiscellaneousTransactionSheet.Cells[sheetrRow, 2].Value = Convert.ToDateTime(SheetData.B);
                         MiscellaneousTransactionSheet.Cells[sheetrRow, 2].Style.WrapText = false;
+                        MiscellaneousTransactionSheet.Cells[sheetrRow, 2].Style.Numberformat.Format = "m/d/yyyy";
                         MiscellaneousTransactionSheet.Cells[sheetrRow, 3].Value = SheetData.C;
                         MiscellaneousTransactionSheet.Cells[sheetrRow, 3].Style.WrapText = false;
                         MiscellaneousTransactionSheet.Cells[sheetrRow, 4].Value = SheetData.D;
