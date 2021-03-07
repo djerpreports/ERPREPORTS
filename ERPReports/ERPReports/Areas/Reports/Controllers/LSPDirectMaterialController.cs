@@ -690,7 +690,7 @@ namespace ERPReports.Areas.Reports.Controllers
                                     MiscTrxSheetCycleCount.InsertRow((sheetRowMisc + 1), 1);
                                     MiscTrxSheetCycleCount.Cells[sheetRowMisc, 1, sheetRowMisc, 100].Copy(MiscTrxSheetCycleCount.Cells[(sheetRowMisc + 1), 1, (sheetRowMisc + 1), 1]);
                                 }
-                                MiscTrxSheetCycleCount.Cells[sheetRowMisc, 1].Value = SheetData.TransDate;
+                                MiscTrxSheetCycleCount.Cells[sheetRowMisc, 1].Value = DateTime.Parse(SheetData.TransDate).ToString("MM/dd/yyyy");
                                 MiscTrxSheetCycleCount.Cells[sheetRowMisc, 1].Style.WrapText = false;
                                 MiscTrxSheetCycleCount.Cells[sheetRowMisc, 2].Value = SheetData.Item;
                                 MiscTrxSheetCycleCount.Cells[sheetRowMisc, 2].Style.WrapText = false;
@@ -739,7 +739,7 @@ namespace ERPReports.Areas.Reports.Controllers
                                     MiscTrxSheetMiscellaneousIssue.InsertRow((sheetRowMisc + 1), 1);
                                     MiscTrxSheetMiscellaneousIssue.Cells[sheetRowMisc, 1, sheetRowMisc, 100].Copy(MiscTrxSheetMiscellaneousIssue.Cells[(sheetRowMisc + 1), 1, (sheetRowMisc + 1), 1]);
                                 }
-                                MiscTrxSheetMiscellaneousIssue.Cells[sheetRowMisc, 1].Value = SheetData.TransDate;
+                                MiscTrxSheetMiscellaneousIssue.Cells[sheetRowMisc, 1].Value = DateTime.Parse(SheetData.TransDate).ToString("MM/dd/yyyy");
                                 MiscTrxSheetMiscellaneousIssue.Cells[sheetRowMisc, 1].Style.WrapText = false;
                                 MiscTrxSheetMiscellaneousIssue.Cells[sheetRowMisc, 2].Value = SheetData.Item;
                                 MiscTrxSheetMiscellaneousIssue.Cells[sheetRowMisc, 2].Style.WrapText = false;
@@ -787,7 +787,7 @@ namespace ERPReports.Areas.Reports.Controllers
                                     MiscTrxSheetMiscellaneousReceipt.InsertRow((sheetRowMisc + 1), 1);
                                     MiscTrxSheetMiscellaneousReceipt.Cells[sheetRowMisc, 1, sheetRowMisc, 100].Copy(MiscTrxSheetMiscellaneousReceipt.Cells[(sheetRowMisc + 1), 1, (sheetRowMisc + 1), 1]);
                                 }
-                                MiscTrxSheetMiscellaneousReceipt.Cells[sheetRowMisc, 1].Value = SheetData.TransDate;
+                                MiscTrxSheetMiscellaneousReceipt.Cells[sheetRowMisc, 1].Value = DateTime.Parse(SheetData.TransDate).ToString("MM/dd/yyyy");
                                 MiscTrxSheetMiscellaneousReceipt.Cells[sheetRowMisc, 1].Style.WrapText = false;
                                 MiscTrxSheetMiscellaneousReceipt.Cells[sheetRowMisc, 2].Value = SheetData.Item;
                                 MiscTrxSheetMiscellaneousReceipt.Cells[sheetRowMisc, 2].Style.WrapText = false;
@@ -1203,7 +1203,7 @@ namespace ERPReports.Areas.Reports.Controllers
                         SFScrapDataSheet.Add(new ExcelColumns
                         {
                             A = MiscellaneousTransactionItem.JobOrLot,
-                            B = MiscellaneousTransactionItem.TransDate,
+                            B = DateTime.Parse(MiscellaneousTransactionItem.TransDate).ToString("MM/dd/yyyy"),
                             C = MiscellaneousTransactionItem.Item,
                             D = MiscellaneousTransactionItem.ItemDesc,
                             E = MiscellaneousTransactionItem.QtyCompleted.ToString(),
@@ -1267,6 +1267,143 @@ namespace ERPReports.Areas.Reports.Controllers
             catch (Exception err)
             {
                 string errmsg = "";
+                if (err.InnerException != null)
+                    errmsg = "An error occured: " + err.InnerException.ToString();
+                else
+                    errmsg = "An error occured: " + err.Message.ToString();
+                return null;
+            }
+        }
+        public ActionResult GenerateFinishedGoodsAndSalesReport()
+        {
+            List<ExcelColumns> WIPShopFloorReport = new List<ExcelColumns>();
+            decimal Total_WIPQty = 0;
+            decimal Total_TotalWIPCost_PHP = 0;
+            decimal Total_TotalWIPCost_USD = 0;
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["LSPI803_App"].ConnectionString.ToString()))
+                {
+                    conn.Open();
+                    using (SqlCommand cmdSql = conn.CreateCommand())
+                    {
+
+                        cmdSql.CommandType = CommandType.StoredProcedure;
+                        cmdSql.CommandText = "LSP_Rpt_NewDM_WIPShopFloorReportSp";
+                        cmdSql.CommandTimeout = 0;
+                        using (SqlDataReader sdr = cmdSql.ExecuteReader())
+                        {
+                            while (sdr.Read())
+                            {
+                                Total_WIPQty += Convert.ToDecimal(sdr["WIPQty"]);
+                                Total_TotalWIPCost_PHP += Convert.ToDecimal(sdr["TotalWIPCost_PHP"]);
+                                Total_TotalWIPCost_USD += Convert.ToDecimal(sdr["TotalWIPCost_USD"]);
+                                WIPShopFloorReport.Add(new ExcelColumns
+                                {
+                                    A = sdr["TransDate"].ToString() == "" ? "" : DateTime.Parse(sdr["TransDate"].ToString()).ToString("MM/dd/yyyy"),
+                                    B = sdr["Item"].ToString(),
+                                    C = sdr["ItemDesc"].ToString(),
+                                    D = sdr["JOReference"].ToString(),
+                                    E = sdr["WIPQty"].ToString(),
+                                    F = sdr["MatlUnit_PHP"].ToString(),
+                                    G = sdr["LandedUnit_PHP"].ToString(),
+                                    H = sdr["PIFGProcessUnit_PHP"].ToString(),
+                                    I = sdr["PIResinUnit_PHP"].ToString(),
+                                    J = sdr["PIHiddenUnit_PHP"].ToString(),
+                                    K = sdr["SFAddedUnit_PHP"].ToString(),
+                                    L = sdr["FGAddedUnit_PHP"].ToString(),
+                                    M = sdr["TotalWIPCost_PHP"].ToString(),
+                                    N = sdr["MatlUnit_USD"].ToString(),
+                                    O = sdr["LandedUnit_USD"].ToString(),
+                                    P = sdr["PIFGProcessUnit_USD"].ToString(),
+                                    Q = sdr["PIResinUnit_USD"].ToString(),
+                                    R = sdr["PIHiddenUnit_USD"].ToString(),
+                                    S = sdr["SFAddedUnit_USD"].ToString(),
+                                    T = sdr["FGAddedUnit_USD"].ToString(),
+                                    U = sdr["TotalWIPCost_USD"].ToString(),
+                                });
+                            }
+
+                        }
+                    }
+                    conn.Close();
+                }
+
+                string filePath = "";
+                string Filename = "LSP_Rpt_DM_WIPShopFloorReport.xlsx";
+                filePath = Path.Combine(Server.MapPath("~/Areas/Reports/Templates/") + "LSP_Rpt_DM_WIPShopFloorReport.xlsx");
+                FileInfo file = new FileInfo(filePath);
+                using (ExcelPackage excelPackage = new ExcelPackage(file))
+                {
+                    #region WIPShopFloorReport(Sheet1)
+                    ExcelWorksheet WIPShopFloorReportSheet = excelPackage.Workbook.Worksheets["LSP_Rpt_DM_WIPShopFloorReport"];
+                    int sheetrRow = 5;
+                    foreach (var SheetData in WIPShopFloorReport)
+                    {
+                        if (sheetrRow < WIPShopFloorReport.Count + 4)
+                        {
+                            WIPShopFloorReportSheet.InsertRow((sheetrRow + 1), 1);
+                            WIPShopFloorReportSheet.Cells[sheetrRow, 1, sheetrRow, 100].Copy(WIPShopFloorReportSheet.Cells[(sheetrRow + 1), 1, (sheetrRow + 1), 1]);
+                        }
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 1].Value = SheetData.A;
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 1].Style.WrapText = false;
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 2].Value = SheetData.B;
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 2].Style.WrapText = false;
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 3].Value = SheetData.C;
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 3].Style.WrapText = false;
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 4].Value = SheetData.D;
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 4].Style.WrapText = false;
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 5].Value = Convert.ToDecimal(SheetData.E);
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 5].Style.WrapText = false;
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 6].Value = Convert.ToDecimal(SheetData.F);
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 6].Style.WrapText = false;
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 7].Value = Convert.ToDecimal(SheetData.G);
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 7].Style.WrapText = false;
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 8].Value = Convert.ToDecimal(SheetData.H);
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 8].Style.WrapText = false;
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 9].Value = Convert.ToDecimal(SheetData.I);
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 9].Style.WrapText = false;
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 10].Value = Convert.ToDecimal(SheetData.J);
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 10].Style.WrapText = false;
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 11].Value = Convert.ToDecimal(SheetData.K);
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 11].Style.WrapText = false;
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 12].Value = Convert.ToDecimal(SheetData.L);
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 12].Style.WrapText = false;
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 13].Value = Convert.ToDecimal(SheetData.M);
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 13].Style.WrapText = false;
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 14].Value = Convert.ToDecimal(SheetData.N);
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 14].Style.WrapText = false;
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 15].Value = Convert.ToDecimal(SheetData.O);
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 15].Style.WrapText = false;
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 16].Value = Convert.ToDecimal(SheetData.P);
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 16].Style.WrapText = false;
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 17].Value = Convert.ToDecimal(SheetData.Q);
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 17].Style.WrapText = false;
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 18].Value = Convert.ToDecimal(SheetData.R);
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 18].Style.WrapText = false;
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 19].Value = Convert.ToDecimal(SheetData.S);
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 19].Style.WrapText = false;
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 20].Value = Convert.ToDecimal(SheetData.T);
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 20].Style.WrapText = false;
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 21].Value = Convert.ToDecimal(SheetData.U);
+                        WIPShopFloorReportSheet.Cells[sheetrRow, 21].Style.WrapText = false;
+                        sheetrRow++;
+                    }
+
+                    WIPShopFloorReportSheet.Cells[sheetrRow, 5].Value = Convert.ToDecimal(Total_WIPQty);
+                    WIPShopFloorReportSheet.Cells[sheetrRow, 5].Style.WrapText = false;
+                    WIPShopFloorReportSheet.Cells[sheetrRow, 13].Value = Convert.ToDecimal(Total_TotalWIPCost_PHP);
+                    WIPShopFloorReportSheet.Cells[sheetrRow, 13].Style.WrapText = false;
+                    WIPShopFloorReportSheet.Cells[sheetrRow, 21].Value = Convert.ToDecimal(Total_TotalWIPCost_USD);
+                    WIPShopFloorReportSheet.Cells[sheetrRow, 21].Style.WrapText = false;
+                    #endregion
+
+                    return File(excelPackage.GetAsByteArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", Filename);
+                }
+            }
+            catch (Exception err)
+            {
+                string errmsg;
                 if (err.InnerException != null)
                     errmsg = "An error occured: " + err.InnerException.ToString();
                 else
