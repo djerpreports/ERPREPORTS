@@ -3159,3 +3159,5 @@ ERPReports/ERPReports/bin/ERPReports.pdb
 ERPReports/ERPReports/bin/ERPReports.dll
 /Published
 /ERPReports/ERPReports/Web.config
+ERPReports/ERPReports/Properties/PublishProfiles/ERPReports.pubxml
+ERPReports/ERPReports/Properties/PublishProfiles/ERPReports.pubxml.user

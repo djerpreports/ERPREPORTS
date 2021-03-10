@@ -6,7 +6,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <_PublishTargetUrl>D:\ERPReportPublished\20210117</_PublishTargetUrl>
+    <_PublishTargetUrl>D:\ERPReportPublished\20210310_1411</_PublishTargetUrl>
   </PropertyGroup>
   <ItemGroup>
     <File Include="ApplicationInsights.config">
@@ -28,16 +28,19 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/03/2021 01:38:55</publishTime>
     </File>
     <File Include="Areas/MasterMaintenance/Views/UserMaster/UserMaster.cshtml">
-      <publishTime>01/03/2021 01:38:55</publishTime>
+      <publishTime>03/07/2021 18:13:38</publishTime>
     </File>
     <File Include="Areas/MasterMaintenance/Views/web.config">
       <publishTime>01/03/2021 01:38:55</publishTime>
     </File>
     <File Include="Areas/Reports/Scripts/LSPDirectMaterial.js">
-      <publishTime>01/10/2021 17:42:23</publishTime>
+      <publishTime>01/31/2021 21:34:35</publishTime>
     </File>
     <File Include="Areas/Reports/Scripts/ProductivityIndexReport.js">
       <publishTime>01/03/2021 01:38:56</publishTime>
+    </File>
+    <File Include="Areas/Reports/Templates/LSP_Rpt_DM_MiscellaneousTransactionReport_LSPI.xlsx">
+      <publishTime>03/07/2021 21:36:34</publishTime>
     </File>
     <File Include="Areas/Reports/Templates/LSP_Rpt_DM_SlowMovingAnalysisReport.xlsx">
       <publishTime>01/10/2021 17:42:23</publishTime>
@@ -49,10 +52,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/03/2021 01:38:56</publishTime>
     </File>
     <File Include="Areas/Reports/Templates/ProductivityIndexReport.xlsx">
-      <publishTime>01/03/2021 01:38:56</publishTime>
+      <publishTime>03/10/2021 15:21:55</publishTime>
     </File>
     <File Include="Areas/Reports/Views/LSPDirectMaterial/LSPDirectMaterial.cshtml">
-      <publishTime>01/10/2021 17:42:23</publishTime>
+      <publishTime>01/31/2021 21:34:35</publishTime>
     </File>
     <File Include="Areas/Reports/Views/ProductivityIndexReport/ProductivityIndexReport.cshtml">
       <publishTime>01/03/2021 01:38:56</publishTime>
@@ -76,7 +79,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/03/2021 01:39:03</publishTime>
     </File>
     <File Include="bin/ERPReports.dll">
-      <publishTime>01/17/2021 19:30:06</publishTime>
+      <publishTime>03/10/2021 15:22:13</publishTime>
     </File>
     <File Include="bin/Microsoft.AI.Agent.Intercept.dll">
       <publishTime>01/03/2021 01:39:07</publishTime>
@@ -9271,7 +9274,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/03/2021 01:39:02</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>01/17/2021 19:31:59</publishTime>
+      <publishTime>03/09/2021 22:04:15</publishTime>
     </File>
   </ItemGroup>
 </Project>

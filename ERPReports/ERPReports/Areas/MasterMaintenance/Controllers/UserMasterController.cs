@@ -168,7 +168,7 @@ namespace ERPReports.Areas.MasterMaintenance.Controllers
                             cmdSql.Parameters.AddWithValue("@UserName", User.UserName);
                             cmdSql.Parameters.AddWithValue("@Password", User.Password);
                             cmdSql.Parameters.AddWithValue("@FirstName", User.FirstName);
-                            cmdSql.Parameters.AddWithValue("@MiddleName", User.MiddleName);
+                            cmdSql.Parameters.AddWithValue("@MiddleName", User.MiddleName==null?"": User.MiddleName);
                             cmdSql.Parameters.AddWithValue("@LastName", User.LastName);
                             cmdSql.Parameters.AddWithValue("@EmailAddress", User.EmailAddress);
                             cmdSql.Parameters.AddWithValue("@UserID", Session["UserName"]);

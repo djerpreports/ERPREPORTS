@@ -205,7 +205,7 @@ BEGIN TRANSACTION
 				INSERT INTO #DMActualCost
 				EXEC dbo.LSP_DM_ActlCost_GetJobMatlTransCostingSp @Lot, 0, @Item, @LotCreateDate, @QtyOnHand
 				
-				EXEC dbo.LSP_GetSlowMovingAnalysisReportRemarks @item, @Remarks OUTPUT
+				EXEC dbo.LSP_GetSlowMovingAnalysisReportRemarksSp @item, @Remarks OUTPUT
 				
 				PRINT @Lot+'_'+@Item
 				
@@ -241,7 +241,7 @@ BEGIN TRANSACTION
 				EXEC dbo.LSP_CurrencyConversionModSp @LotCreateDate, @CurrCode, 'PHP', @ItemPricingCost, @matl_unit_cost_php OUTPUT, @ExchRate OUTPUT
 				EXEC dbo.LSP_CurrencyConversionModSp @LotCreateDate, @CurrCode, 'USD', @ItemPricingCost, @matl_unit_cost_usd OUTPUT, @ExchRate OUTPUT
 								
-				EXEC dbo.LSP_GetSlowMovingAnalysisReportRemarks @item, @Remarks OUTPUT
+				EXEC dbo.LSP_GetSlowMovingAnalysisReportRemarksSp @item, @Remarks OUTPUT
 				
 				INSERT INTO #ItemLotLocCosts
 				SELECT @item
@@ -275,7 +275,7 @@ BEGIN TRANSACTION
 					  , @sf_lbr_cost_php OUTPUT, @sf_ovhd_cost_php OUTPUT
 					  , @fg_lbr_cost_php OUTPUT, @fg_ovhd_cost_php OUTPUT
 			
-			EXEC dbo.LSP_GetSlowMovingAnalysisReportRemarks @item, @Remarks OUTPUT
+			EXEC dbo.LSP_GetSlowMovingAnalysisReportRemarksSp @item, @Remarks OUTPUT
 			
 			INSERT INTO #ItemLotLocCosts
 			SELECT @item

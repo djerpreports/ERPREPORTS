@@ -103,7 +103,7 @@ namespace ERPReports.Areas.Reports.Controllers
                     .ToList();
 
                 string filePath = "";
-                string Filename = "LSP_Rpt_ProductivityIndexReport_" + MonthYear + ".xlsx";
+                string Filename = "LSP_Rpt_ProducedMinutesReport_" + MonthYear + ".xlsx";
                 filePath = Path.Combine(Server.MapPath("~/Areas/Reports/Templates/") + "ProductivityIndexReport.xlsx");
                 FileInfo file = new FileInfo(filePath);
                 using (ExcelPackage excelPackage = new ExcelPackage(file))
