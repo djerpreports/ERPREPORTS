@@ -1,7 +1,7 @@
 --CREATE PROCEDURE LSP_Rpt_NewDM_FinishedGoodsReportSp (
 DECLARE
-	@StartDate				DateType = '05/01/2020'
-  , @EndDate				DateType = '05/31/2020'
+	@StartDate				DateType = '12/01/2019'
+  , @EndDate				DateType = '01/31/2020'
 --) AS
 
 BEGIN
@@ -368,32 +368,32 @@ BEGIN
 		INSERT INTO #BOMStdCost
 		EXEC dbo.LSP_DM_StdCost_GetCurrentMatlCostingSp @Item, @TransDate
 	
-		SELECT @StdMatlCost	= matl_unit_cost
+		SELECT @StdMatlCost	= ISNULL(matl_unit_cost, 0)
 			 , @StdLandedCost = 0
-			 , @StdResinCost = pi_resin_cost
-			 , @StdPIProcess = pi_process_cost
-			 , @StdPIHiddenProfit = pi_hidden_profit
-			 , @StdSFAdded = sf_labr_cost + sf_ovhd_cost
-			 , @StdFGAdded = fg_labr_cost + fg_ovhd_cost
+			 , @StdResinCost = ISNULL(pi_resin_cost, 0)
+			 , @StdPIProcess = ISNULL(pi_process_cost, 0)
+			 , @StdPIHiddenProfit = ISNULL(pi_hidden_profit, 0)
+			 , @StdSFAdded = ISNULL(sf_labr_cost, 0) + ISNULL(sf_ovhd_cost, 0)
+			 , @StdFGAdded = ISNULL(fg_labr_cost, 0) + ISNULL(fg_ovhd_cost, 0)
 		FROM #BOMStdCost
-		WHERE [Level] = 0
+		WHERE [Level] = 0	
 	
 		TRUNCATE TABLE #DMActualCost
 		
 		INSERT INTO #DMActualCost
 		EXEC dbo.LSP_DM_ActlCost_GetJobMatlTransCostingSp @JobOrder, @JobSuffix, @Item, @TransDate, @QtyCompleted
 		
-		SELECT @ActlMatlCostPHP	= matl_unit_cost_php / job_qty
-			 , @ActlLandedCostPHP	= matl_landed_cost_php / job_qty
-			 , @ActlResinCostPHP	= pi_resin_php / job_qty
-			 , @ActlPIProcessPHP	= pi_fg_process_php / job_qty
-			 , @ActlPIHiddenProfitPHP = pi_hidden_profit_php / job_qty
-			 , @ActlSFAddedPHP		= (sf_lbr_cost_php + sf_ovhd_cost_php) / job_qty
-			 , @ActlFGAddedPHP		= (fg_lbr_cost_php + fg_ovhd_cost_php) / job_qty
+		SELECT @ActlMatlCostPHP	= ISNULL(matl_unit_cost_php,0) / ISNULL(job_qty,0)
+			 , @ActlLandedCostPHP	= ISNULL(matl_landed_cost_php,0) / ISNULL(job_qty,0)
+			 , @ActlResinCostPHP	= ISNULL(pi_resin_php,0) / ISNULL(job_qty,0)
+			 , @ActlPIProcessPHP	= ISNULL(pi_fg_process_php,0) / ISNULL(job_qty,0)
+			 , @ActlPIHiddenProfitPHP = ISNULL(pi_hidden_profit_php,0) / ISNULL(job_qty,0)
+			 , @ActlSFAddedPHP		= (ISNULL(sf_lbr_cost_php,0) + ISNULL(sf_ovhd_cost_php,0)) / ISNULL(job_qty,0)
+			 , @ActlFGAddedPHP		= (ISNULL(fg_lbr_cost_php,0) + ISNULL(fg_ovhd_cost_php,0)) / ISNULL(job_qty,0)
 		FROM #DMActualCost
 		WHERE [Level] = 0
 		
-		SELECT @EXWUnitCost = unit_price1 / 1.2
+		SELECT @EXWUnitCost = ISNULL(unit_price1,0) / 1.2
 			 , @EXWCurrCode = curr_code
 		FROM #itemPrice
 		WHERE item = @Item
@@ -405,12 +405,11 @@ BEGIN
 		ELSE
 		BEGIN
 			EXEC dbo.LSP_ConvertUsdToPhpCurrencySp @TransDate, @ExchRate OUTPUT  
-		END
-		
+		END		
 		
 		INSERT INTO @FGReportSet
 		SELECT @TransDate
-			 , @PONum
+			 , ISNULL(@PONum, '')
 			 , @JobOrder
 			 , @JobSuffix
 			 , @Item
@@ -418,21 +417,21 @@ BEGIN
 			 , @ProductCode
 			 , @Family
 			 , @FamilyDesc
-			 , @CONum
-			 , @CustNum
-			 , @ShipToCust
-			 , @CustomerName
+			 , ISNULL(@CONum, '')
+			 , ISNULL(@CustNum, '')
+			 , ISNULL(@ShipToCust, '')
+			 , ISNULL(@CustomerName, '')
 			 , @FGTransType
 			 , @QtyCompleted
-			 , @StdMatlCost * @ExchRate
-			 , @StdLandedCost * @ExchRate
-			 , @StdResinCost * @ExchRate
-			 , @StdPIProcess * @ExchRate
-			 , @StdPIHiddenProfit * @ExchRate
+			 , @StdMatlCost * ISNULL(@ExchRate, 0)
+			 , @StdLandedCost * ISNULL(@ExchRate, 0)
+			 , @StdResinCost * ISNULL(@ExchRate, 0)
+			 , @StdPIProcess * ISNULL(@ExchRate, 0)
+			 , @StdPIHiddenProfit * ISNULL(@ExchRate, 0)
 			 , @StdSFAdded
 			 , @StdFGAdded
 			 , ((@StdMatlCost + @StdLandedCost 
-				+ @StdResinCost + @StdPIProcess + @StdPIHiddenProfit) * @ExchRate)
+				+ @StdResinCost + @StdPIProcess + @StdPIHiddenProfit) * ISNULL(@ExchRate, 0))
 				+ @StdSFAdded + @StdFGAdded
 			 , @ActlMatlCostPHP
 			 , @ActlLandedCostPHP
@@ -485,6 +484,9 @@ BEGIN
 	CLOSE FGCrsr
 	DEALLOCATE FGCrsr	
 
-	SELECT * FROM @FGReportSet
+	--INSERT INTO Rpt_FgReport
+	SELECT * 
+	--INTO Rpt_FgReport
+	FROM @FGReportSet
 
 END

@@ -1,7 +1,7 @@
 --CREATE PROCEDURE LSP_Rpt_NewDM_SalesSummaryReportSp (  
 DECLARE
-	@StartDate					DateType	= '05/01/2020'
-  , @EndDate					DateType	= '05/31/2020'
+	@StartDate					DateType	= '12/01/2019'
+  , @EndDate					DateType	= '12/31/2019'
 --) AS  
   
 BEGIN
@@ -90,6 +90,8 @@ BEGIN
 	  
 	--SELECT * FROM @gl_table  
 	--SELECT * FROM @report_set
+	
+--	INSERT INTO [Rpt_SalesSummary]
 	SELECT inv_date
 		 , inv_num
 		 , ship_to_cust
@@ -99,6 +101,8 @@ BEGIN
 		 , exch_rate
 		 , eng_design
 		 , price
+		 
+	
 	FROM @report_set 
 	ORDER BY inv_date
   

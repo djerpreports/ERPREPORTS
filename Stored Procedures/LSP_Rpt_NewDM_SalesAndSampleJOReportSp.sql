@@ -1,7 +1,7 @@
 --CREATE PROCEDURE LSP_Rpt_NewDM_SalesAndSampleJOReportSp (
 DECLARE
 	@StartDate					DateType	= '12/01/2019'
-  , @EndDate					DateType	= '12/31/2019'
+  , @EndDate					DateType	= '01/31/2020'
 --) AS
 
 BEGIN
@@ -423,8 +423,8 @@ BEGIN
 			 , @FamilyDesc
 			 , @PONum
 			 , @LotNo
-			 , @JobOrder
-			 , @JobSuffix
+			 , ISNULL(@JobOrder, '')
+			 , ISNULL(@JobSuffix, '')
 			 , @CONum
 			 , @COLine
 			 , @CustNum
@@ -432,16 +432,16 @@ BEGIN
 			 , @CustomerName	  
 			 , @QtyCompleted
 			 , @SalesUnitPrice
-			 , @SalesUnitPrice * @ExchRate			  
-			 , @StdMatlCost * @ExchRate
-			 , @StdLandedCost * @ExchRate
-			 , @StdResinCost * @ExchRate
-			 , @StdPIProcess * @ExchRate
-			 , @StdPIHiddenProfit * @ExchRate
+			 , @SalesUnitPrice * ISNULL(@ExchRate, 0)
+			 , @StdMatlCost * ISNULL(@ExchRate, 0)
+			 , @StdLandedCost * ISNULL(@ExchRate, 0)
+			 , @StdResinCost * ISNULL(@ExchRate, 0)
+			 , @StdPIProcess * ISNULL(@ExchRate, 0)
+			 , @StdPIHiddenProfit * ISNULL(@ExchRate, 0)
 			 , @StdSFAdded
 			 , @StdFGAdded
 			 , ((@StdMatlCost + @StdLandedCost 
-				+ @StdResinCost + @StdPIProcess + @StdPIHiddenProfit) * @ExchRate)
+				+ @StdResinCost + @StdPIProcess + @StdPIHiddenProfit) * ISNULL(@ExchRate, 0))
 				+ @StdSFAdded + @StdFGAdded
 			 , @ActlMatlCostPHP
 			 , @ActlLandedCostPHP
@@ -515,6 +515,10 @@ BEGIN
 	CLOSE shipCrsr
 	DEALLOCATE shipCrsr
 
-	SELECT * FROM @SalesReport
+
+	--INSERT INTO DROP TABLE [Rpt_SalesSampleJO]
+	SELECT * 	
+	--INTO [Rpt_SalesSampleJO]
+	FROM @SalesReport
 
 END
