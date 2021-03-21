@@ -3232,6 +3232,8 @@
     <Content Include="Areas\Reports\Templates\LSP_Rpt_NewDM_DirectMaterialLaborPercentageReport.xlsx" />
     <Content Include="Areas\Reports\Templates\LSP_Rpt_DM_SlowMovingAnalysisReport.xlsx" />
     <Content Include="Areas\Reports\Templates\LSP_Rpt_DM_WIPShopFloorReport.xlsx" />
+    <Content Include="Areas\Reports\Templates\LSP_Rpt_DM_MiscellaneousTransactionReport_LSPI.xlsx" />
+    <Content Include="Areas\Reports\Templates\LSP_Rpt_DM_FinishedGoodsSalesReport.xlsx" />
     <None Include="Properties\PublishProfiles\ERPReports.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
