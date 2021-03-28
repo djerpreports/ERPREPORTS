@@ -1,0 +1,30 @@
+Stored Procedure Name: LSP_Rpt_NewDM_RMBeginningBalanceReportSp
+Parameters: @TransDate and @ProdCode
+Returned Columns: 
+	    item			ItemType
+	  , description			DescriptionType
+	  , vend_num			VendNumType
+	  , name			NameType
+	  , product_code		ProductCodeType
+	  , qty_on_hand			QtyUnitType
+	  , loc				LocType
+	  , lot				LotType
+	  , lot_create_date		DateType
+	  , u_m				UmType
+	  , matl_unit_cost_php  	CostPrcType
+	  , landed_cost_php		CostPrcType
+	  , resin_cost_php		CostPrcType
+	  , pi_process_cost_php  	CostPrcType
+	  , pi_hidden_profit_php 	CostPrcType
+	  , sf_added_value_php  	CostPrcType
+	  , matl_unit_cost_usd  	CostPrcType
+	  , landed_cost_usd   		CostPrcType
+	  , resin_cost_usd   		CostPrcType
+	  , pi_process_cost_usd  	CostPrcType
+	  , pi_hidden_profit_usd 	CostPrcType
+	  , sf_added_value_usd  	CostPrcType
+	  , rm_cost_php    		AmountType
+	  , rm_cost_usd    		AmountType
+
+Report Layout Notes:
+1. Plotting of data only, no grouping no total
