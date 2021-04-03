@@ -75,6 +75,7 @@ namespace ERPReports.Areas.Reports.Models
         public string Item { get; set; }
         public string ItemDesc { get; set; }
         public string ProductCode { get; set; }
+        public string Family { get; set; }
         public string FamilyDesc { get; set; }
         public decimal QtyCompleted { get; set; }
         public decimal StdMatlCost_PHP { get; set; }

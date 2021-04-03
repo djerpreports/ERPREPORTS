@@ -1,8 +1,8 @@
---CREATE PROCEDURE LSP_Rpt_NewDM_FinishedGoodsReportSp (
-DECLARE
-	@StartDate				DateType = '05/01/2020'
-  , @EndDate				DateType = '05/31/2020'
---) AS
+ALTER PROCEDURE LSP_Rpt_NewDM_FinishedGoodsReportSp (
+--DECLARE
+	@StartDate				DateType --= '12/01/2019'
+  , @EndDate				DateType --= '12/31/2019'
+) AS
 
 BEGIN
 
@@ -398,7 +398,7 @@ BEGIN
 		FROM #itemPrice
 		WHERE item = @Item
 		 
-		IF @EXWCurrCode <> 'PHP'
+		IF @EXWCurrCode <> 'PHP' AND ISNULL(@EXWCurrCode,'') <> ''
 		BEGIN		
 			EXEC dbo.LSP_CurrencyConversionModSp @TransDate, @EXWCurrCode, 'PHP', @EXWUnitCost, @EXWUnitCost OUTPUT, @ExchRate OUTPUT
 		END
@@ -407,6 +407,12 @@ BEGIN
 			EXEC dbo.LSP_ConvertUsdToPhpCurrencySp @TransDate, @ExchRate OUTPUT  
 		END
 		
+		--IF @Item = 'FG-MCF6P-UL-D24-NL'
+		--	SELECT @StdMatlCost , @ExchRate, @TransDate, @EXWUnitCost, @EXWCurrCode
+		--	 , @StdLandedCost 
+		--	 , @StdResinCost 
+		--	 , @StdPIProcess 
+		--	 , @StdPIHiddenProfit 
 		
 		INSERT INTO @FGReportSet
 		SELECT @TransDate

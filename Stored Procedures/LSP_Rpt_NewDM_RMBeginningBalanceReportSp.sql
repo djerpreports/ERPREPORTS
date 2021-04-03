@@ -1,8 +1,8 @@
---CREATE PROCEDURE LSP_Rpt_NewDM_RMBeginningBalanceReportSp (
-DECLARE
-	@TransDate		DateType		= '12/31/2019'
-  , @ProdCode		ProductCodeType = 'ALL'
---) AS
+CREATE PROCEDURE LSP_Rpt_NewDM_RMBeginningBalanceReportSp (
+--DECLARE
+	@TransDate		DateType		--= '12/31/2019'
+  , @ProdCode		ProductCodeType --= 'ALL'
+) AS
 
 BEGIN
 

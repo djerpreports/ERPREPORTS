@@ -1339,6 +1339,7 @@ namespace ERPReports.Areas.Reports.Controllers
                                     Item = sdr["Item"].ToString(),
                                     ItemDesc = sdr["ItemDesc"].ToString(),
                                     ProductCode = sdr["ProductCode"].ToString(),
+                                    Family = sdr["Family"].ToString(),
                                     FamilyDesc = sdr["FamilyDesc"].ToString(),
                                     QtyCompleted = sdr["QtyCompleted"] == null ? 0: Convert.ToDecimal(sdr["QtyCompleted"]),
                                     StdMatlCost_PHP = sdr["StdMatlCost_PHP"] == null ? 0: Convert.ToDecimal(sdr["StdMatlCost_PHP"]),    
@@ -1754,7 +1755,7 @@ namespace ERPReports.Areas.Reports.Controllers
 
                     #region FAMILY TOTAL
                     var LSP_Rpt_DM_FinishedGoodsSalesReportList_GroubyFamily = LSP_Rpt_DM_FinishedGoodsSalesReportList
-                    .OrderBy(x => x.TransDate)
+                    .OrderBy(x => x.Family)
                     .GroupBy(x => x.FamilyDesc)
                     .ToList();
                     int sheetsRowFamily = sheetsRowNotFinishedGoods + 4;
@@ -1780,7 +1781,7 @@ namespace ERPReports.Areas.Reports.Controllers
                     CurrentDataCount = CurrentDataCount + LSP_Rpt_DM_FinishedGoodsSalesReportList_GroubyFamily.Count + 3;
                     foreach (var LSP_Rpt_DM_FinishedGoodsSalesReportListObj_GroubyFamily in LSP_Rpt_DM_FinishedGoodsSalesReportList_GroubyFamily)
                     {
-                        string ProductCode = "";
+                        string Family = "";
                         string FamilyDesc = "";
 
                         decimal TotalFamily_QtyCompleted = 0;
@@ -1805,7 +1806,7 @@ namespace ERPReports.Areas.Reports.Controllers
                         foreach (var LSP_Rpt_DM_FinishedGoodsSalesReportObj_GroubyFamily in LSP_Rpt_DM_FinishedGoodsSalesReportListObj_GroubyFamily)
                         {
 
-                            ProductCode = LSP_Rpt_DM_FinishedGoodsSalesReportObj_GroubyFamily.ProductCode;
+                            Family = LSP_Rpt_DM_FinishedGoodsSalesReportObj_GroubyFamily.Family;
                             FamilyDesc = LSP_Rpt_DM_FinishedGoodsSalesReportObj_GroubyFamily.FamilyDesc;
 
                             TotalFamily_QtyCompleted += LSP_Rpt_DM_FinishedGoodsSalesReportObj_GroubyFamily.QtyCompleted;
@@ -1855,7 +1856,7 @@ namespace ERPReports.Areas.Reports.Controllers
                             FINISHEDGOODS.Cells[sheetsRowFamily, 1, sheetsRowFamily, 100].Copy(FINISHEDGOODS.Cells[(sheetsRowFamily + 1), 1, (sheetsRowFamily + 1), 1]);
                         }
 
-                        FINISHEDGOODS.Cells[sheetsRowFamily, 7].Value = ProductCode;
+                        FINISHEDGOODS.Cells[sheetsRowFamily, 7].Value = Family;
                         FINISHEDGOODS.Cells[sheetsRowFamily, 7].Style.WrapText = false;
                         FINISHEDGOODS.Cells[sheetsRowFamily, 8].Value = FamilyDesc;
                         FINISHEDGOODS.Cells[sheetsRowFamily, 8].Style.WrapText = false;
@@ -1942,7 +1943,7 @@ namespace ERPReports.Areas.Reports.Controllers
 
                     #region PRODUCT CODE TOTAL
                     var LSP_Rpt_DM_FinishedGoodsSalesReportList_GroubyProductCode = LSP_Rpt_DM_FinishedGoodsSalesReportList
-                    .OrderBy(x => x.TransDate)
+                    .OrderBy(x => x.ProductCode)
                     .GroupBy(x => x.ProductCode)
                     .ToList();
                     int sheetsRowProductCode = sheetsRowFamily + 4;
@@ -2411,7 +2412,7 @@ namespace ERPReports.Areas.Reports.Controllers
 
                             #region FAMILY TOTAL
                             var FinishedGoodsGroupSales_SampleJOList_GroubyFamily = FinishedGoodsGroupSales_SampleJOList
-                            .OrderBy(x => x.TransDate)
+                            .OrderBy(x => x.Family)
                             .GroupBy(x => x.FamilyDesc)
                             .ToList();
                             salesSheetsRow = salesSheetsRow + 2;
@@ -2440,7 +2441,7 @@ namespace ERPReports.Areas.Reports.Controllers
                             int CurrentSalesDataCount = salesSheetsRow + FinishedGoodsGroupSales_SampleJOList_GroubyFamily.ToList().Count - 1;
                             foreach (var FinishedGoodsGroupSales_SampleJOListObj_GroubyFamily in FinishedGoodsGroupSales_SampleJOList_GroubyFamily)
                             {
-                                string ProductCode = "";
+                                string Family = "";
                                 string FamilyDesc = "";
 
                                 decimal Sales_TotalFamily_QtyShipped = 0;
@@ -2467,7 +2468,7 @@ namespace ERPReports.Areas.Reports.Controllers
                                 foreach (var FinishedGoodsGroupSales_SampleJOObj_GroubyFamily in FinishedGoodsGroupSales_SampleJOListObj_GroubyFamily)
                                 {
 
-                                    ProductCode = FinishedGoodsGroupSales_SampleJOObj_GroubyFamily.ProductCode;
+                                    Family = FinishedGoodsGroupSales_SampleJOObj_GroubyFamily.Family;
                                     FamilyDesc = FinishedGoodsGroupSales_SampleJOObj_GroubyFamily.FamilyDesc;
 
                                     Sales_TotalFamily_QtyShipped += FinishedGoodsGroupSales_SampleJOObj_GroubyFamily.QtyShipped;
@@ -2522,7 +2523,7 @@ namespace ERPReports.Areas.Reports.Controllers
                                     SalesSheets.Cells[salesSheetsRow, 1, salesSheetsRow, 100].Copy(SalesSheets.Cells[(salesSheetsRow + 1), 1, (salesSheetsRow + 1), 1]);
                                 }
 
-                                SalesSheets.Cells[salesSheetsRow, 7].Value = ProductCode;
+                                SalesSheets.Cells[salesSheetsRow, 7].Value = Family;
                                 SalesSheets.Cells[salesSheetsRow, 7].Style.WrapText = false;
                                 SalesSheets.Cells[salesSheetsRow, 8].Value = FamilyDesc;
                                 SalesSheets.Cells[salesSheetsRow, 8].Style.WrapText = false;
@@ -2617,8 +2618,8 @@ namespace ERPReports.Areas.Reports.Controllers
 
                             #region Product TOTAL
                             var FinishedGoodsGroupSales_SampleJOList_GroubyProduct = FinishedGoodsGroupSales_SampleJOList
-                            .OrderBy(x => x.TransDate)
-                            .GroupBy(x => x.ProductCode)
+                            .OrderBy(x => x.ProductCode.Replace("FG-", "").Replace("SA-", "").Replace("RM-", ""))
+                            .GroupBy(x => x.ProductCode.Replace("FG-","").Replace("SA-", "").Replace("RM-", ""))
                             .ToList();
                             salesSheetsRow = salesSheetsRow + 3;
                             decimal Sales_GrandTotalProduct_QtyShipped = 0;
@@ -2672,7 +2673,7 @@ namespace ERPReports.Areas.Reports.Controllers
                                 foreach (var FinishedGoodsGroupSales_SampleJOObj_GroubyProduct in FinishedGoodsGroupSales_SampleJOListObj_GroubyProduct)
                                 {
 
-                                    ProductCode = FinishedGoodsGroupSales_SampleJOObj_GroubyProduct.ProductCode.Replace("FG-", "");
+                                    ProductCode = FinishedGoodsGroupSales_SampleJOObj_GroubyProduct.ProductCode.Replace("FG-", "").Replace("SA-", "").Replace("RM-", "");
 
                                     Sales_TotalProduct_QtyShipped += FinishedGoodsGroupSales_SampleJOObj_GroubyProduct.QtyShipped;
                                     Sales_TotalProduct_SalesPricexQtyShipped += FinishedGoodsGroupSales_SampleJOObj_GroubyProduct.SalesPrice * FinishedGoodsGroupSales_SampleJOObj_GroubyProduct.QtyShipped;
@@ -2865,8 +2866,8 @@ namespace ERPReports.Areas.Reports.Controllers
                     //ExcelRichText uses "using OfficeOpenXml.Style;"
                     ExcelRichText text1 = rg.RichText.Add("Exchange Rate: ");
                     text1.Bold = true;
-                    ExcelRichText text2 = rg.RichText.Add(SalesSummaryList[0].exch_rate.ToString());
-                    text2.UnderLine = true;
+                    ExcelRichText text2 = rg.RichText.Add(SalesSummaryList[0].exch_rate.ToString("0.00"));
+                    text2.UnderLine = true;                    
 
                     decimal Total_price = 0;
                     decimal Total_amount_php = 0;
@@ -2909,7 +2910,9 @@ namespace ERPReports.Areas.Reports.Controllers
                         
                         salesSummarySheetsRow++;
                     }
-                    Sales_price += GrandTotal_price;
+
+
+                    Sales_price += Total_price;
                     Sales_amount_php += GrandTotal_amount_php - (Product_price * SalesSummaryList[0].exch_rate);
 
                     SalesSummarySheets.Cells[salesSummarySheetsRow, 5].Value = Convert.ToDecimal(Total_price);
