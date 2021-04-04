@@ -46,6 +46,19 @@
             //}
             return this;
         },
+        validateRMBreakdownPerJOReport: function () {
+            var self = this;
+            var PONumber = $("#PONumber").val()||"";
+            var JONumber = $("#JONumber").val() || "";
+
+            if (PONumber == "" && JONumber == "") {
+                self.showError("Please enter PO Number or JO NUmber. Thank you.");
+                return false;
+            }
+            else {
+                return true;
+            }
+        }
     }
     LSPDirectMaterial.init.prototype = $.extend(LSPDirectMaterial.prototype, $D.init.prototype);
     LSPDirectMaterial.init.prototype = LSPDirectMaterial.prototype;
@@ -55,6 +68,10 @@
         LSPDM.drawDatatables();
 
         $(".ReportType").click(function () {
+            var PONumber = $("#PONumber").val() || "";
+            var JONumber = $("#JONumber").val() || "";
+            var ProductCode = $("#ProductCode").val() || "";
+            var TransactionDate = $("#TransactionDate").val() || "";
             $("#btnPrint").prop("disabled", true);
             if ($('.ReportTypeG1:checked').length) {
                 //$("#StartDate,#EndDate").attr("required",true);
@@ -72,6 +89,27 @@
                     $("#btnPrint").prop("disabled", false);
                 else
                     $("#btnPrint").prop("disabled", true);
+            }
+            if ($('.ReportTypeG4:checked').length) {
+                if (PONumber == "" && JONumber == "") 
+                    $("#btnPrint").prop("disabled", true);
+                else
+                    $("#btnPrint").prop("disabled", false);
+
+                $("#JONumber,#PONumber").prop("disabled", false);
+            } else {
+                $("#JONumber,#PONumber").val("").prop("disabled", true);
+            }
+            if ($('.ReportTypeG5:checked').length) {
+                if (ProductCode == "" || TransactionDate == "")
+                    $("#btnPrint").prop("disabled", true);
+                else
+                    $("#btnPrint").prop("disabled", false);
+
+                $("#ProductCode,#TransactionDate").prop("disabled", false);
+            } else {
+                $("#ProductCode,#TransactionDate").val("").prop("disabled", true);
+                $("#ProductCode").trigger("change.select2");
             }
         });
         $("#StartDate,#EndDate").change(function () {
@@ -111,7 +149,19 @@
                 autoclose: true,
             });
         });
+        $("#TransactionDate").datepicker({
+            todayHighlight: true,
+            autoclose: true,
+        });
         $("#btnPrint").click(function (e) {
+            var isValid = true;
+            if ($("#RMBreakdownPerJOReport").is(":checked"))
+                isValid = LSPDM.validateRMBreakdownPerJOReport();
+
+            if(!isValid){
+                return;
+            }
+
             var checkedCount = $(".ReportType:checked").length;
             var myInterval = setInterval(submitForm, 1);
             var arrSubmittedURL = [];
@@ -148,6 +198,29 @@
                 $("#Month").prop("disabled", true);
             }
         });
+        $("#JONumber,#PONumber").change(function () {
+            var PONumber = $("#PONumber").val() || "";
+            var JONumber = $("#JONumber").val() || "";
+
+            if (PONumber == "" && JONumber == "") {
+                $("#btnPrint").prop("disabled", true);
+            }
+            else {
+                $("#btnPrint").prop("disabled", false);
+            }
+        });
+        $("#ProductCode,#TransactionDate").change(function () {
+            var TransactionDate = $("#TransactionDate").val() || "";
+            var ProductCode = $("#ProductCode").val() || "";
+
+            if (TransactionDate == "" || ProductCode == "") {
+                $("#btnPrint").prop("disabled", true);
+            }
+            else {
+                $("#btnPrint").prop("disabled", false);
+            }
+        });
+
         $("#StartDate,#EndDate").prop("disabled", true);
         $('#ProductCode1,#ProductCode2').select2({
             ajax: {
@@ -184,6 +257,24 @@
                         sp: "LSP_GetFGItemListPerProdCodeWihtNullSp",
                         StartProdCode: ProductCode1,
                         EndProdCode: ProductCode2,
+                    };
+                },
+            },
+            placeholder: '--Please Select--',
+        }).prop("disabled", true);
+        $("#ProductCode").select2({
+            ajax: {
+                url: "/General/GetSelect2Data",
+                data: function (params) {
+                    var search = params.term || "";
+                    return {
+                        q: params.term,
+                        id: 'ProductCode',
+                        text: 'Description',
+                        table: 'prodcode',
+                        db: 'ERPReports',
+                        display: 'id&text',
+                        query: "execute LSP_NewDM_GetAllRMProductCodesGroupedSp",
                     };
                 },
             },

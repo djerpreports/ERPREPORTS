@@ -2953,5 +2953,122 @@ namespace ERPReports.Areas.Reports.Controllers
                 return null;
             }
         }
+        public ActionResult GenerateRMBeginningBalanceReport()
+        {
+            List<RMBeginningBalanceReport> RMBeginningBalanceReportList = new List<RMBeginningBalanceReport>();
+            var ProductCode = Request["ProductCode"];
+            var TransactionDate = Request["TransactionDate"];
+            string MonthYear = DateTime.Parse(TransactionDate).ToString("MMMyyyy");
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["LSPI803_App"].ConnectionString.ToString()))
+                {
+                    conn.Open();
+                    using (SqlCommand cmdSql = conn.CreateCommand())
+                    {
+
+                        cmdSql.CommandType = CommandType.StoredProcedure;
+                        cmdSql.CommandText = "LSP_Rpt_NewDM_RMBeginningBalanceReportSp";
+                        cmdSql.Parameters.AddWithValue("@ProdCode", ProductCode);
+                        cmdSql.Parameters.AddWithValue("@TransDate", TransactionDate);
+                        cmdSql.CommandTimeout = 0;
+                        using (SqlDataReader sdr = cmdSql.ExecuteReader())
+                        {
+                            while (sdr.Read())
+                            {
+                                RMBeginningBalanceReportList.Add(new RMBeginningBalanceReport
+                                {
+                                    product_code = sdr["product_code"].ToString(),
+                                    item = sdr["item"].ToString(),
+                                    description = sdr["description"].ToString(),
+                                    name = sdr["name"].ToString(),
+                                    lot = sdr["lot"].ToString(),
+                                    lot_create_date = sdr["lot_create_date"].ToString(),
+                                    loc = sdr["loc"].ToString(),
+                                    u_m = sdr["u_m"].ToString(),
+                                    qty_on_hand = sdr["qty_on_hand"] == null ? 0 : Convert.ToDecimal(sdr["qty_on_hand"]),
+                                    matl_unit_cost_php = sdr["matl_unit_cost_php"] == null ? 0 : Convert.ToDecimal(sdr["matl_unit_cost_php"]),
+                                    landed_cost_php = sdr["landed_cost_php"] == null ? 0 : Convert.ToDecimal(sdr["landed_cost_php"]),
+                                    resin_cost_php = sdr["resin_cost_php"] == null ? 0 : Convert.ToDecimal(sdr["resin_cost_php"]),
+                                    pi_process_cost_php = sdr["pi_process_cost_php"] == null ? 0 : Convert.ToDecimal(sdr["pi_process_cost_php"]),
+                                    pi_hidden_profit_php = sdr["pi_hidden_profit_php"] == null ? 0 : Convert.ToDecimal(sdr["pi_hidden_profit_php"]),
+                                    sf_added_value_php = sdr["sf_added_value_php"] == null ? 0 : Convert.ToDecimal(sdr["sf_added_value_php"]),
+                                    rm_cost_php = sdr["rm_cost_php"] == null ? 0 : Convert.ToDecimal(sdr["rm_cost_php"]),
+                                    rm_cost_usd = sdr["rm_cost_usd"] == null ? 0 : Convert.ToDecimal(sdr["rm_cost_usd"]),
+                                });
+                            }
+
+                        }
+                    }
+                    conn.Close();
+                }
+                string filePath = "";
+                string Filename = "LSP_Rpt_DM_RMBeginningBalanceReport_" + MonthYear+".xlsx";
+                filePath = Path.Combine(Server.MapPath("~/Areas/Reports/Templates/") + "LSP_Rpt_DM_RMBeginningBalanceReport.xlsx");
+                FileInfo file = new FileInfo(filePath);
+                using (ExcelPackage excelPackage = new ExcelPackage(file))
+                {
+                    ExcelWorksheet RMBegBalanceReportSheet = excelPackage.Workbook.Worksheets["RMBegBalanceReport"];
+                    int sheetsRow = 5;
+                    #region RMBegBalanceReportSheet  
+                    foreach (var RMBeginningBalanceReportListObj in RMBeginningBalanceReportList)
+                    {
+                        if (sheetsRow < RMBeginningBalanceReportList.ToList().Count + 4)
+                        {
+                            RMBegBalanceReportSheet.InsertRow((sheetsRow + 1), 1);
+                            RMBegBalanceReportSheet.Cells[sheetsRow, 1, sheetsRow, 100].Copy(RMBegBalanceReportSheet.Cells[(sheetsRow + 1), 1, (sheetsRow + 1), 1]);
+                        }
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 1].Value = RMBeginningBalanceReportListObj.product_code;
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 1].Style.WrapText = false;
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 2].Value = RMBeginningBalanceReportListObj.item;
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 2].Style.WrapText = false;
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 3].Value = RMBeginningBalanceReportListObj.description;
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 3].Style.WrapText = false;
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 4].Value = RMBeginningBalanceReportListObj.name;
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 4].Style.WrapText = false;
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 5].Value = RMBeginningBalanceReportListObj.lot;
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 5].Style.WrapText = false;
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 6].Value = RMBeginningBalanceReportListObj.lot_create_date;
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 6].Style.WrapText = false;
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 7].Value = RMBeginningBalanceReportListObj.loc;
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 7].Style.WrapText = false;
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 8].Value = RMBeginningBalanceReportListObj.u_m;
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 8].Style.WrapText = false;
+
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 9].Value = Convert.ToDecimal(RMBeginningBalanceReportListObj.qty_on_hand);
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 9].Style.WrapText = false;
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 10].Value = Convert.ToDecimal(RMBeginningBalanceReportListObj.matl_unit_cost_php);
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 10].Style.WrapText = false;
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 11].Value = Convert.ToDecimal(RMBeginningBalanceReportListObj.landed_cost_php);
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 11].Style.WrapText = false;
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 12].Value = Convert.ToDecimal(RMBeginningBalanceReportListObj.resin_cost_php);
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 12].Style.WrapText = false;
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 13].Value = Convert.ToDecimal(RMBeginningBalanceReportListObj.pi_process_cost_php);
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 13].Style.WrapText = false;
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 14].Value = Convert.ToDecimal(RMBeginningBalanceReportListObj.pi_hidden_profit_php);
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 14].Style.WrapText = false;
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 15].Value = Convert.ToDecimal(RMBeginningBalanceReportListObj.sf_added_value_php);
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 15].Style.WrapText = false;
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 16].Value = Convert.ToDecimal(RMBeginningBalanceReportListObj.rm_cost_php);
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 16].Style.WrapText = false;
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 17].Value = Convert.ToDecimal(RMBeginningBalanceReportListObj.rm_cost_usd);
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 17].Style.WrapText = false;
+                        sheetsRow++;
+
+                    }
+                    #endregion
+                    return File(excelPackage.GetAsByteArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", Filename);
+                }
+            }
+            catch (Exception err)
+            {
+                string errmsg;
+                if (err.InnerException != null)
+                    errmsg = "An error occured: " + err.InnerException.ToString();
+                else
+                    errmsg = "An error occured: " + err.Message.ToString();
+                return null;
+            }
+        }
     }
 }
