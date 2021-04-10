@@ -1,85 +1,85 @@
 ALTER PROCEDURE LSP_ActlCost_GetMatlCostingSp (
 --DECLARE
-	@matl_item					ItemType		--= 'RM-DD-ERA85-009'
-  , @matl_lot					LotType			--= '180423-670062'
-  , @matlTransDate				DateType		--= '5/11/2018'
- /* , @JobQty						BIGINT			
-    , @matl_unit_cost_usd         AmountType = 0
-  , @matl_landed_cost_usd         AmountType = 0
-  , @pi_fg_process_usd          AmountType = 0
-  , @pi_resin_usd         AmountType = 0
-  , @pi_vend_cost_usd         AmountType = 0
-  , @pi_hidden_profit_usd         AmountType = 0
-  , @sf_lbr_cost_usd          AmountType = 0
-  , @sf_ovhd_cost_usd         AmountType = 0
-  , @fg_lbr_cost_usd          AmountType = 0
-  , @fg_ovhd_cost_usd         AmountType = 0
-  , @matl_unit_cost_php         AmountType = 0
-  , @matl_landed_cost_php         AmountType = 0
-  , @pi_fg_process_php          AmountType = 0
-  , @pi_resin_php         AmountType = 0
-  , @pi_vend_cost_php         AmountType = 0
-  , @pi_hidden_profit_php         AmountType = 0
-  , @sf_lbr_cost_php          AmountType = 0
-  , @sf_ovhd_cost_php         AmountType = 0
-  , @fg_lbr_cost_php          AmountType = 0
-  , @fg_ovhd_cost_php         AmountType = 0*/
-  , @JobQty						BIGINT			
+	@matl_item					ItemType		--= 'RM-MDK3017'
+  , @matl_lot					LotType			--= '180629-1806081'
+  , @matlTransDate				DateType		--= '2018-06-29 13:44:44.000'
+  /*, @JobQty						BIGINT			
+  , @matl_unit_cost_usd        DECIMAL(18,8) = 0
+  , @matl_landed_cost_usd        DECIMAL(18,8) = 0
+  , @pi_fg_process_usd         DECIMAL(18,8) = 0
+  , @pi_resin_usd        DECIMAL(18,8) = 0
+  , @pi_vend_cost_usd        DECIMAL(18,8) = 0
+  , @pi_hidden_profit_usd        DECIMAL(18,8) = 0
+  , @sf_lbr_cost_usd         DECIMAL(18,8) = 0
+  , @sf_ovhd_cost_usd        DECIMAL(18,8) = 0
+  , @fg_lbr_cost_usd         DECIMAL(18,8) = 0
+  , @fg_ovhd_cost_usd        DECIMAL(18,8) = 0
+  , @matl_unit_cost_php        DECIMAL(18,8) = 0
+  , @matl_landed_cost_php        DECIMAL(18,8) = 0
+  , @pi_fg_process_php         DECIMAL(18,8) = 0
+  , @pi_resin_php        DECIMAL(18,8) = 0
+  , @pi_vend_cost_php        DECIMAL(18,8) = 0
+  , @pi_hidden_profit_php        DECIMAL(18,8) = 0
+  , @sf_lbr_cost_php         DECIMAL(18,8) = 0
+  , @sf_ovhd_cost_php        DECIMAL(18,8) = 0
+  , @fg_lbr_cost_php         DECIMAL(18,8) = 0
+  , @fg_ovhd_cost_php        DECIMAL(18,8) = 0
+  */, @JobQty						BIGINT			
 										OUTPUT
-  , @matl_unit_cost_usd     AmountType --= 0
+  , @matl_unit_cost_usd    DECIMAL(18,8) --= 0
                 OUTPUT
-  , @matl_landed_cost_usd     AmountType --= 0
+  , @matl_landed_cost_usd    DECIMAL(18,8) --= 0
                 OUTPUT
-  , @pi_fg_process_usd      AmountType --= 0
+  , @pi_fg_process_usd     DECIMAL(18,8) --= 0
                 OUTPUT
-  , @pi_resin_usd     AmountType --= 0
+  , @pi_resin_usd    DECIMAL(18,8) --= 0
                 OUTPUT
-  , @pi_vend_cost_usd     AmountType --= 0
+  , @pi_vend_cost_usd    DECIMAL(18,8) --= 0
                 OUTPUT
-  , @pi_hidden_profit_usd     AmountType --= 0
+  , @pi_hidden_profit_usd    DECIMAL(18,8) --= 0
                 OUTPUT
-  , @sf_lbr_cost_usd      AmountType --= 0
+  , @sf_lbr_cost_usd     DECIMAL(18,8) --= 0
                 OUTPUT
-  , @sf_ovhd_cost_usd     AmountType --= 0
+  , @sf_ovhd_cost_usd    DECIMAL(18,8) --= 0
                 OUTPUT
-  , @fg_lbr_cost_usd      AmountType --= 0
+  , @fg_lbr_cost_usd     DECIMAL(18,8) --= 0
                 OUTPUT
-  , @fg_ovhd_cost_usd     AmountType --= 0
+  , @fg_ovhd_cost_usd    DECIMAL(18,8) --= 0
                 OUTPUT
-  , @matl_unit_cost_php     AmountType --= 0
+  , @matl_unit_cost_php    DECIMAL(18,8) --= 0
                 OUTPUT
-  , @matl_landed_cost_php     AmountType --= 0
+  , @matl_landed_cost_php    DECIMAL(18,8) --= 0
                 OUTPUT
-  , @pi_fg_process_php      AmountType --= 0
+  , @pi_fg_process_php     DECIMAL(18,8) --= 0
                 OUTPUT
-  , @pi_resin_php     AmountType --= 0
+  , @pi_resin_php    DECIMAL(18,8) --= 0
                 OUTPUT
-  , @pi_vend_cost_php     AmountType --= 0
+  , @pi_vend_cost_php    DECIMAL(18,8) --= 0
                 OUTPUT
-  , @pi_hidden_profit_php     AmountType --= 0
+  , @pi_hidden_profit_php    DECIMAL(18,8) --= 0
                 OUTPUT
-  , @sf_lbr_cost_php      AmountType --= 0
+  , @sf_lbr_cost_php     DECIMAL(18,8) --= 0
                 OUTPUT
-  , @sf_ovhd_cost_php     AmountType --= 0
+  , @sf_ovhd_cost_php    DECIMAL(18,8) --= 0
                 OUTPUT
-  , @fg_lbr_cost_php      AmountType --= 0
+  , @fg_lbr_cost_php     DECIMAL(18,8) --= 0
                 OUTPUT
-  , @fg_ovhd_cost_php     AmountType --= 0
+  , @fg_ovhd_cost_php    DECIMAL(18,8) --= 0
                 OUTPUT
 ) AS
 
 BEGIN
 	DECLARE 
-		@pi_fg_process			AmountType
-	  , @pi_resin				AmountType
+		@pi_fg_process			DECIMAL(18,8)
+	  , @pi_resin				DECIMAL(18,8)
 	  , @ExchRate			ExchRateType
 	  , @CurrCode			CurrCodeType	  
 	  , @ReceiptCount		BIGINT		= 0
 	  ,	@MiscTransCount		INT			= 0
-	  , @LaborRate		CostPrcType  
-	  , @OvhdRate		CostPrcType  
-	  , @LaborCost		AmountType  
-	  , @OverhdCost		AmountType 
+	  , @LaborRate		DECIMAL(18,8)  
+	  , @OvhdRate		DECIMAL(18,8)  
+	  , @LaborCost		DECIMAL(18,8)  
+	  , @OverhdCost		DECIMAL(18,8) 
 	  
 	  , @MatlRcptDate			DateType
 	  , @MatlMiscRcptDate		DateType
@@ -201,11 +201,11 @@ BEGIN
 			ELSE
 			BEGIN
 				SELECT TOP(1) @matl_unit_cost_php = CASE WHEN v.curr_code = 'JPY'
-															THEN (por.unit_mat_cost / por.exch_rate)
-														ELSE (por.unit_mat_cost * por.exch_rate) END
+															THEN (ROUND(por.unit_mat_cost,5) / por.exch_rate)
+														ELSE (ROUND(por.unit_mat_cost,5) * por.exch_rate) END
 					 , @matl_landed_cost_php = CASE WHEN v.curr_code = 'JPY'
-														THEN (por.unit_duty_cost + por.unit_brokerage_cost + por.unit_freight_cost + por.unit_loc_frt_cost) / por.exch_rate
-													ELSE (por.unit_duty_cost + por.unit_brokerage_cost + por.unit_freight_cost + por.unit_loc_frt_cost) * por.exch_rate END
+														THEN (ROUND(por.unit_duty_cost, 5) + ROUND(por.unit_brokerage_cost, 5) + ROUND(por.unit_freight_cost, 5) + ROUND(por.unit_loc_frt_cost,5) ) / por.exch_rate
+													ELSE  (ROUND(por.unit_duty_cost, 5) + ROUND(por.unit_brokerage_cost, 5) + ROUND(por.unit_freight_cost, 5) + ROUND(por.unit_loc_frt_cost, 5)) * por.exch_rate END
 				FROM matltran AS m
 					JOIN po_rcpt AS por
 						ON m.ref_num = por.po_num 

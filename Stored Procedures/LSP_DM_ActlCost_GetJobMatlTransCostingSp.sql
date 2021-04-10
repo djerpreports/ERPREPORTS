@@ -1,12 +1,12 @@
 --LSP_DM_ActlCost_GetJobMatlTransCostingSp '19CL-00191',0,'SF-L4336','2020-01-04 06:03:13.000',60
 
---ALTER PROCEDURE LSP_DM_ActlCost_GetJobMatlTransCostingSp (
-DECLARE  
-	@Job					JobType		= '19-0002507'
-  , @Suffix					SuffixType	= 0
-  , @Item					ItemType	= 'FG-DK-100D'
-  , @JobTransDate			DateType	= '2020-05-20'
-  , @QtyTrans				QtyUnitType	= 200
+ALTER PROCEDURE LSP_DM_ActlCost_GetJobMatlTransCostingSp (
+--DECLARE  
+	@Job					JobType		--= '19-0002507'
+  , @Suffix					SuffixType	--= 0
+  , @Item					ItemType	--= 'FG-DK-100D'
+  , @JobTransDate			DateType	--= '2020-05-20'
+  , @QtyTrans				QtyUnitType	--= 200
  	--@Job					JobType		= '20-0000864'
   --, @Suffix					SuffixType	= 0
   --, @Item					ItemType	= 'FG-3RS2024'
@@ -15,7 +15,7 @@ DECLARE
  	--@Job					JobType		= '19-0002265'
   --, @Suffix					SuffixType	= 0
   --, @Item					ItemType	= 'FG-E21-211'
---) AS
+) AS
 BEGIN
 
 	IF OBJECT_ID('tempdb..#itemMatl') IS NOT NULL
@@ -114,7 +114,7 @@ BEGIN
 		 , CAST(0 AS NVARCHAR(20)) AS Parent
 		 , m.ref_release
 		 , row_number() OVER (PARTITION BY j.item, m.ref_release ORDER BY m.ref_release ASC)
-		 , CAST(m.ref_release AS NVARCHAR(5)) + '_' + CAST((row_number() OVER (PARTITION BY j.item, m.ref_release ORDER BY m.ref_release ASC)) AS NVARCHAR(50)) AS subsequence
+		 , CAST(m.ref_release AS NVARCHAR(5)) + '_' + RIGHT('00' + CAST((row_number() OVER (PARTITION BY j.item, m.ref_release ORDER BY m.ref_release ASC)) AS NVARCHAR(10)), 2) AS subsequence
 		 , m.item
 		 , SUM(m.qty * -1)
 		 , m.lot
