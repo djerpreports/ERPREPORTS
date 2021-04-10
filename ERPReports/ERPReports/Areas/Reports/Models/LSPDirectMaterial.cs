@@ -146,4 +146,25 @@ namespace ERPReports.Areas.Reports.Models
       public decimal exch_rate { get; set; } 
       public decimal eng_design { get; set; } 
     }
+    public class RMBeginningBalanceReport {
+        public string product_code { get; set; }
+        public string item { get; set; }
+        public string description { get; set; }
+        public string name { get; set; }
+        public string lot { get; set; }
+        public string lot_create_date { get; set; }
+        public string loc { get; set; }
+        public string u_m { get; set; }
+        public decimal qty_on_hand { get; set; }
+        public decimal matl_unit_cost_php { get; set; }
+        public decimal landed_cost_php { get; set; }
+        public decimal resin_cost_php { get; set; }
+        public decimal pi_process_cost_php { get; set; }
+        public decimal pi_hidden_profit_php { get; set; }
+        public decimal sf_added_value_php { get; set; }
+        public decimal rm_cost_php { get; set; }
+        public decimal rm_cost_usd { get; set; }
+
+    }
+
 }

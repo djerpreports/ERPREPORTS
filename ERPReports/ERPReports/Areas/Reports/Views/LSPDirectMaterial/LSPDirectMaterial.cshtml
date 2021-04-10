@@ -38,25 +38,31 @@
         </style>
         <form id="frmReport" action="" method="post" target="_blank">
             <div class="row">
-                <div class="col-lg-12 col-xl-8 offset-xl-2">
+                <div class="col-lg-12 col-xl-12">
                     <fieldset class="m-b-10">
                         <div class="row">
-                            <div class="col-sm-4 m-b-15">
+                            <div class="col-sm-3 m-b-15">
                                 <div class="checkbox checkbox-css">
                                     <input type="checkbox" data-url="/Reports/LSPDirectMaterial/GenerateFinishedGoodsAndSalesReport" class="ReportType ReportTypeG1" id="FinishedGoodsAndSalesReport" name="FinishedGoodsAndSalesReport" value="Finished Goods and Sales Report">
                                     <label for="FinishedGoodsAndSalesReport">Finished Goods and Sales Report</label>
                                 </div>
                             </div>
-                            <div class="col-sm-4 m-b-15">
+                            <div class="col-sm-3 m-b-15">
                                 <div class="checkbox checkbox-css">
                                     <input type="checkbox" data-url="/Reports/LSPDirectMaterial/GenerateMiscellaneousTransactionReport" class="ReportType ReportTypeG1" id="MiscellaneousTransactionReport" name="MiscellaneousTransactionReport" value="Miscellaneous Transaction Report">
                                     <label for="MiscellaneousTransactionReport">Miscellaneous Transaction Report</label>
                                 </div>
                             </div>
-                            <div class="col-sm-4 m-b-15">
+                            <div class="col-sm-3 m-b-15">
                                 <div class="checkbox checkbox-css">
                                     <input type="checkbox" data-url="/Reports/LSPDirectMaterial/GenerateDMAndLaborPercentageReport" class="ReportType ReportTypeG1" id="DMAndLaborPercentageReport" name="DMAndLaborPercentageReport" value="DM and Labor Percentage Report">
                                     <label for="DMAndLaborPercentageReport">DM and Labor Percentage Report</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-3 m-b-15">
+                                <div class="checkbox checkbox-css">
+                                    <input type="checkbox" data-url="/Reports/LSPDirectMaterial/GenerateRMBreakdownForFGAndSalesReport" class="ReportType ReportTypeG1" id="RMBreakdownForFGAndSalesReport" name="RMBreakdownForFGAndSalesReport" value="DM and Labor Percentage Report">
+                                    <label for="RMBreakdownForFGAndSalesReport">RM Breakdown for FG and Sales Report</label>
                                 </div>
                             </div>
                         </div>
@@ -84,14 +90,14 @@
                             <fieldset>
                                 <div class="input-group input-group-sm m-b-5">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" style="width:105px;">Product Code</span>
+                                        <span class="input-group-text" style="width:115px;">Product Code</span>
                                     </div>
                                     <select id="ProductCode1" name="ProductCode1" class="form-control form-control-sm ProductCodes br-r-0"></select>
                                     <select id="ProductCode2" name="ProductCode2" class="form-control form-control-sm ProductCodes"></select>
                                 </div>
                                 <div class="input-group input-group-sm m-b-5">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" style="width:105px;">Model</span>
+                                        <span class="input-group-text" style="width:115px;">Model</span>
                                     </div>
                                     <select id="Model1" name="Model1" class="form-control form-control-sm ProductCodes br-r-0"></select>
                                     <select id="Model2" name="Model2" class="form-control form-control-sm ProductCodes"></select>
@@ -110,7 +116,7 @@
                             <div class="col-sm-6">
                                 <div class="input-group input-group-sm m-b-5">
                                     <div class="input-group-prepend">
-                                        <span class="input-group-text" style="width:105px;">Month <span class="text-danger">*</span></span>
+                                        <span class="input-group-text" style="width:115px;">Month <span class="text-danger">*</span></span>
                                     </div>
                                     <select id="Month" name="Month" class="form-control form-control-sm ReportTypeG3" disabled>
                                         <option value="">--Please Select--</option>
@@ -143,6 +149,58 @@
                                 <div class="checkbox checkbox-css">
                                     <input type="checkbox" data-url="/Reports/LSPDirectMaterial/GenerateWIPShopFloorReport" class="ReportType ReportTypeG2" id="WIPShopFloorReport" name="WIPShopFloorReport" value="Inventory Turnover Report">
                                     <label for="WIPShopFloorReport">WIP Shop Floor Report</label>
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset class="m-b-10">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="checkbox checkbox-css">
+                                    <input type="checkbox" data-url="/Reports/LSPDirectMaterial/GenerateRMBreakdownPerJOReport" class="ReportType ReportTypeG4" id="RMBreakdownPerJOReport" name="RMBreakdownPerJOReport" value="Slow Monitoring Analysis Report">
+                                    <label for="RMBreakdownPerJOReport">RM Breakdown per JO Report</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="input-group input-group-sm m-b-5">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" style="width:115px;">PO Number <span class="text-danger">*</span></span>
+                                    </div>
+                                    <input type="text" id="PONumber" name="PONumber" class="form-control form-control-sm ReportTypeG4" disabled />
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="input-group input-group-sm m-b-5">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" style="width:115px;">JO Number <span class="text-danger">*</span></span>
+                                    </div>
+                                    <input type="text" id="JONumber" name="JONumber" class="form-control form-control-sm ReportTypeG4" disabled />
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                    <fieldset class="m-b-10">
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="checkbox checkbox-css">
+                                    <input type="checkbox" data-url="/Reports/LSPDirectMaterial/GenerateRMBeginningBalanceReport" class="ReportType ReportTypeG5" id="RMBeginningBalanceReport" name="RMBeginningBalanceReport" value="Slow Monitoring Analysis Report">
+                                    <label for="RMBeginningBalanceReport">RM Beginning Balance Report</label>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="input-group input-group-sm m-b-5">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" style="width:115px;">Product Code <span class="text-danger">*</span></span>
+                                    </div>
+                                    <select id="ProductCode" name="ProductCode" class="form-control form-control-sm ReportTypeG5" ></select>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <div class="input-group input-group-sm m-b-5">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" style="width:115px;">Transaction Date <span class="text-danger">*</span></span>
+                                    </div>
+                                    <input type="text" id="TransactionDate" name="TransactionDate" class="form-control form-control-sm ReportTypeG5" disabled />
                                 </div>
                             </div>
                         </div>
