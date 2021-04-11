@@ -1,4 +1,4 @@
-CREATE PROCEDURE LSP_Rpt_NewDM_SalesAndSampleJOReportSp (
+ALTER PROCEDURE LSP_Rpt_NewDM_SalesAndSampleJOReportSp (
 --DECLARE
 	@StartDate					DateType	--= '12/01/2019'
   , @EndDate					DateType	--= '12/31/2019'

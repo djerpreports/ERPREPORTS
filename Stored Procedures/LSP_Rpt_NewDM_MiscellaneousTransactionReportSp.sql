@@ -1,10 +1,10 @@
 --EXEC dbo.LSP_Rpt_NewDM_MiscellaneousTransactionReportSp '05/01/2020', '05/31/2020'
 
---ALTER PROCEDURE LSP_Rpt_NewDM_MiscellaneousTransactionReportSp (
-DECLARE
-	@StartDate					DateType	= '05/01/2020'
-  , @EndDate					DateType	= '05/31/2020'
---) AS
+ALTER PROCEDURE LSP_Rpt_NewDM_MiscellaneousTransactionReportSp (
+--DECLARE
+	@StartDate					DateType	--= '05/01/2020'
+  , @EndDate					DateType	--= '05/31/2020'
+) AS
 BEGIN
 
 	IF OBJECT_ID('tempdb..#DMActualCost') IS NOT NULL
@@ -521,7 +521,7 @@ BEGIN
 						+ SFAddedCost_PHP + FGAddedCost_PHP))
 		   AS TotalCost_PHP	
 	FROM #MiscTransReport
-	WHERE TransDesc = 'Miscellaneous Issue'
+	WHERE (TransDesc = 'Miscellaneous Issue' OR TransDesc = 'SF Scrap Data')
 	  AND ReasonDesc LIKE '%Scrap%'
 	UNION ALL 
 	SELECT @EndDate

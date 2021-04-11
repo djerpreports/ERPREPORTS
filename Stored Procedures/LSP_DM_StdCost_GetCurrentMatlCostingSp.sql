@@ -1,10 +1,10 @@
 --LSP_DM_StdCost_GetCurrentMatlCostingSp 'FG-DK-100D'
 
---ALTER PROCEDURE LSP_DM_StdCost_GetCurrentMatlCostingSp (
-DECLARE
-	@Item				ItemType = 'FG-SR4-017'
-  , @TransDate			DateType = '05/29/2020'
---) AS 
+ALTER PROCEDURE LSP_DM_StdCost_GetCurrentMatlCostingSp (
+--DECLARE
+	@Item				ItemType --= 'FG-DK-100D'
+  , @TransDate			DateType --= '05/29/2020'
+) AS 
 BEGIN
 
 	IF OBJECT_ID('tempdb..#itemMatl') IS NOT NULL
@@ -24,15 +24,15 @@ BEGIN
 	  , sequence			INT
 	  , subsequence			NVARCHAR(50)
 	  , matl				NVARCHAR(60)
-	  , matl_qty			DECIMAL(18,10)
-	  , matl_unit_cost		DECIMAL(18,10)
-	  , pi_process_cost		DECIMAL(18,10)
-	  , pi_resin_cost		DECIMAL(18,10)
-	  , pi_hidden_profit	DECIMAL(18,10)
-	  , sf_labr_cost		DECIMAL(18,10)
-	  , sf_ovhd_cost		DECIMAL(18,10)
-	  , fg_labr_cost		DECIMAL(18,10)
-	  , fg_ovhd_cost		DECIMAL(18,10)
+	  , matl_qty			DECIMAL(18,8)
+	  , matl_unit_cost		DECIMAL(18,8)
+	  , pi_process_cost		DECIMAL(18,8)
+	  , pi_resin_cost		DECIMAL(18,8)
+	  , pi_hidden_profit	DECIMAL(18,8)
+	  , sf_labr_cost		DECIMAL(18,8)
+	  , sf_ovhd_cost		DECIMAL(18,8)
+	  , fg_labr_cost		DECIMAL(18,8)
+	  , fg_ovhd_cost		DECIMAL(18,8)
 	)
 		
 	DECLARE
@@ -42,14 +42,14 @@ BEGIN
 	  , @Sequence			SequenceType
 	  , @SubSequence		NVARCHAR(50)
 	  , @CurrLevel			INT				= 1
-	  , @MatlUnitCost		DECIMAL(18,10)
-	  , @PIProcessCost		DECIMAL(18,10)
-	  , @PIResinCost		DECIMAL(18,10)
-	  , @PIHiddenProfit		DECIMAL(18,10)
-	  , @SFLabrCost			DECIMAL(18,10)
-	  , @SFOvhdCost			DECIMAL(18,10)
-	  , @FGLabrCost			DECIMAL(18,10)
-	  , @FGOvhdCost			DECIMAL(18,10)
+	  , @MatlUnitCost		DECIMAL(18,8)
+	  , @PIProcessCost		DECIMAL(18,8)
+	  , @PIResinCost		DECIMAL(18,8)
+	  , @PIHiddenProfit		DECIMAL(18,8)
+	  , @SFLabrCost			DECIMAL(18,8)
+	  , @SFOvhdCost			DECIMAL(18,8)
+	  , @FGLabrCost			DECIMAL(18,8)
+	  , @FGOvhdCost			DECIMAL(18,8)
 
 	  , @Ctr				INT
 	  , @LevelCtr			INT	  
@@ -222,7 +222,7 @@ BEGIN
 			 , @SFOvhdCost	 = 0
 			 , @FGLabrCost	 = 0
 			 , @FGOvhdCost = 0
-	
+
 		EXEC dbo.LSP_StdCost_GetMatlCostingSp 
 					@Matl, @TransDate, @MatlUnitCost OUTPUT
 					, @PIProcessCost	OUTPUT, @PIResinCost OUTPUT, @PIHiddenProfit OUTPUT

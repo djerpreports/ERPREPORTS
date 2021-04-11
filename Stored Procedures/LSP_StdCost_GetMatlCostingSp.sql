@@ -1,6 +1,6 @@
 ALTER PROCEDURE LSP_StdCost_GetMatlCostingSp (
 --DECLARE
-	@Matl			ItemType		--= 'RM-SC11-P3008SZC3'
+	@Matl			ItemType		--= 'PI-FG-MDK3002'
   , @TransDate		DateType		--= '05/29/2020'
   , @MatlUnitCost	DECIMAL(18,10)	= 0
 									OUTPUT
@@ -31,15 +31,14 @@ BEGIN
 	IF @Matl NOT LIKE 'SF-%' AND @Matl NOT LIKE 'FG-%'
 	BEGIN
 		
-		SELECT @IsPIFG = CASE WHEN COUNT(*) > 1 THEN 1 ELSE 0 END
+		SELECT @IsPIFG = CASE WHEN COUNT(*) >= 1 THEN 1 ELSE 0 END
 		FROM itemvend AS iv
 				JOIN itemvendprice AS ivp 
 					ON iv.item = ivp.item
 					  AND iv.vend_num = ivp.vend_num
 					  AND iv.[rank] = 1
 		WHERE iv.item = @Matl
-		  AND iv.vend_num = 'LPI0001'
-		  
+		  AND iv.vend_num = 'LPI0001'		  
 		
 		IF @IsPIFG = 1
 		BEGIN

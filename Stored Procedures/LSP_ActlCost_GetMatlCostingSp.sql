@@ -1,9 +1,9 @@
-ALTER PROCEDURE LSP_ActlCost_GetMatlCostingSp (
---DECLARE
-	@matl_item					ItemType		--= 'RM-MDK3017'
-  , @matl_lot					LotType			--= '180629-1806081'
-  , @matlTransDate				DateType		--= '2018-06-29 13:44:44.000'
-  /*, @JobQty						BIGINT			
+--ALTER PROCEDURE LSP_ActlCost_GetMatlCostingSp (
+DECLARE
+	@matl_item					ItemType		= 'RM-CP74-104'
+  , @matl_lot					LotType			= '190228-4598'
+  , @matlTransDate				DateType		= '3/6/2019  3:30:24 PM'
+  , @JobQty						BIGINT			
   , @matl_unit_cost_usd        DECIMAL(18,8) = 0
   , @matl_landed_cost_usd        DECIMAL(18,8) = 0
   , @pi_fg_process_usd         DECIMAL(18,8) = 0
@@ -24,7 +24,7 @@ ALTER PROCEDURE LSP_ActlCost_GetMatlCostingSp (
   , @sf_ovhd_cost_php        DECIMAL(18,8) = 0
   , @fg_lbr_cost_php         DECIMAL(18,8) = 0
   , @fg_ovhd_cost_php        DECIMAL(18,8) = 0
-  */, @JobQty						BIGINT			
+  /*, @JobQty						BIGINT			
 										OUTPUT
   , @matl_unit_cost_usd    DECIMAL(18,8) --= 0
                 OUTPUT
@@ -66,7 +66,7 @@ ALTER PROCEDURE LSP_ActlCost_GetMatlCostingSp (
                 OUTPUT
   , @fg_ovhd_cost_php    DECIMAL(18,8) --= 0
                 OUTPUT
-) AS
+) AS*/
 
 BEGIN
 	DECLARE 
@@ -405,26 +405,26 @@ BEGIN
 		END
 	END
 	
---SELECT @JobQty, @matl_unit_cost_usd AS matl_unit_cost_usd
---  , @matl_landed_cost_usd AS matl_landed_cost_usd
---  , @pi_fg_process_usd  AS pi_fg_process_usd
---  , @pi_resin_usd AS pi_resin_usd
---  , @pi_vend_cost_usd AS pi_vend_cost_usd
---  , @pi_hidden_profit_usd AS pi_hidden_profit_usd
---  , @sf_lbr_cost_usd  AS sf_lbr_cost_usd
---  , @sf_ovhd_cost_usd AS sf_ovhd_cost_usd
---  , @fg_lbr_cost_usd  AS fg_lbr_cost_usd
---  , @fg_ovhd_cost_usd AS fg_ovhd_cost_usd
---  , @matl_unit_cost_php AS matl_unit_cost_php
---  , @matl_landed_cost_php AS matl_landed_cost_php
---  , @pi_fg_process_php  AS pi_fg_process_php
---  , @pi_resin_php AS pi_resin_php
---  , @pi_vend_cost_php AS pi_vend_cost_php
---  , @pi_hidden_profit_php AS pi_hidden_profit_php
---  , @sf_lbr_cost_php  AS sf_lbr_cost_php
---  , @sf_ovhd_cost_php AS sf_ovhd_cost_php
---  , @fg_lbr_cost_php  AS fg_lbr_cost_php
---  , @fg_ovhd_cost_php AS fg_ovhd_cost_php
+SELECT @JobQty, @matl_unit_cost_usd AS matl_unit_cost_usd
+  , @matl_landed_cost_usd AS matl_landed_cost_usd
+  , @pi_fg_process_usd  AS pi_fg_process_usd
+  , @pi_resin_usd AS pi_resin_usd
+  , @pi_vend_cost_usd AS pi_vend_cost_usd
+  , @pi_hidden_profit_usd AS pi_hidden_profit_usd
+  , @sf_lbr_cost_usd  AS sf_lbr_cost_usd
+  , @sf_ovhd_cost_usd AS sf_ovhd_cost_usd
+  , @fg_lbr_cost_usd  AS fg_lbr_cost_usd
+  , @fg_ovhd_cost_usd AS fg_ovhd_cost_usd
+  , @matl_unit_cost_php AS matl_unit_cost_php
+  , @matl_landed_cost_php AS matl_landed_cost_php
+  , @pi_fg_process_php  AS pi_fg_process_php
+  , @pi_resin_php AS pi_resin_php
+  , @pi_vend_cost_php AS pi_vend_cost_php
+  , @pi_hidden_profit_php AS pi_hidden_profit_php
+  , @sf_lbr_cost_php  AS sf_lbr_cost_php
+  , @sf_ovhd_cost_php AS sf_ovhd_cost_php
+  , @fg_lbr_cost_php  AS fg_lbr_cost_php
+  , @fg_ovhd_cost_php AS fg_ovhd_cost_php
 
---, @matlTransDate, @ExchRate
+, @matlTransDate, @ExchRate
 END

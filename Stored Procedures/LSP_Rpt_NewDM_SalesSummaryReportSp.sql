@@ -1,4 +1,4 @@
-CREATE PROCEDURE LSP_Rpt_NewDM_SalesSummaryReportSp (  
+ALTER PROCEDURE LSP_Rpt_NewDM_SalesSummaryReportSp (  
 --DECLARE
 	@StartDate					DateType	--= '05/01/2020'
   , @EndDate					DateType	--= '05/31/2020'

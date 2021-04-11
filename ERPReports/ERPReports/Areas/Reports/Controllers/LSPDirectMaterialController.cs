@@ -695,9 +695,9 @@ namespace ERPReports.Areas.Reports.Controllers
                                 MiscTrxSheetCycleCount.Cells[sheetRowMisc, 1].Value = DateTime.Parse(SheetData.TransDate).ToString("MM/dd/yyyy");
                                 MiscTrxSheetCycleCount.Cells[sheetRowMisc, 1].Style.WrapText = false;
                                 MiscTrxSheetCycleCount.Cells[sheetRowMisc, 2].Value = SheetData.Item;
-                                MiscTrxSheetCycleCount.Cells[sheetRowMisc, 2].Style.WrapText = false;
+                                MiscTrxSheetCycleCount.Cells[sheetRowMisc, 2].Style.WrapText = true;
                                 MiscTrxSheetCycleCount.Cells[sheetRowMisc, 3].Value = SheetData.ItemDesc;
-                                MiscTrxSheetCycleCount.Cells[sheetRowMisc, 3].Style.WrapText = false;
+                                MiscTrxSheetCycleCount.Cells[sheetRowMisc, 3].Style.WrapText = true;
                                 MiscTrxSheetCycleCount.Cells[sheetRowMisc, 4].Value = SheetData.TransDesc;
                                 MiscTrxSheetCycleCount.Cells[sheetRowMisc, 4].Style.WrapText = false;
                                 MiscTrxSheetCycleCount.Cells[sheetRowMisc, 5].Value = SheetData.ReasonDesc;
@@ -745,9 +745,9 @@ namespace ERPReports.Areas.Reports.Controllers
                                 MiscTrxSheetMiscellaneousIssue.Cells[sheetRowMisc, 1].Value = DateTime.Parse(SheetData.TransDate).ToString("MM/dd/yyyy");
                                 MiscTrxSheetMiscellaneousIssue.Cells[sheetRowMisc, 1].Style.WrapText = false;
                                 MiscTrxSheetMiscellaneousIssue.Cells[sheetRowMisc, 2].Value = SheetData.Item;
-                                MiscTrxSheetMiscellaneousIssue.Cells[sheetRowMisc, 2].Style.WrapText = false;
+                                MiscTrxSheetMiscellaneousIssue.Cells[sheetRowMisc, 2].Style.WrapText = true;
                                 MiscTrxSheetMiscellaneousIssue.Cells[sheetRowMisc, 3].Value = SheetData.ItemDesc;
-                                MiscTrxSheetMiscellaneousIssue.Cells[sheetRowMisc, 3].Style.WrapText = false;
+                                MiscTrxSheetMiscellaneousIssue.Cells[sheetRowMisc, 3].Style.WrapText = true;
                                 MiscTrxSheetMiscellaneousIssue.Cells[sheetRowMisc, 4].Value = SheetData.TransDesc;
                                 MiscTrxSheetMiscellaneousIssue.Cells[sheetRowMisc, 4].Style.WrapText = false;
                                 MiscTrxSheetMiscellaneousIssue.Cells[sheetRowMisc, 5].Value = SheetData.ReasonDesc;
@@ -793,9 +793,9 @@ namespace ERPReports.Areas.Reports.Controllers
                                 MiscTrxSheetMiscellaneousReceipt.Cells[sheetRowMisc, 1].Value = DateTime.Parse(SheetData.TransDate).ToString("MM/dd/yyyy");
                                 MiscTrxSheetMiscellaneousReceipt.Cells[sheetRowMisc, 1].Style.WrapText = false;
                                 MiscTrxSheetMiscellaneousReceipt.Cells[sheetRowMisc, 2].Value = SheetData.Item;
-                                MiscTrxSheetMiscellaneousReceipt.Cells[sheetRowMisc, 2].Style.WrapText = false;
+                                MiscTrxSheetMiscellaneousReceipt.Cells[sheetRowMisc, 2].Style.WrapText = true;
                                 MiscTrxSheetMiscellaneousReceipt.Cells[sheetRowMisc, 3].Value = SheetData.ItemDesc;
-                                MiscTrxSheetMiscellaneousReceipt.Cells[sheetRowMisc, 3].Style.WrapText = false;
+                                MiscTrxSheetMiscellaneousReceipt.Cells[sheetRowMisc, 3].Style.WrapText = true;
                                 MiscTrxSheetMiscellaneousReceipt.Cells[sheetRowMisc, 4].Value = SheetData.TransDesc;
                                 MiscTrxSheetMiscellaneousReceipt.Cells[sheetRowMisc, 4].Style.WrapText = false;
                                 MiscTrxSheetMiscellaneousReceipt.Cells[sheetRowMisc, 5].Value = SheetData.ReasonDesc;
@@ -1164,7 +1164,7 @@ namespace ERPReports.Areas.Reports.Controllers
                                 SummarySheet.Cells[SummarySheetSheetrRow, 1].Value = ItemData.Wc;
                                 SummarySheet.Cells[SummarySheetSheetrRow, 1].Style.WrapText = false;
                                 SummarySheet.Cells[SummarySheetSheetrRow, 2].Value = ItemData.Item;
-                                SummarySheet.Cells[SummarySheetSheetrRow, 2].Style.WrapText = false;
+                                SummarySheet.Cells[SummarySheetSheetrRow, 2].Style.WrapText = true;
                                 SummarySheet.Cells[SummarySheetSheetrRow, 3].Value = ItemData.ItemDesc;
                                 SummarySheet.Cells[SummarySheetSheetrRow, 3].Style.WrapText = true;
                                 SummarySheet.Cells[SummarySheetSheetrRow, 4].Value = Convert.ToInt32(ItemData.QtyScrapped);
@@ -3021,14 +3021,15 @@ namespace ERPReports.Areas.Reports.Controllers
                         RMBegBalanceReportSheet.Cells[sheetsRow, 1].Value = RMBeginningBalanceReportListObj.product_code;
                         RMBegBalanceReportSheet.Cells[sheetsRow, 1].Style.WrapText = false;
                         RMBegBalanceReportSheet.Cells[sheetsRow, 2].Value = RMBeginningBalanceReportListObj.item;
-                        RMBegBalanceReportSheet.Cells[sheetsRow, 2].Style.WrapText = false;
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 2].Style.WrapText = true;
                         RMBegBalanceReportSheet.Cells[sheetsRow, 3].Value = RMBeginningBalanceReportListObj.description;
-                        RMBegBalanceReportSheet.Cells[sheetsRow, 3].Style.WrapText = false;
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 3].Style.WrapText = true;
                         RMBegBalanceReportSheet.Cells[sheetsRow, 4].Value = RMBeginningBalanceReportListObj.name;
                         RMBegBalanceReportSheet.Cells[sheetsRow, 4].Style.WrapText = false;
                         RMBegBalanceReportSheet.Cells[sheetsRow, 5].Value = RMBeginningBalanceReportListObj.lot;
                         RMBegBalanceReportSheet.Cells[sheetsRow, 5].Style.WrapText = false;
-                        RMBegBalanceReportSheet.Cells[sheetsRow, 6].Value = RMBeginningBalanceReportListObj.lot_create_date;
+                        RMBegBalanceReportSheet.Cells[sheetsRow, 6].Value = Convert.ToDateTime(RMBeginningBalanceReportListObj.lot_create_date);
+                        
                         RMBegBalanceReportSheet.Cells[sheetsRow, 6].Style.WrapText = false;
                         RMBegBalanceReportSheet.Cells[sheetsRow, 7].Value = RMBeginningBalanceReportListObj.loc;
                         RMBegBalanceReportSheet.Cells[sheetsRow, 7].Style.WrapText = false;

@@ -1,4 +1,4 @@
-CREATE PROCEDURE LSP_NewDM_GetAllRMProductCodesGroupedSp  
+ALTER PROCEDURE LSP_NewDM_GetAllRMProductCodesGroupedSp  
   
 AS  
   
@@ -13,7 +13,7 @@ BEGIN
 							 product_code = 'PS-RM'  
 	GROUP BY REPLACE(REPLACE(product_code, 'RM-', ''), 'SA-', '')  
 	UNION  
-	SELECT 'ALL', 'ALL'
+	SELECT 'ALL', ' ALL'
 	FROM prodcode  
 	  
 	ORDER BY Description  

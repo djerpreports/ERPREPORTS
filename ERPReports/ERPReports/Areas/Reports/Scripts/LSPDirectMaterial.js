@@ -274,7 +274,7 @@
                         table: 'prodcode',
                         db: 'ERPReports',
                         display: 'id&text',
-                        query: "execute LSP_NewDM_GetAllRMProductCodesGroupedSp",
+                        query: "EXEC LSPI803_App.dbo.LSP_NewDM_GetAllRMProductCodesGroupedSp",
                     };
                 },
             },
