@@ -1,13 +1,41 @@
 Stored Procedure Name: LSP_Rpt_NewDM_InventoryTurnOverReportSP
-Parameter: @IsShowDetail BIT
+Parameters: @IsShowDetail BIT
+	@StartDate	DATETIME	OUTPUT
+	@EndDate	DATETIME	OUTPUT
+//Gagamitin yung OUTPUT para sa Usage na display, @StartDate yung start ng MonthName tapos increment lang until maka-12 months
+
 Returned fields:
 	   trans_date		DATETIME
 	  , trans_type		NVARCHAR(25)  	NULLABLE
 	  , reason_code		NVARCHAR	NULLABLE
 	  , reason_desc		NVARCHAR	NULLABLE
 	  , qty			DECIMAL		NULLABLE
-	  , usage_matl		DECIMAL  
-	  , usage_landed	DECIMAL  
+	  , usage_matl		DECIMAL		NULLABLE
+	  , usage_landed	DECIMAL		NULLABLE
+	  , usage_M1		DECIMAL		NULLABLE
+	  , usage_M2		DECIMAL		NULLABLE
+	  , usage_M3		DECIMAL		NULLABLE
+	  , usage_M4		DECIMAL		NULLABLE
+	  , usage_M5		DECIMAL		NULLABLE
+	  , usage_M6		DECIMAL		NULLABLE
+	  , usage_M7		DECIMAL		NULLABLE
+	  , usage_M8		DECIMAL		NULLABLE
+	  , usage_M9		DECIMAL		NULLABLE
+	  , usage_M10		DECIMAL		NULLABLE
+	  , usage_M11		DECIMAL		NULLABLE
+	  , usage_M12		DECIMAL		NULLABLE
+	  , usage_L1		DECIMAL		NULLABLE
+	  , usage_L2		DECIMAL		NULLABLE
+	  , usage_L3		DECIMAL		NULLABLE
+	  , usage_L4		DECIMAL		NULLABLE
+	  , usage_L5		DECIMAL		NULLABLE
+	  , usage_L6		DECIMAL		NULLABLE
+	  , usage_L7		DECIMAL		NULLABLE
+	  , usage_L8		DECIMAL		NULLABLE
+	  , usage_L9		DECIMAL		NULLABLE
+	  , usage_L10		DECIMAL		NULLABLE
+	  , usage_L11		DECIMAL		NULLABLE
+	  , usage_L12		DECIMAL		NULLABLE
 	  , item		NVARCHAR	NULLABLE
 	  , item_desc		NVARCHAR	NULLABLE
 	  , product_code	NVARCHAR	

@@ -1,6 +1,6 @@
 ALTER PROCEDURE LSP_NewDM_GetInventorySafetyStockMaterialLandedCostSp (  
 --DECLARE  
-	@ProdCode				ProductCodeType --= 'COIL'
+	@ProdCode				ProductCodeType --= 'DK2300'
   , @InvtyMaterialCost		AmountType		OUTPUT  
   , @InvtyLandedCost		AmountType		OUTPUT  
   , @SafetyMaterialCost		AmountType		OUTPUT  
@@ -159,7 +159,7 @@ BEGIN
 		END
 		 
 		  
-		 IF @Item LIKE 'SF-%'
+		IF @Item LIKE 'SF-%'
 		BEGIN
 			
 			IF EXISTS(SELECT * FROM job WHERE job = @LotNumber AND item = @Item)
@@ -281,9 +281,9 @@ BEGIN
 	FROM @ItemCost  
 	GROUP BY Item  
 	  
-	SELECT @InvtyMaterialCost = SUM(matl_cost)  
-	  , @InvtyLandedCost = SUM(landed_cost)  
-	  , @SafetyMaterialCost = SUM(safety_stock_cost)  
+	SELECT @InvtyMaterialCost = SUM(ISNULL(matl_cost, 0))
+	  , @InvtyLandedCost = SUM(ISNULL(landed_cost, 0))
+	  , @SafetyMaterialCost = SUM(ISNULL(safety_stock_cost, 0))
 	--  , @SafetyLandedCost = SUM(safety_landed_cost)  
 	  
 	FROM @ItemLotCost  

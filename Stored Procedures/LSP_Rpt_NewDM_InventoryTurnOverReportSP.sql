@@ -1,6 +1,8 @@
 --CREATE PROCEDURE LSP_Rpt_NewDM_InventoryTurnOverReportSP (
 DECLARE
 	@IsShowDetail					BIT = 1
+  , @StartDate						DateType		--OUTPUT
+  , @EndDate						DateType		--OUTPUT
 --) AS
 BEGIN
 
@@ -10,9 +12,9 @@ BEGIN
 		DROP TABLE #DMActualCost
 
 	DECLARE  
-		@StartDate					DateType
+		/*@StartDate					DateType
 	  , @EndDate					DateType
-	  , @TransDate					DATETIME
+	  , */@TransDate					DATETIME
 	  , @TransType					NVARCHAR(25)  
 	  , @ReasonCode					NVARCHAR(10)
 	  , @ReasonDesc					NVARCHAR(80)
@@ -60,14 +62,48 @@ BEGIN
 	  , @InvtyLandedCost			DECIMAL(18,8)
 	  , @SafetyMatlCost				DECIMAL(18,8)
 	
+	  , @MonthGroup			NVARCHAR(200) = ''
+	  , @MonthGroup2		NVARCHAR(200) = ''
+	  , @Select1			NVARCHAR(1000) = ''
+	  , @Select2			NVARCHAR(1000) = ''
+	  , @CurrDate			DateType
+	  , @SqlStr				NVARCHAR(4000)
+	  , @ParmDefinition		NVARCHAR(500)
+	  
+	  ,	@DMInvty			DMInvtyTurnOverType
+	  
 	DECLARE @report_set AS TABLE (  
-		trans_date					DateType  
-	  , trans_type					NVARCHAR(25)  
-	  , reason_code					ReasonCodeType  
-	  , reason_desc					DescriptionType  
-	  , qty							QtyUnitType  
-	  , usage_matl					AmountType  
-	  , usage_landed				AmountType  
+		trans_date					DateType
+	  , trans_type					NVARCHAR(25)
+	  , reason_code					ReasonCodeType
+	  , reason_desc					DescriptionType
+	  , qty							QtyUnitType
+	  , usage_matl					AmountType
+	  , usage_landed				AmountType	  
+	  , usage_M1					AmountType
+	  , usage_M2					AmountType
+	  , usage_M3					AmountType
+	  , usage_M4					AmountType
+	  , usage_M5					AmountType
+	  , usage_M6					AmountType
+	  , usage_M7					AmountType
+	  , usage_M8					AmountType
+	  , usage_M9					AmountType
+	  , usage_M10					AmountType
+	  , usage_M11					AmountType
+	  , usage_M12					AmountType
+	  , usage_L1					AmountType
+	  , usage_L2					AmountType
+	  , usage_L3					AmountType
+	  , usage_L4					AmountType
+	  , usage_L5					AmountType
+	  , usage_L6					AmountType
+	  , usage_L7					AmountType
+	  , usage_L8					AmountType
+	  , usage_L9					AmountType
+	  , usage_L10					AmountType
+	  , usage_L11					AmountType
+	  , usage_L12					AmountType
 	  , item					    ItemType  
 	  , item_desc					DescriptionType  
 	  , product_code				ProductCodeType  
@@ -154,7 +190,7 @@ BEGIN
 	
 	SELECT @StartDate =	DATEADD(S, 0, DATEADD(M,DATEDIFF(m, 0, GETDATE())-12,0))
 		 , @EndDate = DATEADD(S, -1, DATEADD(mm, DATEDIFF(m, 0, GETDATE()),0))
-	
+	--/*****************
 	--INSERT INTO #InvtyTurnOverDtl (TransDate, TransType, ReasonCode, ReasonDesc, Qty, Item, ItemDesc, ProductCode, LotNumber, RefNum, RefLine)
 	DECLARE transCrsr CURSOR FAST_FORWARD FOR	
 	SELECT mt.trans_date
@@ -419,6 +455,8 @@ BEGIN
 	CLOSE transCrsr
 	DEALLOCATE transCrsr
 
+	--***********/
+	
 	
 	DECLARE usageCrsr CURSOR FAST_FORWARD FOR  
 	SELECT MAX(TransDate)
@@ -439,9 +477,9 @@ BEGIN
 	WHILE @@FETCH_STATUS = 0
 	BEGIN
 
-		EXEC dbo.LSP_NewDM_GetInventorySafetyStockMaterialLandedCostSp @ProductCode, @InvtyMatlCost OUTPUT, @InvtyLandedCost OUTPUT, @SafetyMatlCost OUTPUT  
+		EXEC dbo.LSP_NewDM_GetInventorySafetyStockMaterialLandedCostSp @ProdCodeCrsr, @InvtyMatlCost OUTPUT, @InvtyLandedCost OUTPUT, @SafetyMatlCost OUTPUT  
 		
-		INSERT INTO @report_set (  
+		INSERT INTO @DMInvty (  
 			trans_date  
 		  , usage_matl  
 		  , usage_landed  
@@ -471,6 +509,93 @@ BEGIN
 	CLOSE usageCrsr
 	DEALLOCATE usageCrsr
 	
+	/****************/
+	SET @CurrDate = @StartDate
+
+	WHILE CONVERT(VARCHAR(6), @CurrDate, 112) <= CONVERT(VARCHAR(6), @EndDate, 112) 
+	BEGIN
+
+		IF CONVERT(VARCHAR(6), @CurrDate, 112) = CONVERT(VARCHAR(6), @EndDate, 112) 
+		BEGIN
+			SET @MonthGroup = @MonthGroup + '[' + CONVERT(VARCHAR(6), @CurrDate, 112)  + ']'
+			SET @MonthGroup2 = @MonthGroup2 + '[' + CONVERT(VARCHAR(6), @CurrDate, 112)  + '_2]'
+			SET @Select1 = @Select1 + 'MAX(ISNULL([' + CONVERT(VARCHAR(6), @CurrDate, 112)  + '],0)) AS _' + CONVERT(VARCHAR(6), @CurrDate, 112) + ''
+			SET @Select2 = @Select2 + 'MAX(ISNULL([' + CONVERT(VARCHAR(6), @CurrDate, 112)  + '],0)) AS _' + CONVERT(VARCHAR(6), @CurrDate, 112) + '_2'
+		END
+		ELSE
+		BEGIN
+			SET @MonthGroup = @MonthGroup + '[' + CONVERT(VARCHAR(6), @CurrDate, 112)  + '], '
+			SET @MonthGroup2 = @MonthGroup2 + '[' + CONVERT(VARCHAR(6), @CurrDate, 112)  + '_2], '
+			SET @Select1 = @Select1 + 'MAX(ISNULL([' + CONVERT(VARCHAR(6), @CurrDate, 112)  + '],0)) AS _' + CONVERT(VARCHAR(6), @CurrDate, 112) + ', '
+			SET @Select2 = @Select2 + 'MAX(ISNULL([' + CONVERT(VARCHAR(6), @CurrDate, 112)  + '],0)) AS _' + CONVERT(VARCHAR(6), @CurrDate, 112) + '_2, '
+		END
+
+		SET @CurrDate = DATEADD(MONTH, 1,@CurrDate)
+
+	END
+
+	--SELECT @MonthGroup, @MonthGroup2, @Select1, @Select2
+
+	SELECT @SqlStr = 'SELECT product_code ' 
+					+ ', ' + @Select1 
+					+ ', ' + @Select2 
+					+ ', invty_matl_cost  
+					   , invty_landed_cost  
+					   , safety_matl_cost  
+					   , report_group'
+					+ ' FROM (  SELECT CONVERT(VARCHAR(6), trans_date, 112) AS [YYYYMM_1]--, * 
+						 , usage_matl
+						 , (CONVERT(VARCHAR(6), trans_date, 112) + ''_2'') AS [YYYYMM_2]
+						 , usage_landed
+						 , product_code
+						 , invty_matl_cost  
+						 , invty_landed_cost  
+						 , safety_matl_cost  
+						 , report_group
+					FROM @DMInvtyTbl
+					WHERE report_group = ''USAGE''
+				  ) rpt
+			PIVOT (SUM(usage_matl) FOR [YYYYMM_1] IN ('+ @MonthGroup +') ) pvt
+			PIVOT (SUM(usage_landed) FOR [YYYYMM_2] IN ('+ @MonthGroup2 +') ) pvt2
+			GROUP BY product_code, invty_matl_cost, invty_landed_cost, safety_matl_cost, report_group;'
+			
+	SET @ParmDefinition = N'@DMInvtyTbl DMInvtyTurnOverType READONLY';  
+	
+	INSERT INTO @report_set (
+		product_code
+	  , usage_M1
+	  , usage_M2
+	  , usage_M3
+	  , usage_M4
+	  , usage_M5
+	  , usage_M6
+	  , usage_M7
+	  , usage_M8
+	  , usage_M9
+	  , usage_M10
+	  , usage_M11
+	  , usage_M12
+	  , usage_L1
+	  , usage_L2
+	  , usage_L3
+	  , usage_L4
+	  , usage_L5
+	  , usage_L6
+	  , usage_L7
+	  , usage_L8
+	  , usage_L9
+	  , usage_L10
+	  , usage_L11
+	  , usage_L12
+	  , invty_matl_cost
+	  , invty_landed_cost
+	  , safety_matl_cost
+	  , report_group
+	)
+	EXEC sp_executesql @SqlStr, @ParmDefinition, @DMInvtyTbl = @DMInvty
+	
+	/********/
+	
 	DECLARE ProdCodeCrsr CURSOR FAST_FORWARD FOR  
 	SELECT product_code  
 	FROM @report_set  
@@ -485,122 +610,122 @@ BEGIN
 	  
 	 UPDATE @report_set  
 	 SET M1 = (SELECT ISNULL(SUM(usage_matl),0)  
-				 FROM @report_set  
+				 FROM @DMInvty  
 				 WHERE product_code = @ProdCode  
 				AND (MONTH(trans_date) = MONTH(@StartDate)  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 1, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 2, @StartDate))) )  
 	   , M2 = (SELECT ISNULL(SUM(usage_matl),0)  
-				 FROM @report_set  
+				 FROM @DMInvty  
 				 WHERE product_code = @ProdCode  
 				AND (MONTH(trans_date) = MONTH(DATEADD(MONTH, 1, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 2, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 3, @StartDate))) )  
 	   , M3 = (SELECT ISNULL(SUM(usage_matl),0)  
-				 FROM @report_set  
+				 FROM @DMInvty  
 				 WHERE product_code = @ProdCode  
 				AND (MONTH(trans_date) = MONTH(DATEADD(MONTH, 2, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 3, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 4, @StartDate))) )  
 	   , M4 = (SELECT ISNULL(SUM(usage_matl),0)  
-				 FROM @report_set  
+				 FROM @DMInvty  
 				 WHERE product_code = @ProdCode  
 				AND (MONTH(trans_date) = MONTH(DATEADD(MONTH, 3, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 4, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 5, @StartDate))) )  
 	   , M5 = (SELECT ISNULL(SUM(usage_matl),0)  
-				 FROM @report_set  
+				 FROM @DMInvty  
 				 WHERE product_code = @ProdCode  
 				AND (MONTH(trans_date) = MONTH(DATEADD(MONTH, 4, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 5, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 6, @StartDate))) )  
 	   , M6 = (SELECT ISNULL(SUM(usage_matl),0)  
-				 FROM @report_set  
+				 FROM @DMInvty  
 				 WHERE product_code = @ProdCode  
 				AND (MONTH(trans_date) = MONTH(DATEADD(MONTH, 5, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 6, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 7, @StartDate))) )  
 	   , M7 = (SELECT ISNULL(SUM(usage_matl),0)  
-				 FROM @report_set  
+				 FROM @DMInvty  
 				 WHERE product_code = @ProdCode  
 				AND (MONTH(trans_date) = MONTH(DATEADD(MONTH, 6, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 7, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 8, @StartDate))) )  
 	   , M8 = (SELECT ISNULL(SUM(usage_matl),0)  
-				 FROM @report_set  
+				 FROM @DMInvty  
 				 WHERE product_code = @ProdCode  
 				AND (MONTH(trans_date) = MONTH(DATEADD(MONTH, 7, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 8, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 9, @StartDate))) )  
 	   , M9 = (SELECT ISNULL(SUM(usage_matl),0)  
-				 FROM @report_set  
+				 FROM @DMInvty  
 				 WHERE product_code = @ProdCode  
 				AND (MONTH(trans_date) = MONTH(DATEADD(MONTH, 8, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 9, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 10, @StartDate))) )  
 	   , M10 = (SELECT ISNULL(SUM(usage_matl),0)  
-				  FROM @report_set  
+				  FROM @DMInvty  
 				  WHERE product_code = @ProdCode  
 				AND (MONTH(trans_date) = MONTH(DATEADD(MONTH, 9, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 10, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 11, @StartDate))) )  
 	 --LANDED COST USAGE  
 	   , L1 = (SELECT ISNULL(SUM(usage_landed),0)  
-				 FROM @report_set  
+				 FROM @DMInvty  
 				 WHERE product_code = @ProdCode  
 				AND (MONTH(trans_date) = MONTH(@StartDate)  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 1, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 2, @StartDate))) )  
 	   , L2 = (SELECT ISNULL(SUM(usage_landed),0)  
-				 FROM @report_set  
+				 FROM @DMInvty  
 				 WHERE product_code = @ProdCode  
 				AND (MONTH(trans_date) = MONTH(DATEADD(MONTH, 1, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 2, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 3, @StartDate))) )  
 	   , L3 = (SELECT ISNULL(SUM(usage_landed),0)  
-				 FROM @report_set  
+				 FROM @DMInvty  
 				 WHERE product_code = @ProdCode  
 				AND (MONTH(trans_date) = MONTH(DATEADD(MONTH, 2, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 3, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 4, @StartDate))) )  
 	   , L4 = (SELECT ISNULL(SUM(usage_landed),0)  
-				 FROM @report_set  
+				 FROM @DMInvty  
 				 WHERE product_code = @ProdCode  
 				AND (MONTH(trans_date) = MONTH(DATEADD(MONTH, 3, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 4, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 5, @StartDate))) )  
 	   , L5 = (SELECT ISNULL(SUM(usage_landed),0)  
-				 FROM @report_set  
+				 FROM @DMInvty  
 				 WHERE product_code = @ProdCode  
 				AND (MONTH(trans_date) = MONTH(DATEADD(MONTH, 4, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 5, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 6, @StartDate))) )  
 	   , L6 = (SELECT ISNULL(SUM(usage_landed),0)  
-				 FROM @report_set  
+				 FROM @DMInvty  
 				 WHERE product_code = @ProdCode  
 				AND (MONTH(trans_date) = MONTH(DATEADD(MONTH, 5, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 6, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 7, @StartDate))) )  
 	   , L7 = (SELECT ISNULL(SUM(usage_landed),0)  
-				 FROM @report_set  
+				 FROM @DMInvty  
 				 WHERE product_code = @ProdCode  
 				AND (MONTH(trans_date) = MONTH(DATEADD(MONTH, 6, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 7, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 8, @StartDate))) )  
 	   , L8 = (SELECT ISNULL(SUM(usage_landed),0)  
-				 FROM @report_set  
+				 FROM @DMInvty  
 				 WHERE product_code = @ProdCode  
 				AND (MONTH(trans_date) = MONTH(DATEADD(MONTH, 7, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 8, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 9, @StartDate))) )  
 	   , L9 = (SELECT ISNULL(SUM(usage_landed),0)  
-				 FROM @report_set  
+				 FROM @DMInvty  
 				 WHERE product_code = @ProdCode  
 				AND (MONTH(trans_date) = MONTH(DATEADD(MONTH, 8, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 9, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 10, @StartDate))) )  
 	   , L10 = (SELECT ISNULL(SUM(usage_landed),0)  
-				  FROM @report_set  
+				  FROM @DMInvty  
 				  WHERE product_code = @ProdCode  
 				AND (MONTH(trans_date) = MONTH(DATEADD(MONTH, 9, @StartDate))  
 				 OR MONTH(trans_date) = MONTH(DATEADD(MONTH, 10, @StartDate))  
@@ -610,11 +735,11 @@ BEGIN
 	 UPDATE @report_set  
 	 SET MAX_3months = (SELECT TOP(1)(SELECT MAX(m)   
 			  FROM (VALUES (M1), (M2), (M3), (M4), (M5), (M6), (M7), (M8), (M9), (M10)) AS value(m))  
-			FROM @report_set  
+			FROM @DMInvty  
 			WHERE product_code = @ProdCode)  
 	   , L_MAX_3Months = (SELECT TOP(1)(SELECT MAX(l)   
 			  FROM (VALUES (L1), (L2), (L3), (L4), (L5), (L6), (L7), (L8), (L9), (L10)) AS value(l))  
-			FROM @report_set  
+			FROM @DMInvty  
 			WHERE product_code = @ProdCode)  
 	 WHERE product_code = @ProdCode  
 	  
@@ -625,6 +750,7 @@ BEGIN
 	  
 	CLOSE ProdCodeCrsr  
 	DEALLOCATE ProdCodeCrsr 
+
 	
 	IF @IsShowDetail = 1
 	BEGIN
@@ -664,6 +790,7 @@ BEGIN
 	
 	
 	SELECT * 
+	--INTO Rpt_InvtyTurnover2
 	FROM @report_set  
 	ORDER BY report_group DESC, product_code, trans_date  
 	
