@@ -166,5 +166,78 @@ namespace ERPReports.Areas.Reports.Models
         public decimal rm_cost_usd { get; set; }
 
     }
+    public class InventoryTurnOverReport
+    {
+        public string trans_date { get; set; }
+        public string trans_dateMMYYYY { get; set; }
+        public string trans_type { get; set; }
+        public string reason_code { get; set; }
+        public string reason_desc { get; set; }
+        public decimal qty { get; set; }
+        public decimal usage_matl { get; set; } 
+        public decimal usage_landed { get; set; } 
+        public string item { get; set; }
+        public string item_desc { get; set; }
+        public string product_code { get; set; }
+        public string lot { get; set; }
+        public string ref_num { get; set; }
+        public int ref_line { get; set; }
+        public decimal invty_matl_cost { get; set; } 
+        public decimal invty_landed_cost { get; set; } 
+        public decimal safety_matl_cost { get; set; } 
+        public string report_group { get; set; }
+        public decimal usage_M1 { get; set; }
+        public decimal usage_L1 { get; set; }
+        public decimal usage_M2 { get; set; }
+        public decimal usage_L2 { get; set; }
+        public decimal usage_M3 { get; set; }
+        public decimal usage_L3 { get; set; }
+        public decimal usage_M4 { get; set; }
+        public decimal usage_L4 { get; set; }
+        public decimal usage_M5 { get; set; }
+        public decimal usage_L5 { get; set; }
+        public decimal usage_M6 { get; set; }
+        public decimal usage_L6 { get; set; }
+        public decimal usage_M7 { get; set; }
+        public decimal usage_L7 { get; set; }
+        public decimal usage_M8 { get; set; }
+        public decimal usage_L8 { get; set; }
+        public decimal usage_M9 { get; set; }
+        public decimal usage_L9 { get; set; }
+        public decimal usage_M10 { get; set; }
+        public decimal usage_L10 { get; set; }
+        public decimal usage_M11 { get; set; }
+        public decimal usage_L11 { get; set; }
+        public decimal usage_M12 { get; set; }
+        public decimal usage_L12 { get; set; }
+
+        public decimal M1 { get; set; }
+        public decimal L1 { get; set; }
+        public decimal M2 { get; set; }
+        public decimal L2 { get; set; }
+        public decimal M3 { get; set; }
+        public decimal L3 { get; set; }
+        public decimal M4 { get; set; }
+        public decimal L4 { get; set; }
+        public decimal M5 { get; set; }
+        public decimal L5 { get; set; }
+        public decimal M6 { get; set; }
+        public decimal L6 { get; set; }
+        public decimal M7 { get; set; }
+        public decimal L7 { get; set; }
+        public decimal M8 { get; set; }
+        public decimal L8 { get; set; }
+        public decimal M9 { get; set; }
+        public decimal L9 { get; set; }
+        public decimal M10 { get; set; }
+        public decimal L10 { get; set; }
+        public decimal M11 { get; set; }
+        public decimal L11 { get; set; }
+        public decimal M12 { get; set; }
+        public decimal L12 { get; set; }
+        public decimal MAX_3Months { get; set; }
+        public decimal L_MAX_3Months { get; set; }
+
+    }
 
 }

@@ -3071,5 +3071,544 @@ namespace ERPReports.Areas.Reports.Controllers
                 return null;
             }
         }
+        public ActionResult GenerateInventoryTurnoverReport()
+        {
+            var ShowDetailedTransaction = Request["ShowDetailedTransaction"] == "Show Detailed Transaction" ? 1 : 0;
+            var RetStartDate = "";
+            List<InventoryTurnOverReport> InventoryTurnOverReportList = new List<InventoryTurnOverReport>();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["LSPI803_App"].ConnectionString.ToString()))
+                {
+                    conn.Open();
+                    using (SqlCommand cmdSql = conn.CreateCommand())
+                    {
+
+                        cmdSql.CommandType = CommandType.StoredProcedure;
+                        cmdSql.CommandText = "LSP_Rpt_NewDM_InventoryTurnOverReportSP";
+                        cmdSql.Parameters.Clear();
+                        cmdSql.Parameters.AddWithValue("@IsShowDetail", ShowDetailedTransaction);
+                        SqlParameter StartDate = cmdSql.Parameters.Add("@StartDate", SqlDbType.VarChar, 255);
+                        SqlParameter EndDate = cmdSql.Parameters.Add("@EndDate", SqlDbType.VarChar, 255);
+                        StartDate.Direction = ParameterDirection.Output;
+                        EndDate.Direction = ParameterDirection.Output;
+                        cmdSql.CommandTimeout = 0;
+
+                        cmdSql.ExecuteNonQuery();
+                        RetStartDate = StartDate.Value.ToString();
+                        using (SqlDataReader sdr = cmdSql.ExecuteReader())
+                        {
+                            while (sdr.Read())
+                            {
+                                InventoryTurnOverReportList.Add(new InventoryTurnOverReport
+                                {
+                                    trans_date = sdr["trans_date"].ToString(),
+                                    trans_dateMMYYYY = sdr["trans_date"].ToString() == "" ? "" : DateTime.Parse(sdr["trans_date"].ToString()).ToString("MMyyyy"),
+                                    trans_type = sdr["trans_type"].ToString(),
+                                    reason_code = sdr["reason_code"].ToString(),
+                                    reason_desc = sdr["reason_desc"].ToString(),
+                                    qty = sdr["qty"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["qty"]),
+                                    usage_matl = sdr["usage_matl"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_matl"]),
+                                    usage_landed = sdr["usage_landed"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_landed"]),
+                                    item = sdr["item"].ToString(),
+                                    item_desc = sdr["item_desc"].ToString(),
+                                    product_code = sdr["product_code"].ToString(),
+                                    lot = sdr["lot"].ToString(),
+                                    ref_num = sdr["ref_num"].ToString(),
+                                    ref_line = sdr["ref_line"].ToString() == "" ? 0 : Convert.ToInt32(sdr["ref_line"]),
+                                    invty_matl_cost = sdr["invty_matl_cost"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["invty_matl_cost"]),
+                                    invty_landed_cost = sdr["invty_landed_cost"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["invty_landed_cost"]),
+                                    safety_matl_cost = sdr["safety_matl_cost"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["safety_matl_cost"]),
+                                    report_group = sdr["report_group"].ToString(),
+                                    usage_M1 = sdr["usage_M1"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_M1"]),
+                                    usage_L1 = sdr["usage_L1"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_L1"]),
+                                    usage_M2 = sdr["usage_M2"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_M2"]),
+                                    usage_L2 = sdr["usage_L2"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_L2"]),
+                                    usage_M3 = sdr["usage_M3"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_M3"]),
+                                    usage_L3 = sdr["usage_L3"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_L3"]),
+                                    usage_M4 = sdr["usage_M4"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_M4"]),
+                                    usage_L4 = sdr["usage_L4"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_L4"]),
+                                    usage_M5 = sdr["usage_M5"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_M5"]),
+                                    usage_L5 = sdr["usage_L5"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_L5"]),
+                                    usage_M6 = sdr["usage_M6"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_M6"]),
+                                    usage_L6 = sdr["usage_L6"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_L6"]),
+                                    usage_M7 = sdr["usage_M7"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_M7"]),
+                                    usage_L7 = sdr["usage_L7"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_L7"]),
+                                    usage_M8 = sdr["usage_M8"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_M8"]),
+                                    usage_L8 = sdr["usage_L8"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_L8"]),
+                                    usage_M9 = sdr["usage_M9"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_M9"]),
+                                    usage_L9 = sdr["usage_L9"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_L9"]),
+                                    usage_M10 = sdr["usage_M10"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_M10"]),
+                                    usage_L10 = sdr["usage_L10"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_L10"]),
+                                    usage_M11 = sdr["usage_M11"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_M11"]),
+                                    usage_L11 = sdr["usage_L11"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_L11"]),
+                                    usage_M12 = sdr["usage_M12"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_M12"]),
+                                    usage_L12 = sdr["usage_L12"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_L12"]),
+
+                                    M1 = sdr["M1"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["M1"]),
+                                    L1 = sdr["L1"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["L1"]),
+                                    M2 = sdr["M2"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["M2"]),
+                                    L2 = sdr["L2"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["L2"]),
+                                    M3 = sdr["M3"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["M3"]),
+                                    L3 = sdr["L3"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["L3"]),
+                                    M4 = sdr["M4"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["M4"]),
+                                    L4 = sdr["L4"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["L4"]),
+                                    M5 = sdr["M5"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["M5"]),
+                                    L5 = sdr["L5"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["L5"]),
+                                    M6 = sdr["M6"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["M6"]),
+                                    L6 = sdr["L6"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["L6"]),
+                                    M7 = sdr["M7"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["M7"]),
+                                    L7 = sdr["L7"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["L7"]),
+                                    M8 = sdr["M8"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["M8"]),
+                                    L8 = sdr["L8"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["L8"]),
+                                    M9 = sdr["M9"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["M9"]),
+                                    L9 = sdr["L9"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["L9"]),
+                                    M10 = sdr["M10"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["M10"]),
+                                    L10 = sdr["L10"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["L10"]),
+                                    //M11 = sdr["M11"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["M11"]),
+                                    //L11 = sdr["L11"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["L11"]),
+                                    //M12 = sdr["M12"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["M12"]),
+                                    //L12 = sdr["L12"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["L12"]),
+                                    MAX_3Months = sdr["MAX_3Months"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["MAX_3Months"]),
+                                    L_MAX_3Months = sdr["L_MAX_3Months"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["L_MAX_3Months"]),
+                                });
+                            }
+
+                        }
+                    }
+                    conn.Close();
+                }
+                string filePath = "";
+                string Filename = "LSP_Rpt_DM_InventoryTurnOverReport.xlsx";
+                filePath = Path.Combine(Server.MapPath("~/Areas/Reports/Templates/") + "LSP_Rpt_DM_InventoryTurnOverReport.xlsx");
+                FileInfo file = new FileInfo(filePath);
+                using (ExcelPackage excelPackage = new ExcelPackage(file))
+                {
+                    List<InventoryTurnOverReport> InventoryTurnOverReport_NewGroup = new List<InventoryTurnOverReport>();
+                    var groupedByUsage = InventoryTurnOverReportList
+                    .Where(x => x.report_group == "USAGE")
+                    .GroupBy(u => u.product_code)
+                    .Select(grp => grp.ToList())
+                    .ToList();
+
+                    foreach(var groupedByUsageObj in groupedByUsage)
+                    {
+                        string trans_date = "";
+                        string trans_dateMMYYYY = "";
+                        string trans_type = "";
+                        string reason_code = "";
+                        string reason_desc = "";
+                        decimal qty = 0;
+                        decimal usage_matl = 0;
+                        decimal usage_landed = 0;
+                        string item = "";
+                        string item_desc = "";
+                        string product_code = "";
+                        string lot = "";
+                        string ref_num = "";
+                        int ref_line = 0;
+                        decimal invty_matl_cost = 0;
+                        decimal invty_landed_cost = 0;
+                        decimal safety_matl_cost = 0;
+                        string report_group = "";
+                        decimal usage_M1 = 0;
+                        decimal usage_L1 = 0;
+                        decimal usage_M2 = 0;
+                        decimal usage_L2 = 0;
+                        decimal usage_M3 = 0;
+                        decimal usage_L3 = 0;
+                        decimal usage_M4 = 0;
+                        decimal usage_L4 = 0;
+                        decimal usage_M5 = 0;
+                        decimal usage_L5 = 0;
+                        decimal usage_M6 = 0;
+                        decimal usage_L6 = 0;
+                        decimal usage_M7 = 0;
+                        decimal usage_L7 = 0;
+                        decimal usage_M8 = 0;
+                        decimal usage_L8 = 0;
+                        decimal usage_M9 = 0;
+                        decimal usage_L9 = 0;
+                        decimal usage_M10 = 0;
+                        decimal usage_L10 = 0;
+                        decimal usage_M11 = 0;
+                        decimal usage_L11 = 0;
+                        decimal usage_M12 = 0;
+                        decimal usage_L12 = 0;
+
+                        decimal M1 = 0;
+                        decimal L1 = 0;
+                        decimal M2 = 0;
+                        decimal L2 = 0;
+                        decimal M3 = 0;
+                        decimal L3 = 0;
+                        decimal M4 = 0;
+                        decimal L4 = 0;
+                        decimal M5 = 0;
+                        decimal L5 = 0;
+                        decimal M6 = 0;
+                        decimal L6 = 0;
+                        decimal M7 = 0;
+                        decimal L7 = 0;
+                        decimal M8 = 0;
+                        decimal L8 = 0;
+                        decimal M9 = 0;
+                        decimal L9 = 0;
+                        decimal M10 = 0;
+                        decimal L10 = 0;
+                        decimal M11 = 0;
+                        decimal L11 = 0;
+                        decimal M12 = 0;
+                        decimal L12 = 0;
+                        decimal MAX_3Months = 0;
+                        decimal L_MAX_3Months = 0;
+                        foreach(var UsageObj in groupedByUsageObj)
+                        {
+                            trans_date = UsageObj.trans_date;
+                            trans_dateMMYYYY = UsageObj.trans_dateMMYYYY;
+                            trans_type = UsageObj.trans_type;
+                            reason_code = UsageObj.reason_code;
+                            reason_desc = UsageObj.reason_desc;
+                            qty += UsageObj.qty;
+                            usage_matl += UsageObj.usage_matl;
+                            usage_landed += UsageObj.usage_landed;
+                            item = UsageObj.item;
+                            item_desc = UsageObj.item_desc;
+                            product_code = UsageObj.product_code;
+                            lot = UsageObj.lot;
+                            ref_num = UsageObj.ref_num;
+                            ref_line = UsageObj.ref_line;
+                            invty_matl_cost += UsageObj.invty_matl_cost;
+                            invty_landed_cost += UsageObj.invty_landed_cost;
+                            safety_matl_cost += UsageObj.safety_matl_cost;
+                            report_group = UsageObj.report_group;
+                            usage_M1 += UsageObj.usage_M1;
+                            usage_L1 += UsageObj.usage_L1;
+                            usage_M2 += UsageObj.usage_M2;
+                            usage_L2 += UsageObj.usage_L2;
+                            usage_M3 += UsageObj.usage_M3;
+                            usage_L3 += UsageObj.usage_L3;
+                            usage_M4 += UsageObj.usage_M4;
+                            usage_L4 += UsageObj.usage_L4;
+                            usage_M5 += UsageObj.usage_M5;
+                            usage_L5 += UsageObj.usage_L5;
+                            usage_M6 += UsageObj.usage_M6;
+                            usage_L6 += UsageObj.usage_L6;
+                            usage_M7 += UsageObj.usage_M7;
+                            usage_L7 += UsageObj.usage_L7;
+                            usage_M8 += UsageObj.usage_M8;
+                            usage_L8 += UsageObj.usage_L8;
+                            usage_M9 += UsageObj.usage_M9;
+                            usage_L9 += UsageObj.usage_L9;
+                            usage_M10 += UsageObj.usage_M10;
+                            usage_L10 += UsageObj.usage_L10;
+                            usage_M11 += UsageObj.usage_M11;
+                            usage_L11 += UsageObj.usage_L11;
+                            usage_M12 += UsageObj.usage_M12;
+                            usage_L12 += UsageObj.usage_L12;
+
+                            M1 += UsageObj.M1;
+                            L1 += UsageObj.L1;
+                            M2 += UsageObj.M2;
+                            L2 += UsageObj.L2;
+                            M3 += UsageObj.M3;
+                            L3 += UsageObj.L3;
+                            M4 += UsageObj.M4;
+                            L4 += UsageObj.L4;
+                            M5 += UsageObj.M5;
+                            L5 += UsageObj.L5;
+                            M6 += UsageObj.M6;
+                            L6 += UsageObj.L6;
+                            M7 += UsageObj.M7;
+                            L7 += UsageObj.L7;
+                            M8 += UsageObj.M8;
+                            L8 += UsageObj.L8;
+                            M9 += UsageObj.M9;
+                            L9 += UsageObj.L9;
+                            M10 += UsageObj.M10;
+                            L10 += UsageObj.L10;
+                            //M11 += UsageObj.M11;
+                            //L11 += UsageObj.L11;
+                            //M12 += UsageObj.M12;
+                            //L12 += UsageObj.L12;
+                            MAX_3Months += UsageObj.MAX_3Months;
+                            L_MAX_3Months += UsageObj.L_MAX_3Months;
+                        }
+                        InventoryTurnOverReport_NewGroup.Add(new InventoryTurnOverReport
+                        {
+                            trans_date = trans_date,
+                            trans_dateMMYYYY = trans_dateMMYYYY,
+                            trans_type = trans_type,
+                            reason_code = reason_code,
+                            reason_desc = reason_desc,
+                            qty = qty,
+                            usage_matl = usage_matl,
+                            usage_landed = usage_landed,
+                            item = item,
+                            item_desc = item_desc,
+                            product_code = product_code,
+                            lot = lot,
+                            ref_num = ref_num,
+                            ref_line = ref_line,
+                            invty_matl_cost = invty_matl_cost,
+                            invty_landed_cost = invty_landed_cost,
+                            safety_matl_cost = safety_matl_cost,
+                            report_group = report_group,
+                            usage_M1 = usage_M1,
+                            usage_L1 = usage_L1,
+                            usage_M2 = usage_M2,
+                            usage_L2 = usage_L2,
+                            usage_M3 = usage_M3,
+                            usage_L3 = usage_L3,
+                            usage_M4 = usage_M4,
+                            usage_L4 = usage_L4,
+                            usage_M5 = usage_M5,
+                            usage_L5 = usage_L5,
+                            usage_M6 = usage_M6,
+                            usage_L6 = usage_L6,
+                            usage_M7 = usage_M7,
+                            usage_L7 = usage_L7,
+                            usage_M8 = usage_M8,
+                            usage_L8 = usage_L8,
+                            usage_M9 = usage_M9,
+                            usage_L9 = usage_L9,
+                            usage_M10 = usage_M10,
+                            usage_L10 = usage_L10,
+                            usage_M11 = usage_M11,
+                            usage_L11 = usage_L11,
+                            usage_M12 = usage_M12,
+                            usage_L12 = usage_L12,
+                            M1 = M1,
+                            L1 = L1,
+                            M2 = M2,
+                            L2 = L2,
+                            M3 = M3,
+                            L3 = L3,
+                            M4 = M4,
+                            L4 = L4,
+                            M5 = M5,
+                            L5 = L5,
+                            M6 = M6,
+                            L6 = L6,
+                            M7 = M7,
+                            L7 = L7,
+                            M8 = M8,
+                            L8 = L8,
+                            M9 = M9,
+                            L9 = L9,
+                            M10 = M10,
+                            L10 = L10,
+                            //M11 = M11,
+                            //L11 = L11,
+                            //M12 = M12,
+                            //L12 = L12,
+                            MAX_3Months = MAX_3Months,
+                            L_MAX_3Months = L_MAX_3Months,
+                        });
+                    }
+                    #region UsageSheet 
+                    ExcelWorksheet UsageSheet = excelPackage.Workbook.Worksheets["Usage"];
+                    int sheetsRowUsage = 8;
+                    UsageSheet.Cells["A3"].Value = DateTime.Now;
+                    var parsedDate = DateTime.Parse(RetStartDate);
+                    int colCtr = 2;
+                    for(int m= 0;m <= 11; m++)
+                    {
+                        string newDate = parsedDate.AddMonths(m).ToString("MMM");
+
+                        UsageSheet.Cells[6, colCtr].Value = newDate;
+                        UsageSheet.Cells[6, colCtr].Style.WrapText = false;
+                        colCtr+=2;
+                    }
+                    InventoryTurnOverReport_NewGroup = InventoryTurnOverReport_NewGroup.ToList();
+                    foreach (var InventoryTurnOverReport_NewGroupObj in InventoryTurnOverReport_NewGroup)
+                    {
+                            if (sheetsRowUsage < InventoryTurnOverReport_NewGroup.ToList().Count + 7)
+                            {
+                                UsageSheet.InsertRow((sheetsRowUsage + 1), 1);
+                                UsageSheet.Cells[sheetsRowUsage, 1, sheetsRowUsage, 100].Copy(UsageSheet.Cells[(sheetsRowUsage + 1), 1, (sheetsRowUsage + 1), 1]);
+                            }
+                            UsageSheet.Cells[sheetsRowUsage, 1].Value = InventoryTurnOverReport_NewGroupObj.product_code;
+                            UsageSheet.Cells[sheetsRowUsage, 1].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 2].Value = InventoryTurnOverReport_NewGroupObj.usage_M1;
+                            UsageSheet.Cells[sheetsRowUsage, 2].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 3].Value = InventoryTurnOverReport_NewGroupObj.usage_L1;
+                            UsageSheet.Cells[sheetsRowUsage, 3].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 4].Value = InventoryTurnOverReport_NewGroupObj.usage_M2;
+                            UsageSheet.Cells[sheetsRowUsage, 4].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 5].Value = InventoryTurnOverReport_NewGroupObj.usage_L2;
+                            UsageSheet.Cells[sheetsRowUsage, 5].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 6].Value = InventoryTurnOverReport_NewGroupObj.usage_M3;
+                            UsageSheet.Cells[sheetsRowUsage, 6].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 7].Value = InventoryTurnOverReport_NewGroupObj.usage_L3;
+                            UsageSheet.Cells[sheetsRowUsage, 7].Style.WrapText = false;
+
+                            UsageSheet.Cells[sheetsRowUsage, 8].Value = InventoryTurnOverReport_NewGroupObj.usage_M4;
+                            UsageSheet.Cells[sheetsRowUsage, 8].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 9].Value = InventoryTurnOverReport_NewGroupObj.usage_L4;
+                            UsageSheet.Cells[sheetsRowUsage, 9].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 10].Value = InventoryTurnOverReport_NewGroupObj.usage_M5;
+                            UsageSheet.Cells[sheetsRowUsage, 10].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 11].Value = InventoryTurnOverReport_NewGroupObj.usage_L5;
+                            UsageSheet.Cells[sheetsRowUsage, 11].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 12].Value = InventoryTurnOverReport_NewGroupObj.usage_M6;
+                            UsageSheet.Cells[sheetsRowUsage, 12].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 13].Value = InventoryTurnOverReport_NewGroupObj.usage_L6;
+                            UsageSheet.Cells[sheetsRowUsage, 13].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 14].Value = InventoryTurnOverReport_NewGroupObj.usage_M7;
+                            UsageSheet.Cells[sheetsRowUsage, 14].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 15].Value = InventoryTurnOverReport_NewGroupObj.usage_L7;
+                            UsageSheet.Cells[sheetsRowUsage, 15].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 16].Value = InventoryTurnOverReport_NewGroupObj.usage_M8;
+                            UsageSheet.Cells[sheetsRowUsage, 16].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 17].Value = InventoryTurnOverReport_NewGroupObj.usage_L8;
+                            UsageSheet.Cells[sheetsRowUsage, 17].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 18].Value = InventoryTurnOverReport_NewGroupObj.usage_M9;
+                            UsageSheet.Cells[sheetsRowUsage, 18].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 29].Value = InventoryTurnOverReport_NewGroupObj.usage_L9;
+                            UsageSheet.Cells[sheetsRowUsage, 29].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 20].Value = InventoryTurnOverReport_NewGroupObj.usage_M10;
+                            UsageSheet.Cells[sheetsRowUsage, 20].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 21].Value = InventoryTurnOverReport_NewGroupObj.usage_L10;
+                            UsageSheet.Cells[sheetsRowUsage, 21].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 22].Value = InventoryTurnOverReport_NewGroupObj.usage_M11;
+                            UsageSheet.Cells[sheetsRowUsage, 22].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 23].Value = InventoryTurnOverReport_NewGroupObj.usage_L11;
+                            UsageSheet.Cells[sheetsRowUsage, 23].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 24].Value = InventoryTurnOverReport_NewGroupObj.usage_M12;
+                            UsageSheet.Cells[sheetsRowUsage, 24].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 25].Value = InventoryTurnOverReport_NewGroupObj.usage_L12;
+                            UsageSheet.Cells[sheetsRowUsage, 25].Style.WrapText = false;
+
+                            decimal averageM = (InventoryTurnOverReport_NewGroupObj.usage_M1+InventoryTurnOverReport_NewGroupObj.usage_M2+InventoryTurnOverReport_NewGroupObj.usage_M3+InventoryTurnOverReport_NewGroupObj.usage_M4+InventoryTurnOverReport_NewGroupObj.usage_M5+InventoryTurnOverReport_NewGroupObj.usage_M6+InventoryTurnOverReport_NewGroupObj.usage_M7+InventoryTurnOverReport_NewGroupObj.usage_M8+InventoryTurnOverReport_NewGroupObj.usage_M9+InventoryTurnOverReport_NewGroupObj.usage_M10+InventoryTurnOverReport_NewGroupObj.usage_M11+InventoryTurnOverReport_NewGroupObj.usage_M12)/ 12;
+                            decimal averageL = (InventoryTurnOverReport_NewGroupObj.usage_L1+InventoryTurnOverReport_NewGroupObj.usage_L2+InventoryTurnOverReport_NewGroupObj.usage_L3+InventoryTurnOverReport_NewGroupObj.usage_L4+InventoryTurnOverReport_NewGroupObj.usage_L5+InventoryTurnOverReport_NewGroupObj.usage_L6+InventoryTurnOverReport_NewGroupObj.usage_L7+InventoryTurnOverReport_NewGroupObj.usage_L8+InventoryTurnOverReport_NewGroupObj.usage_L9+InventoryTurnOverReport_NewGroupObj.usage_L10+InventoryTurnOverReport_NewGroupObj.usage_L11+InventoryTurnOverReport_NewGroupObj.usage_L12)/ 12;
+                            UsageSheet.Cells[sheetsRowUsage, 26].Value = averageM;
+                            UsageSheet.Cells[sheetsRowUsage, 26].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 27].Value = averageL;
+                            UsageSheet.Cells[sheetsRowUsage, 27].Style.WrapText = false;
+
+                            decimal[] arr_M = { InventoryTurnOverReport_NewGroupObj.usage_M1,InventoryTurnOverReport_NewGroupObj.usage_M2,InventoryTurnOverReport_NewGroupObj.usage_M3,InventoryTurnOverReport_NewGroupObj.usage_M4,InventoryTurnOverReport_NewGroupObj.usage_M5,InventoryTurnOverReport_NewGroupObj.usage_M6,InventoryTurnOverReport_NewGroupObj.usage_M7,InventoryTurnOverReport_NewGroupObj.usage_M8,InventoryTurnOverReport_NewGroupObj.usage_M9,InventoryTurnOverReport_NewGroupObj.usage_M10,InventoryTurnOverReport_NewGroupObj.usage_M11,InventoryTurnOverReport_NewGroupObj.usage_M12 };
+                            decimal[] arr_L = { InventoryTurnOverReport_NewGroupObj.usage_L1,InventoryTurnOverReport_NewGroupObj.usage_L2,InventoryTurnOverReport_NewGroupObj.usage_L3,InventoryTurnOverReport_NewGroupObj.usage_L4,InventoryTurnOverReport_NewGroupObj.usage_L5,InventoryTurnOverReport_NewGroupObj.usage_L6,InventoryTurnOverReport_NewGroupObj.usage_L7,InventoryTurnOverReport_NewGroupObj.usage_L8,InventoryTurnOverReport_NewGroupObj.usage_L9,InventoryTurnOverReport_NewGroupObj.usage_L10,InventoryTurnOverReport_NewGroupObj.usage_L11,InventoryTurnOverReport_NewGroupObj.usage_L12 };
+
+                            UsageSheet.Cells[sheetsRowUsage, 28].Value = arr_M.Max();
+                            UsageSheet.Cells[sheetsRowUsage, 28].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 29].Value = arr_L.Max();
+                            UsageSheet.Cells[sheetsRowUsage, 29].Style.WrapText = false;
+
+                            UsageSheet.Cells[sheetsRowUsage, 30].Value = InventoryTurnOverReport_NewGroupObj.M1;
+                            UsageSheet.Cells[sheetsRowUsage, 30].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 31].Value = InventoryTurnOverReport_NewGroupObj.L1;
+                            UsageSheet.Cells[sheetsRowUsage, 31].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 32].Value = InventoryTurnOverReport_NewGroupObj.M2;
+                            UsageSheet.Cells[sheetsRowUsage, 32].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 33].Value = InventoryTurnOverReport_NewGroupObj.L2;
+                            UsageSheet.Cells[sheetsRowUsage, 33].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 34].Value = InventoryTurnOverReport_NewGroupObj.M3;
+                            UsageSheet.Cells[sheetsRowUsage, 34].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 35].Value = InventoryTurnOverReport_NewGroupObj.L3;
+                            UsageSheet.Cells[sheetsRowUsage, 35].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 36].Value = InventoryTurnOverReport_NewGroupObj.M4;
+                            UsageSheet.Cells[sheetsRowUsage, 36].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 37].Value = InventoryTurnOverReport_NewGroupObj.L4;
+                            UsageSheet.Cells[sheetsRowUsage, 37].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 38].Value = InventoryTurnOverReport_NewGroupObj.M5;
+                            UsageSheet.Cells[sheetsRowUsage, 38].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 39].Value = InventoryTurnOverReport_NewGroupObj.L5;
+                            UsageSheet.Cells[sheetsRowUsage, 39].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 40].Value = InventoryTurnOverReport_NewGroupObj.M6;
+                            UsageSheet.Cells[sheetsRowUsage, 40].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 41].Value = InventoryTurnOverReport_NewGroupObj.L6;
+                            UsageSheet.Cells[sheetsRowUsage, 41].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 42].Value = InventoryTurnOverReport_NewGroupObj.M7;
+                            UsageSheet.Cells[sheetsRowUsage, 42].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 43].Value = InventoryTurnOverReport_NewGroupObj.L7;
+                            UsageSheet.Cells[sheetsRowUsage, 43].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 44].Value = InventoryTurnOverReport_NewGroupObj.M8;
+                            UsageSheet.Cells[sheetsRowUsage, 44].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 45].Value = InventoryTurnOverReport_NewGroupObj.L8;
+                            UsageSheet.Cells[sheetsRowUsage, 45].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 46].Value = InventoryTurnOverReport_NewGroupObj.M9;
+                            UsageSheet.Cells[sheetsRowUsage, 46].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 47].Value = InventoryTurnOverReport_NewGroupObj.L9;
+                            UsageSheet.Cells[sheetsRowUsage, 47].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 49].Value = InventoryTurnOverReport_NewGroupObj.M10;
+                            UsageSheet.Cells[sheetsRowUsage, 49].Style.WrapText = false;
+
+                            UsageSheet.Cells[sheetsRowUsage, 50].Value = InventoryTurnOverReport_NewGroupObj.MAX_3Months;
+                            UsageSheet.Cells[sheetsRowUsage, 50].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 51].Value = InventoryTurnOverReport_NewGroupObj.L_MAX_3Months;
+                            UsageSheet.Cells[sheetsRowUsage, 51].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 52].Value = InventoryTurnOverReport_NewGroupObj.invty_matl_cost;
+                            UsageSheet.Cells[sheetsRowUsage, 52].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 53].Value = InventoryTurnOverReport_NewGroupObj.invty_landed_cost;
+                            UsageSheet.Cells[sheetsRowUsage, 53].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 54].Value = InventoryTurnOverReport_NewGroupObj.safety_matl_cost;
+                            UsageSheet.Cells[sheetsRowUsage, 54].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 55].Value = (InventoryTurnOverReport_NewGroupObj.MAX_3Months + InventoryTurnOverReport_NewGroupObj.L_MAX_3Months + InventoryTurnOverReport_NewGroupObj.safety_matl_cost);
+                            UsageSheet.Cells[sheetsRowUsage, 55].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 56].Value = ((InventoryTurnOverReport_NewGroupObj.invty_matl_cost + InventoryTurnOverReport_NewGroupObj.invty_landed_cost) / (InventoryTurnOverReport_NewGroupObj.MAX_3Months + InventoryTurnOverReport_NewGroupObj.L_MAX_3Months)) * 3;
+                            UsageSheet.Cells[sheetsRowUsage, 56].Style.WrapText = false;
+                            UsageSheet.Cells[sheetsRowUsage, 57].Value = (InventoryTurnOverReport_NewGroupObj.invty_matl_cost + InventoryTurnOverReport_NewGroupObj.invty_landed_cost) - (InventoryTurnOverReport_NewGroupObj.MAX_3Months + InventoryTurnOverReport_NewGroupObj.L_MAX_3Months + InventoryTurnOverReport_NewGroupObj.safety_matl_cost);
+                            UsageSheet.Cells[sheetsRowUsage, 57].Style.WrapText = false;
+
+                            sheetsRowUsage++;
+
+                    }
+                    #endregion
+
+                    var groupedByTransDate = InventoryTurnOverReportList.GroupBy(a => a.trans_dateMMYYYY).ToList();
+
+                    ExcelWorksheet DetailedSheet = excelPackage.Workbook.Worksheets["Detailed"];
+                    int sheetsRow = 6;
+                    #region DetailedSheet 
+                    DetailedSheet.Cells["A3"].Value = DateTime.Now;
+                    foreach (var InventoryTurnOverReportListObj in InventoryTurnOverReportList)
+                    {
+                        if (sheetsRow<InventoryTurnOverReportList.ToList().Count + 5)
+                        {
+                            DetailedSheet.InsertRow((sheetsRow + 1), 1);
+                            DetailedSheet.Cells[sheetsRow, 1, sheetsRow, 100].Copy(DetailedSheet.Cells[(sheetsRow + 1), 1, (sheetsRow + 1), 1]);
+                        }
+                        DetailedSheet.Cells[sheetsRow, 1].Value = InventoryTurnOverReportListObj.trans_date;
+                        DetailedSheet.Cells[sheetsRow, 1].Style.WrapText = false;
+                        DetailedSheet.Cells[sheetsRow, 2].Value = InventoryTurnOverReportListObj.trans_type;
+                        DetailedSheet.Cells[sheetsRow, 2].Style.WrapText = false;
+                        DetailedSheet.Cells[sheetsRow, 3].Value = InventoryTurnOverReportListObj.reason_code ;
+                        DetailedSheet.Cells[sheetsRow, 3].Style.WrapText = false;
+                        DetailedSheet.Cells[sheetsRow, 4].Value = InventoryTurnOverReportListObj.reason_desc;
+                        DetailedSheet.Cells[sheetsRow, 4].Style.WrapText = false;
+                        DetailedSheet.Cells[sheetsRow, 5].Value = InventoryTurnOverReportListObj.item;
+                        DetailedSheet.Cells[sheetsRow, 5].Style.WrapText = false;
+                        DetailedSheet.Cells[sheetsRow, 6].Value = InventoryTurnOverReportListObj.item_desc;
+                        DetailedSheet.Cells[sheetsRow, 6].Style.WrapText = false;
+                        DetailedSheet.Cells[sheetsRow, 7].Value = InventoryTurnOverReportListObj.product_code;
+                        DetailedSheet.Cells[sheetsRow, 7].Style.WrapText = false;
+                        DetailedSheet.Cells[sheetsRow, 8].Value = (InventoryTurnOverReportListObj.ref_num+ "" +InventoryTurnOverReportListObj.ref_line);
+                        DetailedSheet.Cells[sheetsRow, 8].Style.WrapText = false;
+
+                        DetailedSheet.Cells[sheetsRow, 9].Value = InventoryTurnOverReportListObj.qty;
+                        DetailedSheet.Cells[sheetsRow, 9].Style.WrapText = false;
+                        DetailedSheet.Cells[sheetsRow, 10].Value = InventoryTurnOverReportListObj.usage_matl;
+                        DetailedSheet.Cells[sheetsRow, 10].Style.WrapText = false;
+                        DetailedSheet.Cells[sheetsRow, 11].Value = InventoryTurnOverReportListObj.usage_landed;
+                        DetailedSheet.Cells[sheetsRow, 11].Style.WrapText = false;
+
+                        sheetsRow++;
+
+                    }
+                    #endregion
+                    return File(excelPackage.GetAsByteArray(), "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet", Filename);
+                }
+            }
+            catch (Exception err)
+            {
+                string errmsg;
+                if (err.InnerException != null)
+                    errmsg = "An error occured: " + err.InnerException.ToString();
+                else
+                    errmsg = "An error occured: " + err.Message.ToString();
+                return null;
+            }
+        }
     }
 }
