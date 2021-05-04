@@ -1,9 +1,9 @@
---CREATE PROCEDURE LSP_Rpt_NewDM_InventoryTurnOverReportSP (
-DECLARE
+ALTER PROCEDURE LSP_Rpt_NewDM_InventoryTurnOverReportSP (
+--DECLARE
 	@IsShowDetail					BIT = 1
-  , @StartDate						DateType		--OUTPUT
-  , @EndDate						DateType		--OUTPUT
---) AS
+  , @StartDate						DateType		OUTPUT
+  , @EndDate						DateType		OUTPUT
+) AS
 BEGIN
 
 	IF OBJECT_ID('tempdb..#InvtyTurnOverDtl') IS NOT NULL

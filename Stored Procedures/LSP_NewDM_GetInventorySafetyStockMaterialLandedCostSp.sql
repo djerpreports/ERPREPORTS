@@ -1,4 +1,4 @@
-ALTER PROCEDURE LSP_NewDM_GetInventorySafetyStockMaterialLandedCostSp (  
+CREATE PROCEDURE LSP_NewDM_GetInventorySafetyStockMaterialLandedCostSp (  
 --DECLARE  
 	@ProdCode				ProductCodeType --= 'DK2300'
   , @InvtyMaterialCost		AmountType		OUTPUT  

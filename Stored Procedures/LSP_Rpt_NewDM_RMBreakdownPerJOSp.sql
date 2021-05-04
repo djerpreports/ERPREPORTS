@@ -224,6 +224,7 @@ BEGIN
 		     --, a.matl_qty, a1.job_qty, a1.job_matl_qty
 		     , CAST((a.matl_qty / a1.job_qty) AS DECIMAL(18,8))
 		     , CAST((a.matl_qty / a1.job_qty) AS DECIMAL(18,8)) * a1.actl_matl_qty
+		     --, ((a.matl_qty / a1.job_qty) * a1.job_matl_qty)
 		     -- CASE WHEN a.[Level] = 2 THEN a1.job_matl_qty ELSE a1.actl_matl_qty END
 		  --   ,  (matl_qty 
 				--   / (SELECT actl_matl_qty 
@@ -287,6 +288,7 @@ BEGIN
 		 , [Level]
 		 , sequence
 		 , subsequence
+		 , lot_no
 		 , matl_qty
 		 , job_qty
 		 , job_matl_qty
