@@ -1341,22 +1341,23 @@ namespace ERPReports.Areas.Reports.Controllers
                                     ProductCode = sdr["ProductCode"].ToString(),
                                     Family = sdr["Family"].ToString(),
                                     FamilyDesc = sdr["FamilyDesc"].ToString(),
-                                    QtyCompleted = sdr["QtyCompleted"] == null ? 0: Convert.ToDecimal(sdr["QtyCompleted"]),
-                                    StdMatlCost_PHP = sdr["StdMatlCost_PHP"] == null ? 0: Convert.ToDecimal(sdr["StdMatlCost_PHP"]),    
-                                    StdResinCost_PHP = sdr["StdResinCost_PHP"] == null ? 0: Convert.ToDecimal(sdr["StdResinCost_PHP"]), 
-                                    StdPIProcess_PHP = sdr["StdPIProcess_PHP"] == null ? 0: Convert.ToDecimal(sdr["StdPIProcess_PHP"]), 
-                                    StdHiddenProfit_PHP = sdr["StdHiddenProfit_PHP"] == null ? 0: Convert.ToDecimal(sdr["StdHiddenProfit_PHP"]),    
-                                    StdSFAdded_PHP = sdr["StdSFAdded_PHP"] == null ? 0: Convert.ToDecimal(sdr["StdSFAdded_PHP"]),   
-                                    StdFGAdded_PHP = sdr["StdFGAdded_PHP"] == null ? 0: Convert.ToDecimal(sdr["StdFGAdded_PHP"]),   
-                                    StdUnitCost_PHP = sdr["StdUnitCost_PHP"] == null ? 0: Convert.ToDecimal(sdr["StdUnitCost_PHP"]),    
-                                    ActlMatlUnitCost_PHP = sdr["ActlMatlUnitCost_PHP"] == null ? 0: Convert.ToDecimal(sdr["ActlMatlUnitCost_PHP"]), 
-                                    ActlLandedCost_PHP = sdr["ActlLandedCost_PHP"] == null ? 0: Convert.ToDecimal(sdr["ActlLandedCost_PHP"]),   
-                                    ActlResinCost_PHP = sdr["ActlResinCost_PHP"] == null ? 0: Convert.ToDecimal(sdr["ActlResinCost_PHP"]),  
-                                    ActlPIProcess_PHP = sdr["ActlPIProcess_PHP"] == null ? 0: Convert.ToDecimal(sdr["ActlPIProcess_PHP"]),  
-                                    ActlHiddenProfit_PHP = sdr["ActlHiddenProfit_PHP"] == null ? 0: Convert.ToDecimal(sdr["ActlHiddenProfit_PHP"]), 
-                                    ActlSFAdded_PHP = sdr["ActlSFAdded_PHP"] == null ? 0: Convert.ToDecimal(sdr["ActlSFAdded_PHP"]),
-                                    ActlFGAdded_PHP = sdr["ActlFGAdded_PHP"] == null ? 0: Convert.ToDecimal(sdr["ActlFGAdded_PHP"]),    
-                                    ActlUnitCost_PHP = sdr["ActlUnitCost_PHP"] == null ? 0: Convert.ToDecimal(sdr["ActlUnitCost_PHP"]), 
+
+                                    QtyCompleted = String.IsNullOrEmpty(sdr["QtyCompleted"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["QtyCompleted"]),
+                                    StdMatlCost_PHP = String.IsNullOrEmpty(sdr["StdMatlCost_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["StdMatlCost_PHP"]),
+                                    StdResinCost_PHP = String.IsNullOrEmpty(sdr["StdResinCost_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["StdResinCost_PHP"]),
+                                    StdPIProcess_PHP = String.IsNullOrEmpty(sdr["StdPIProcess_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["StdPIProcess_PHP"]),
+                                    StdHiddenProfit_PHP = String.IsNullOrEmpty(sdr["StdHiddenProfit_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["StdHiddenProfit_PHP"]),
+                                    StdSFAdded_PHP = String.IsNullOrEmpty(sdr["StdSFAdded_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["StdSFAdded_PHP"]),
+                                    StdFGAdded_PHP = String.IsNullOrEmpty(sdr["StdFGAdded_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["StdFGAdded_PHP"]),
+                                    StdUnitCost_PHP = String.IsNullOrEmpty(sdr["StdUnitCost_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["StdUnitCost_PHP"]),
+                                    ActlMatlUnitCost_PHP = String.IsNullOrEmpty(sdr["ActlMatlUnitCost_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["ActlMatlUnitCost_PHP"]),
+                                    ActlLandedCost_PHP = String.IsNullOrEmpty(sdr["ActlLandedCost_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["ActlLandedCost_PHP"]),
+                                    ActlResinCost_PHP = String.IsNullOrEmpty(sdr["ActlResinCost_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["ActlResinCost_PHP"]),
+                                    ActlPIProcess_PHP = String.IsNullOrEmpty(sdr["ActlPIProcess_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["ActlPIProcess_PHP"]),
+                                    ActlHiddenProfit_PHP = String.IsNullOrEmpty(sdr["ActlHiddenProfit_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["ActlHiddenProfit_PHP"]),
+                                    ActlSFAdded_PHP = String.IsNullOrEmpty(sdr["ActlSFAdded_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["ActlSFAdded_PHP"]),
+                                    ActlFGAdded_PHP = String.IsNullOrEmpty(sdr["ActlFGAdded_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["ActlFGAdded_PHP"]),
+                                    ActlUnitCost_PHP = String.IsNullOrEmpty(sdr["ActlUnitCost_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["ActlUnitCost_PHP"]),                                    
                                 });
                             }
 
@@ -2153,32 +2154,32 @@ namespace ERPReports.Areas.Reports.Controllers
                                         FamilyDesc = sdr["FamilyDesc"] == null ? "" : sdr["FamilyDesc"].ToString(),
                                         PONum = sdr["PONum"] == null ? "" : sdr["PONum"].ToString(),
                                         LotNo = sdr["LotNo"] == null ? "" : sdr["LotNo"].ToString(),
-                                        JobOrder = sdr["JobOrder"] == null ? "" : sdr["JobOrder"].ToString(),
-                                        JobSuffix = sdr["JobSuffix"] == null ? "" : sdr["JobSuffix"].ToString(),
+                                        JobOrder = String.IsNullOrEmpty(sdr["JobOrder"].ToString()) == true ? "" : sdr["JobOrder"].ToString(),
+                                        JobSuffix = String.IsNullOrEmpty(sdr["JobSuffix"].ToString()) == true ? "" : sdr["JobSuffix"].ToString(),
                                         CONum = sdr["CONum"] == null ? "" : sdr["CONum"].ToString(),
                                         COLine = sdr["COLine"] == null ? "" : sdr["COLine"].ToString(),
                                         CustNum = sdr["CustNum"] == null ? "" : sdr["CustNum"].ToString(),
                                         ShipToCust = sdr["ShipToCust"] == null ? "" : sdr["ShipToCust"].ToString(),
                                         CustomerName = sdr["CustomerName"] == null ? "" : sdr["CustomerName"].ToString(),
-                                        QtyShipped = sdr["QtyShipped"] == null ? 0 : Convert.ToDecimal(sdr["QtyShipped"]),
-                                        SalesPrice = sdr["SalesPrice"] == null ? 0 : Convert.ToDecimal(sdr["SalesPrice"]),
-                                        SalesPriceConv = sdr["SalesPriceConv"] == null ? 0 : Convert.ToDecimal(sdr["SalesPriceConv"]),
-                                        StdMatlCost_PHP = sdr["StdMatlCost_PHP"] == null ? 0 : Convert.ToDecimal(sdr["StdMatlCost_PHP"]),
-                                        StdLandedCost_PHP = sdr["StdLandedCost_PHP"] == null ? 0 : Convert.ToDecimal(sdr["StdLandedCost_PHP"]),
-                                        StdResinCost_PHP = sdr["StdResinCost_PHP"] == null ? 0 : Convert.ToDecimal(sdr["StdResinCost_PHP"]),
-                                        StdPIProcess_PHP = sdr["StdPIProcess_PHP"] == null ? 0 : Convert.ToDecimal(sdr["StdPIProcess_PHP"]),
-                                        StdHiddenProfit_PHP = sdr["StdHiddenProfit_PHP"] == null ? 0 : Convert.ToDecimal(sdr["StdHiddenProfit_PHP"]),
-                                        StdSFAdded_PHP = sdr["StdSFAdded_PHP"] == null ? 0 : Convert.ToDecimal(sdr["StdSFAdded_PHP"]),
-                                        StdFGAdded_PHP = sdr["StdFGAdded_PHP"] == null ? 0 : Convert.ToDecimal(sdr["StdFGAdded_PHP"]),
-                                        StdUnitCost_PHP = sdr["StdUnitCost_PHP"] == null ? 0 : Convert.ToDecimal(sdr["StdUnitCost_PHP"]),
-                                        ActlMatlUnitCost_PHP = sdr["ActlMatlUnitCost_PHP"] == null ? 0 : Convert.ToDecimal(sdr["ActlMatlUnitCost_PHP"]),
-                                        ActlLandedCost_PHP = sdr["ActlLandedCost_PHP"] == null ? 0 : Convert.ToDecimal(sdr["ActlLandedCost_PHP"]),
-                                        ActlResinCost_PHP = sdr["ActlResinCost_PHP"] == null ? 0 : Convert.ToDecimal(sdr["ActlResinCost_PHP"]),
-                                        ActlPIProcess_PHP = sdr["ActlPIProcess_PHP"] == null ? 0 : Convert.ToDecimal(sdr["ActlPIProcess_PHP"]),
-                                        ActlHiddenProfit_PHP = sdr["ActlHiddenProfit_PHP"] == null ? 0 : Convert.ToDecimal(sdr["ActlHiddenProfit_PHP"]),
-                                        ActlSFAdded_PHP = sdr["ActlSFAdded_PHP"] == null ? 0 : Convert.ToDecimal(sdr["ActlSFAdded_PHP"]),
-                                        ActlFGAdded_PHP = sdr["ActlFGAdded_PHP"] == null ? 0 : Convert.ToDecimal(sdr["ActlFGAdded_PHP"]),
-                                        ActlUnitCost_PHP = sdr["ActlUnitCost_PHP"] == null ? 0 : Convert.ToDecimal(sdr["ActlUnitCost_PHP"]),
+                                        QtyShipped = String.IsNullOrEmpty(sdr["QtyShipped"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["QtyShipped"]),
+                                        SalesPrice = String.IsNullOrEmpty(sdr["SalesPrice"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["SalesPrice"]),
+                                        SalesPriceConv = String.IsNullOrEmpty(sdr["SalesPriceConv"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["SalesPriceConv"]),
+                                        StdMatlCost_PHP = String.IsNullOrEmpty(sdr["StdMatlCost_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["StdMatlCost_PHP"]),
+                                        StdLandedCost_PHP = String.IsNullOrEmpty(sdr["StdLandedCost_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["StdLandedCost_PHP"]),
+                                        StdResinCost_PHP = String.IsNullOrEmpty(sdr["StdResinCost_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["StdResinCost_PHP"]),
+                                        StdPIProcess_PHP = String.IsNullOrEmpty(sdr["StdPIProcess_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["StdPIProcess_PHP"]),
+                                        StdHiddenProfit_PHP = String.IsNullOrEmpty(sdr["StdHiddenProfit_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["StdHiddenProfit_PHP"]),
+                                        StdSFAdded_PHP = String.IsNullOrEmpty(sdr["StdSFAdded_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["StdSFAdded_PHP"]),
+                                        StdFGAdded_PHP = String.IsNullOrEmpty(sdr["StdFGAdded_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["StdFGAdded_PHP"]),
+                                        StdUnitCost_PHP = String.IsNullOrEmpty(sdr["StdUnitCost_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["StdUnitCost_PHP"]),
+                                        ActlMatlUnitCost_PHP = String.IsNullOrEmpty(sdr["ActlMatlUnitCost_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["ActlMatlUnitCost_PHP"]),
+                                        ActlLandedCost_PHP = String.IsNullOrEmpty(sdr["ActlLandedCost_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["ActlLandedCost_PHP"]),
+                                        ActlResinCost_PHP = String.IsNullOrEmpty(sdr["ActlResinCost_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["ActlResinCost_PHP"]),
+                                        ActlPIProcess_PHP = String.IsNullOrEmpty(sdr["ActlPIProcess_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["ActlPIProcess_PHP"]),
+                                        ActlHiddenProfit_PHP = String.IsNullOrEmpty(sdr["ActlHiddenProfit_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["ActlHiddenProfit_PHP"]),
+                                        ActlSFAdded_PHP = String.IsNullOrEmpty(sdr["ActlSFAdded_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["ActlSFAdded_PHP"]),
+                                        ActlFGAdded_PHP = String.IsNullOrEmpty(sdr["ActlFGAdded_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["ActlFGAdded_PHP"]),
+                                        ActlUnitCost_PHP = String.IsNullOrEmpty(sdr["ActlUnitCost_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["ActlUnitCost_PHP"]),
                                         ShipCategory = sdr["ShipCategory"] == null ? "" : sdr["ShipCategory"].ToString(),
                                         Recoverable = sdr["Recoverable"] == null ? "" : sdr["Recoverable"].ToString(),
                                         JobRemarks = sdr["JobRemarks"] == null ? "" : sdr["JobRemarks"].ToString(),
@@ -2843,11 +2844,11 @@ namespace ERPReports.Areas.Reports.Controllers
                                         inv_num = sdr["inv_num"].ToString(),
                                         ship_to_cust = sdr["ship_to_cust"].ToString(),
                                         inv_desc = sdr["inv_desc"].ToString(),
-                                        amount = sdr["amount"] == null ? 0 : Convert.ToDecimal(sdr["amount"]),
-                                        amount_php = sdr["amount_php"] == null ? 0 : Convert.ToDecimal(sdr["amount_php"]),
-                                        exch_rate = sdr["exch_rate"] == null ? 0 : Convert.ToDecimal(sdr["exch_rate"]),
-                                        eng_design = sdr["eng_design"] == null ? 0 : Convert.ToDecimal(sdr["eng_design"]),
-                                        price = sdr["price"] == null ? 0 : Convert.ToDecimal(sdr["price"]),
+                                        amount = String.IsNullOrEmpty(sdr["amount"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["amount"]),
+                                        amount_php = String.IsNullOrEmpty(sdr["amount_php"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["amount_php"]),
+                                        exch_rate = String.IsNullOrEmpty(sdr["exch_rate"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["exch_rate"]),
+                                        eng_design = String.IsNullOrEmpty(sdr["eng_design"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["eng_design"]),
+                                        price = String.IsNullOrEmpty(sdr["price"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["price"]),
                                     });
                                 }
                             }
@@ -2855,89 +2856,92 @@ namespace ERPReports.Areas.Reports.Controllers
                         conn.Close();
                     }
                     var SalesSummaryListOrderByinv_date = SalesSummaryList.OrderBy(x => x.inv_date).ToList();
-                    ExcelWorksheet SalesSummarySheets = excelPackage.Workbook.Worksheets["SalesSummary"];
-                    int salesSummarySheetsRow = 6;
+                    if (SalesSummaryList.Count > 0) {
+                        ExcelWorksheet SalesSummarySheets = excelPackage.Workbook.Worksheets["SalesSummary"];
+                        int salesSummarySheetsRow = 6;
 
-                    SalesSummarySheets.Cells["A2"].Value = "From "+DateTime.Parse(StartDate).ToString("MMM dd, yyyy") +" to "+ DateTime.Parse(EndDate).ToString("MMM dd, yyyy"); 
-                    SalesSummarySheets.Cells["A4"].Value = SalesSummaryList[0].exch_rate;
-                    //Multiple Fonts in the same cell
-                    ExcelRange rg = SalesSummarySheets.Cells["A4"];
-                    rg.IsRichText = true;
-                    //ExcelRichText uses "using OfficeOpenXml.Style;"
-                    ExcelRichText text1 = rg.RichText.Add("Exchange Rate: ");
-                    text1.Bold = true;
-                    ExcelRichText text2 = rg.RichText.Add(SalesSummaryList[0].exch_rate.ToString("0.00"));
-                    text2.UnderLine = true;                    
+                        SalesSummarySheets.Cells["A2"].Value = "From " + DateTime.Parse(StartDate).ToString("MMM dd, yyyy") + " to " + DateTime.Parse(EndDate).ToString("MMM dd, yyyy");
+                        SalesSummarySheets.Cells["A4"].Value = SalesSummaryList[0].exch_rate;
+                        //Multiple Fonts in the same cell
+                        ExcelRange rg = SalesSummarySheets.Cells["A4"];
+                        rg.IsRichText = true;
+                        //ExcelRichText uses "using OfficeOpenXml.Style;"
+                        ExcelRichText text1 = rg.RichText.Add("Exchange Rate: ");
+                        text1.Bold = true;
+                        ExcelRichText text2 = rg.RichText.Add(SalesSummaryList[0].exch_rate.ToString("0.00"));
+                        text2.UnderLine = true;
 
-                    decimal Total_price = 0;
-                    decimal Total_amount_php = 0;
-                    decimal Product_price = 0;
-                    decimal Product_amount_php = 0;
-                    decimal GrandTotal_price = 0;
-                    decimal GrandTotal_amount_php = 0;
-                    decimal Sales_price = 0;
-                    decimal Sales_amount_php = 0;
-                    foreach (var SalesSummaryListOrderByinv_dateObj in SalesSummaryListOrderByinv_date)
-                    {
-                        if (salesSummarySheetsRow < SalesSummaryListOrderByinv_date.ToList().Count + 5)
+                        decimal Total_price = 0;
+                        decimal Total_amount_php = 0;
+                        decimal Product_price = 0;
+                        decimal Product_amount_php = 0;
+                        decimal GrandTotal_price = 0;
+                        decimal GrandTotal_amount_php = 0;
+                        decimal Sales_price = 0;
+                        decimal Sales_amount_php = 0;
+                        foreach (var SalesSummaryListOrderByinv_dateObj in SalesSummaryListOrderByinv_date)
                         {
-                            SalesSummarySheets.InsertRow((salesSummarySheetsRow + 1), 1);
-                            SalesSummarySheets.Cells[salesSummarySheetsRow, 1, salesSummarySheetsRow, 100].Copy(SalesSummarySheets.Cells[(salesSummarySheetsRow + 1), 1, (salesSummarySheetsRow + 1), 1]);
+                            if (salesSummarySheetsRow < SalesSummaryListOrderByinv_date.ToList().Count + 5)
+                            {
+                                SalesSummarySheets.InsertRow((salesSummarySheetsRow + 1), 1);
+                                SalesSummarySheets.Cells[salesSummarySheetsRow, 1, salesSummarySheetsRow, 100].Copy(SalesSummarySheets.Cells[(salesSummarySheetsRow + 1), 1, (salesSummarySheetsRow + 1), 1]);
+                            }
+
+                            SalesSummarySheets.Cells[salesSummarySheetsRow, 1].Value = DateTime.Parse(SalesSummaryListOrderByinv_dateObj.inv_date).ToString("mm/dd/yyyy");
+                            SalesSummarySheets.Cells[salesSummarySheetsRow, 1].Style.WrapText = false;
+                            SalesSummarySheets.Cells[salesSummarySheetsRow, 2].Value = SalesSummaryListOrderByinv_dateObj.inv_num;
+                            SalesSummarySheets.Cells[salesSummarySheetsRow, 2].Style.WrapText = false;
+                            SalesSummarySheets.Cells[salesSummarySheetsRow, 3].Value = SalesSummaryListOrderByinv_dateObj.ship_to_cust;
+                            SalesSummarySheets.Cells[salesSummarySheetsRow, 3].Style.WrapText = false;
+                            SalesSummarySheets.Cells[salesSummarySheetsRow, 4].Value = SalesSummaryListOrderByinv_dateObj.inv_desc;
+                            SalesSummarySheets.Cells[salesSummarySheetsRow, 4].Style.WrapText = false;
+
+                            SalesSummarySheets.Cells[salesSummarySheetsRow, 5].Value = Convert.ToDecimal(SalesSummaryListOrderByinv_dateObj.price);
+                            SalesSummarySheets.Cells[salesSummarySheetsRow, 5].Style.WrapText = false;
+                            SalesSummarySheets.Cells[salesSummarySheetsRow, 6].Value = Convert.ToDecimal(SalesSummaryListOrderByinv_dateObj.amount_php);
+                            SalesSummarySheets.Cells[salesSummarySheetsRow, 6].Style.WrapText = false;
+
+                            Total_price += SalesSummaryListOrderByinv_dateObj.price - SalesSummaryListOrderByinv_dateObj.eng_design;
+                            Total_amount_php += SalesSummaryListOrderByinv_dateObj.amount_php;
+
+                            Product_price += SalesSummaryListOrderByinv_dateObj.eng_design;
+                            Product_amount_php += SalesSummaryListOrderByinv_dateObj.eng_design * SalesSummaryListOrderByinv_dateObj.exch_rate;
+
+                            GrandTotal_price += SalesSummaryListOrderByinv_dateObj.price;
+                            GrandTotal_amount_php += SalesSummaryListOrderByinv_dateObj.amount_php;
+
+                            salesSummarySheetsRow++;
                         }
 
-                        SalesSummarySheets.Cells[salesSummarySheetsRow, 1].Value = DateTime.Parse(SalesSummaryListOrderByinv_dateObj.inv_date).ToString("mm/dd/yyyy");
-                        SalesSummarySheets.Cells[salesSummarySheetsRow, 1].Style.WrapText = false;
-                        SalesSummarySheets.Cells[salesSummarySheetsRow, 2].Value = SalesSummaryListOrderByinv_dateObj.inv_num;
-                        SalesSummarySheets.Cells[salesSummarySheetsRow, 2].Style.WrapText = false;
-                        SalesSummarySheets.Cells[salesSummarySheetsRow, 3].Value = SalesSummaryListOrderByinv_dateObj.ship_to_cust;
-                        SalesSummarySheets.Cells[salesSummarySheetsRow, 3].Style.WrapText = false;
-                        SalesSummarySheets.Cells[salesSummarySheetsRow, 4].Value = SalesSummaryListOrderByinv_dateObj.inv_desc;
-                        SalesSummarySheets.Cells[salesSummarySheetsRow, 4].Style.WrapText = false;
 
-                        SalesSummarySheets.Cells[salesSummarySheetsRow, 5].Value = Convert.ToDecimal(SalesSummaryListOrderByinv_dateObj.price);
+                        Sales_price += Total_price;
+                        Sales_amount_php += GrandTotal_amount_php - (Product_price * SalesSummaryList[0].exch_rate);
+
+                        SalesSummarySheets.Cells[salesSummarySheetsRow, 5].Value = Convert.ToDecimal(Total_price);
                         SalesSummarySheets.Cells[salesSummarySheetsRow, 5].Style.WrapText = false;
-                        SalesSummarySheets.Cells[salesSummarySheetsRow, 6].Value = Convert.ToDecimal(SalesSummaryListOrderByinv_dateObj.amount_php);
+                        SalesSummarySheets.Cells[salesSummarySheetsRow, 6].Value = Convert.ToDecimal(Total_amount_php);
                         SalesSummarySheets.Cells[salesSummarySheetsRow, 6].Style.WrapText = false;
+                        salesSummarySheetsRow++;
 
-                        Total_price += SalesSummaryListOrderByinv_dateObj.price - SalesSummaryListOrderByinv_dateObj.eng_design;
-                        Total_amount_php += SalesSummaryListOrderByinv_dateObj.amount_php;
+                        SalesSummarySheets.Cells[salesSummarySheetsRow, 5].Value = Convert.ToDecimal(Product_price);
+                        SalesSummarySheets.Cells[salesSummarySheetsRow, 5].Style.WrapText = false;
+                        SalesSummarySheets.Cells[salesSummarySheetsRow, 6].Value = Convert.ToDecimal(Product_amount_php);
+                        SalesSummarySheets.Cells[salesSummarySheetsRow, 6].Style.WrapText = false;
+                        salesSummarySheetsRow++;
 
-                        Product_price += SalesSummaryListOrderByinv_dateObj.eng_design;
-                        Product_amount_php += SalesSummaryListOrderByinv_dateObj.eng_design* SalesSummaryListOrderByinv_dateObj.exch_rate;
+                        SalesSummarySheets.Cells[salesSummarySheetsRow, 5].Value = Convert.ToDecimal(GrandTotal_price);
+                        SalesSummarySheets.Cells[salesSummarySheetsRow, 5].Style.WrapText = false;
+                        SalesSummarySheets.Cells[salesSummarySheetsRow, 6].Value = Convert.ToDecimal(GrandTotal_amount_php);
+                        SalesSummarySheets.Cells[salesSummarySheetsRow, 6].Style.WrapText = false;
+                        salesSummarySheetsRow++;
 
-                        GrandTotal_price += SalesSummaryListOrderByinv_dateObj.price;
-                        GrandTotal_amount_php += SalesSummaryListOrderByinv_dateObj.amount_php;
-                        
+                        SalesSummarySheets.Cells[salesSummarySheetsRow, 5].Value = Convert.ToDecimal(Sales_price);
+                        SalesSummarySheets.Cells[salesSummarySheetsRow, 5].Style.WrapText = false;
+                        SalesSummarySheets.Cells[salesSummarySheetsRow, 6].Value = Convert.ToDecimal(Sales_amount_php);
+                        SalesSummarySheets.Cells[salesSummarySheetsRow, 6].Style.WrapText = false;
                         salesSummarySheetsRow++;
                     }
-
-
-                    Sales_price += Total_price;
-                    Sales_amount_php += GrandTotal_amount_php - (Product_price * SalesSummaryList[0].exch_rate);
-
-                    SalesSummarySheets.Cells[salesSummarySheetsRow, 5].Value = Convert.ToDecimal(Total_price);
-                    SalesSummarySheets.Cells[salesSummarySheetsRow, 5].Style.WrapText = false;
-                    SalesSummarySheets.Cells[salesSummarySheetsRow, 6].Value = Convert.ToDecimal(Total_amount_php);
-                    SalesSummarySheets.Cells[salesSummarySheetsRow, 6].Style.WrapText = false;
-                    salesSummarySheetsRow++;
-
-                    SalesSummarySheets.Cells[salesSummarySheetsRow, 5].Value = Convert.ToDecimal(Product_price);
-                    SalesSummarySheets.Cells[salesSummarySheetsRow, 5].Style.WrapText = false;
-                    SalesSummarySheets.Cells[salesSummarySheetsRow, 6].Value = Convert.ToDecimal(Product_amount_php);
-                    SalesSummarySheets.Cells[salesSummarySheetsRow, 6].Style.WrapText = false;
-                    salesSummarySheetsRow++;
-
-                    SalesSummarySheets.Cells[salesSummarySheetsRow, 5].Value = Convert.ToDecimal(GrandTotal_price);
-                    SalesSummarySheets.Cells[salesSummarySheetsRow, 5].Style.WrapText = false;
-                    SalesSummarySheets.Cells[salesSummarySheetsRow, 6].Value = Convert.ToDecimal(GrandTotal_amount_php);
-                    SalesSummarySheets.Cells[salesSummarySheetsRow, 6].Style.WrapText = false;
-                    salesSummarySheetsRow++;
-
-                    SalesSummarySheets.Cells[salesSummarySheetsRow, 5].Value = Convert.ToDecimal(Sales_price);
-                    SalesSummarySheets.Cells[salesSummarySheetsRow, 5].Style.WrapText = false;
-                    SalesSummarySheets.Cells[salesSummarySheetsRow, 6].Value = Convert.ToDecimal(Sales_amount_php);
-                    SalesSummarySheets.Cells[salesSummarySheetsRow, 6].Style.WrapText = false;
-                    salesSummarySheetsRow++;
+                    
 
                     #endregion
                     return File(excelPackage.GetAsByteArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", Filename);
@@ -3102,75 +3106,75 @@ namespace ERPReports.Areas.Reports.Controllers
                             {
                                 InventoryTurnOverReportList.Add(new InventoryTurnOverReport
                                 {
-                                    trans_date = sdr["trans_date"].ToString(),
-                                    trans_dateMMYYYY = sdr["trans_date"].ToString() == "" ? "" : DateTime.Parse(sdr["trans_date"].ToString()).ToString("MMyyyy"),
+                                    trans_date = String.IsNullOrEmpty(sdr["trans_date"].ToString()) == true ? "" : sdr["trans_date"].ToString(),
+                                    trans_dateMMYYYY = String.IsNullOrEmpty(sdr["trans_date"].ToString()) == true ? "" : DateTime.Parse(sdr["trans_date"].ToString()).ToString("MMyyyy"),
                                     trans_type = sdr["trans_type"].ToString(),
                                     reason_code = sdr["reason_code"].ToString(),
                                     reason_desc = sdr["reason_desc"].ToString(),
                                     qty = sdr["qty"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["qty"]),
-                                    usage_matl = sdr["usage_matl"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_matl"]),
-                                    usage_landed = sdr["usage_landed"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_landed"]),
+                                    usage_matl = String.IsNullOrEmpty(sdr["usage_matl"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["usage_matl"]),
+                                    usage_landed = String.IsNullOrEmpty(sdr["usage_landed"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["usage_landed"]),
                                     item = sdr["item"].ToString(),
                                     item_desc = sdr["item_desc"].ToString(),
                                     product_code = sdr["product_code"].ToString(),
                                     lot = sdr["lot"].ToString(),
                                     ref_num = sdr["ref_num"].ToString(),
-                                    ref_line = sdr["ref_line"].ToString() == "" ? 0 : Convert.ToInt32(sdr["ref_line"]),
-                                    invty_matl_cost = sdr["invty_matl_cost"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["invty_matl_cost"]),
-                                    invty_landed_cost = sdr["invty_landed_cost"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["invty_landed_cost"]),
-                                    safety_matl_cost = sdr["safety_matl_cost"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["safety_matl_cost"]),
+                                    ref_line = String.IsNullOrEmpty(sdr["ref_line"].ToString()) == true ? 0 : Convert.ToInt32(sdr["ref_line"]),
+                                    invty_matl_cost = String.IsNullOrEmpty(sdr["invty_matl_cost"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["invty_matl_cost"]),
+                                    invty_landed_cost = String.IsNullOrEmpty(sdr["invty_landed_cost"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["invty_landed_cost"]),
+                                    safety_matl_cost = String.IsNullOrEmpty(sdr["safety_matl_cost"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["safety_matl_cost"]),
                                     report_group = sdr["report_group"].ToString(),
-                                    usage_M1 = sdr["usage_M1"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_M1"]),
-                                    usage_L1 = sdr["usage_L1"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_L1"]),
-                                    usage_M2 = sdr["usage_M2"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_M2"]),
-                                    usage_L2 = sdr["usage_L2"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_L2"]),
-                                    usage_M3 = sdr["usage_M3"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_M3"]),
-                                    usage_L3 = sdr["usage_L3"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_L3"]),
-                                    usage_M4 = sdr["usage_M4"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_M4"]),
-                                    usage_L4 = sdr["usage_L4"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_L4"]),
-                                    usage_M5 = sdr["usage_M5"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_M5"]),
-                                    usage_L5 = sdr["usage_L5"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_L5"]),
-                                    usage_M6 = sdr["usage_M6"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_M6"]),
-                                    usage_L6 = sdr["usage_L6"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_L6"]),
-                                    usage_M7 = sdr["usage_M7"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_M7"]),
-                                    usage_L7 = sdr["usage_L7"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_L7"]),
-                                    usage_M8 = sdr["usage_M8"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_M8"]),
-                                    usage_L8 = sdr["usage_L8"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_L8"]),
-                                    usage_M9 = sdr["usage_M9"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_M9"]),
-                                    usage_L9 = sdr["usage_L9"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_L9"]),
-                                    usage_M10 = sdr["usage_M10"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_M10"]),
-                                    usage_L10 = sdr["usage_L10"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_L10"]),
-                                    usage_M11 = sdr["usage_M11"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_M11"]),
-                                    usage_L11 = sdr["usage_L11"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_L11"]),
-                                    usage_M12 = sdr["usage_M12"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_M12"]),
-                                    usage_L12 = sdr["usage_L12"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["usage_L12"]),
+                                    usage_M1 = String.IsNullOrEmpty(sdr["usage_M1"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["usage_M1"]),
+                                    usage_L1 = String.IsNullOrEmpty(sdr["usage_L1"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["usage_L1"]),
+                                    usage_M2 = String.IsNullOrEmpty(sdr["usage_M2"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["usage_M2"]),
+                                    usage_L2 = String.IsNullOrEmpty(sdr["usage_L2"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["usage_L2"]),
+                                    usage_M3 = String.IsNullOrEmpty(sdr["usage_M3"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["usage_M3"]),
+                                    usage_L3 = String.IsNullOrEmpty(sdr["usage_L3"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["usage_L3"]),
+                                    usage_M4 = String.IsNullOrEmpty(sdr["usage_M4"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["usage_M4"]),
+                                    usage_L4 = String.IsNullOrEmpty(sdr["usage_L4"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["usage_L4"]),
+                                    usage_M5 = String.IsNullOrEmpty(sdr["usage_M5"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["usage_M5"]),
+                                    usage_L5 = String.IsNullOrEmpty(sdr["usage_L5"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["usage_L5"]),
+                                    usage_M6 = String.IsNullOrEmpty(sdr["usage_M6"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["usage_M6"]),
+                                    usage_L6 = String.IsNullOrEmpty(sdr["usage_L6"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["usage_L6"]),
+                                    usage_M7 = String.IsNullOrEmpty(sdr["usage_M7"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["usage_M7"]),
+                                    usage_L7 = String.IsNullOrEmpty(sdr["usage_L7"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["usage_L7"]),
+                                    usage_M8 = String.IsNullOrEmpty(sdr["usage_M8"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["usage_M8"]),
+                                    usage_L8 = String.IsNullOrEmpty(sdr["usage_L8"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["usage_L8"]),
+                                    usage_M9 = String.IsNullOrEmpty(sdr["usage_M9"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["usage_M9"]),
+                                    usage_L9 = String.IsNullOrEmpty(sdr["usage_L9"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["usage_L9"]),
+                                    usage_M10 = String.IsNullOrEmpty(sdr["usage_M10"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["usage_M10"]),
+                                    usage_L10 = String.IsNullOrEmpty(sdr["usage_L10"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["usage_L10"]),
+                                    usage_M11 = String.IsNullOrEmpty(sdr["usage_M11"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["usage_M11"]),
+                                    usage_L11 = String.IsNullOrEmpty(sdr["usage_L11"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["usage_L11"]),
+                                    usage_M12 = String.IsNullOrEmpty(sdr["usage_M12"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["usage_M12"]),
+                                    usage_L12 = String.IsNullOrEmpty(sdr["usage_L12"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["usage_L12"]),
 
-                                    M1 = sdr["M1"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["M1"]),
-                                    L1 = sdr["L1"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["L1"]),
-                                    M2 = sdr["M2"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["M2"]),
-                                    L2 = sdr["L2"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["L2"]),
-                                    M3 = sdr["M3"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["M3"]),
-                                    L3 = sdr["L3"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["L3"]),
-                                    M4 = sdr["M4"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["M4"]),
-                                    L4 = sdr["L4"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["L4"]),
-                                    M5 = sdr["M5"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["M5"]),
-                                    L5 = sdr["L5"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["L5"]),
-                                    M6 = sdr["M6"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["M6"]),
-                                    L6 = sdr["L6"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["L6"]),
-                                    M7 = sdr["M7"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["M7"]),
-                                    L7 = sdr["L7"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["L7"]),
-                                    M8 = sdr["M8"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["M8"]),
-                                    L8 = sdr["L8"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["L8"]),
-                                    M9 = sdr["M9"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["M9"]),
-                                    L9 = sdr["L9"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["L9"]),
-                                    M10 = sdr["M10"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["M10"]),
-                                    L10 = sdr["L10"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["L10"]),
+                                    M1 = String.IsNullOrEmpty(sdr["M1"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["M1"]),
+                                    L1 = String.IsNullOrEmpty(sdr["L1"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["L1"]),
+                                    M2 = String.IsNullOrEmpty(sdr["M2"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["M2"]),
+                                    L2 = String.IsNullOrEmpty(sdr["L2"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["L2"]),
+                                    M3 = String.IsNullOrEmpty(sdr["M3"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["M3"]),
+                                    L3 = String.IsNullOrEmpty(sdr["L3"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["L3"]),
+                                    M4 = String.IsNullOrEmpty(sdr["M4"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["M4"]),
+                                    L4 = String.IsNullOrEmpty(sdr["L4"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["L4"]),
+                                    M5 = String.IsNullOrEmpty(sdr["M5"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["M5"]),
+                                    L5 = String.IsNullOrEmpty(sdr["L5"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["L5"]),
+                                    M6 = String.IsNullOrEmpty(sdr["M6"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["M6"]),
+                                    L6 = String.IsNullOrEmpty(sdr["L6"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["L6"]),
+                                    M7 = String.IsNullOrEmpty(sdr["M7"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["M7"]),
+                                    L7 = String.IsNullOrEmpty(sdr["L7"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["L7"]),
+                                    M8 = String.IsNullOrEmpty(sdr["M8"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["M8"]),
+                                    L8 = String.IsNullOrEmpty(sdr["L8"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["L8"]),
+                                    M9 = String.IsNullOrEmpty(sdr["M9"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["M9"]),
+                                    L9 = String.IsNullOrEmpty(sdr["L9"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["L9"]),
+                                    M10 = String.IsNullOrEmpty(sdr["M10"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["M10"]),
+                                    L10 = String.IsNullOrEmpty(sdr["L10"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["L10"]),
                                     //M11 = sdr["M11"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["M11"]),
                                     //L11 = sdr["L11"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["L11"]),
                                     //M12 = sdr["M12"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["M12"]),
                                     //L12 = sdr["L12"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["L12"]),
-                                    MAX_3Months = sdr["MAX_3Months"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["MAX_3Months"]),
-                                    L_MAX_3Months = sdr["L_MAX_3Months"].ToString() == "" ? 0 : Convert.ToDecimal(sdr["L_MAX_3Months"]),
+                                    MAX_3Months = String.IsNullOrEmpty(sdr["MAX_3Months"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["MAX_3Months"]),
+                                    L_MAX_3Months = String.IsNullOrEmpty(sdr["L_MAX_3Months"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["L_MAX_3Months"]),
                                 });
                             }
 

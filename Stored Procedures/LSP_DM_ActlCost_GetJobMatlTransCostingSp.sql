@@ -1,12 +1,12 @@
 --LSP_DM_ActlCost_GetJobMatlTransCostingSp '19CL-00191',0,'SF-L4336','2020-01-04 06:03:13.000',60
 
---ALTER PROCEDURE LSP_DM_ActlCost_GetJobMatlTransCostingSp (
-DECLARE  
-	@Job					JobType		= '19HT-00020'
-  , @Suffix					SuffixType	= 0
-  , @Item					ItemType	= 'SF-3DK3001'
-  , @JobTransDate			DateType	= '1/4/2020  6:03:13 AM'
-  , @QtyTrans				QtyUnitType	= 311
+ALTER PROCEDURE LSP_DM_ActlCost_GetJobMatlTransCostingSp (
+--DECLARE  
+	@Job					JobType		--= '20-0000781'
+  , @Suffix					SuffixType	--= 0
+  , @Item					ItemType	--= 'FG-EP3:10-5(2)'
+  , @JobTransDate			DateType	--= '2020-05-22 00:00:00.000'
+  , @QtyTrans				QtyUnitType	--= 5
  	--@Job					JobType		= '20-0000864'
   --, @Suffix					SuffixType	= 0
   --, @Item					ItemType	= 'FG-3RS2024'
@@ -15,7 +15,7 @@ DECLARE
  	--@Job					JobType		= '19-0002265'
   --, @Suffix					SuffixType	= 0
   --, @Item					ItemType	= 'FG-E21-211'
---) AS
+) AS
 BEGIN
 
 	IF OBJECT_ID('tempdb..#itemMatl') IS NOT NULL
@@ -32,7 +32,7 @@ BEGIN
 	  , [Level]						INT
 	  , Parent						NVARCHAR(20)
 	  , oper_num					INT
-	  , sequence					NVARCHAR(2)
+	  , sequence					NVARCHAR(3)
 	  , subsequence					NVARCHAR(50)
 	  , matl						NVARCHAR(60)
 	  , matl_qty					DECIMAL(18,8)
@@ -113,8 +113,8 @@ BEGIN
 		 , @CurrLevel AS [Level]
 		 , CAST(0 AS NVARCHAR(20)) AS Parent
 		 , m.ref_release
-		 , RIGHT('00' + CAST(row_number() OVER (PARTITION BY j.item, m.ref_release ORDER BY m.ref_release ASC) AS NVARCHAR(2)), 2)
-		 , CAST(m.ref_release AS NVARCHAR(5)) + '_' + RIGHT('00' + CAST((row_number() OVER (PARTITION BY j.item, m.ref_release ORDER BY m.ref_release ASC)) AS NVARCHAR(10)), 2) AS subsequence
+		 , RIGHT('000' + CAST(row_number() OVER (PARTITION BY j.item, m.ref_release ORDER BY m.ref_release ASC) AS NVARCHAR(3)), 3)
+		 , CAST(m.ref_release AS NVARCHAR(5)) + '_' + RIGHT('000' + CAST((row_number() OVER (PARTITION BY j.item, m.ref_release ORDER BY m.ref_release ASC)) AS NVARCHAR(10)), 3) AS subsequence
 		 , m.item
 		 , SUM(m.qty * -1)
 		 , m.lot
@@ -137,7 +137,7 @@ BEGIN
 		 , 0
 		 , '0'
 		 , '0'
-		 , '00'
+		 , '000'
 		 , '0'
 		 , item
 		 , @QtyTrans
@@ -194,7 +194,7 @@ BEGIN
 		 , [Level]
 		 , CAST(Parent AS NVARCHAR(50)) AS Parent
 		 , oper_num
-		 , CAST(sequence AS NVARCHAR(2)) AS sequence
+		 , CAST(sequence AS NVARCHAR(3)) AS sequence
 		 , CAST(subsequence AS NVARCHAR(50)) AS subsequence
 		 , matl
 		 , CAST(lot_no AS NVARCHAR(50)) AS lot_no
@@ -281,7 +281,7 @@ BEGIN
 					 , @CurrLevel AS [Level]
 					 , CAST(@Level AS NVARCHAR(5)) + '.' + CAST(@OperNum AS NVARCHAR(5)) + '.' + CAST(@Sequence AS NVARCHAR(5))AS Parent
 					 , m.ref_release
-					 , RIGHT('00' + CAST(row_number() OVER (PARTITION BY j.item, m.ref_release ORDER BY m.ref_release ASC) AS NVARCHAR(2)), 2)
+					 , RIGHT('000' + CAST(row_number() OVER (PARTITION BY j.item, m.ref_release ORDER BY m.ref_release ASC) AS NVARCHAR(3)), 3)
 					, @SubSequence + '.' + CAST((row_number() OVER (PARTITION BY j.item, m.ref_release ORDER BY m.ref_release ASC)) AS NVARCHAR(50)) AS subsequence
 					 , m.item
 					 , SUM(m.qty * -1)
@@ -310,7 +310,7 @@ BEGIN
 					 , @Level + 1 AS [Level]
 					 , CAST(@Level AS NVARCHAR(5)) + '.' + CAST(@OperNum AS NVARCHAR(5)) + '.' + CAST(@Sequence AS NVARCHAR(5))AS Parent
 					 , m.ref_release AS oper_num
-					 , RIGHT('00' + CAST(row_number() OVER (PARTITION BY j.item, m.ref_release ORDER BY m.ref_release ASC) AS NVARCHAR(2)), 2) AS sequence
+					 , RIGHT('000' + CAST(row_number() OVER (PARTITION BY j.item, m.ref_release ORDER BY m.ref_release ASC) AS NVARCHAR(3)), 3) AS sequence
 					, @SubSequence + '.' + CAST((row_number() OVER (PARTITION BY j.item, m.ref_release ORDER BY m.ref_release ASC)) AS NVARCHAR(50)) AS subsequence
 					 , m.item AS matl
 					 , m.lot

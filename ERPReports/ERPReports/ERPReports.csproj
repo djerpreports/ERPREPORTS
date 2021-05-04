@@ -3217,10 +3217,6 @@
     <Content Include="Content\assets\plugins\Parsleyjs\yarn.lock" />
     <Content Include="Content\assets\plugins\slimscroll\bower.json" />
     <Content Include="Content\assets\plugins\slimscroll\package.json" />
-    <Content Include="Content\DOQFiles\DOQ_COPPER.pdf" />
-    <Content Include="Content\DOQFiles\DOQ_COPPER1.pdf" />
-    <Content Include="Content\DOQFiles\DOQ_OTHER PARTS.pdf" />
-    <Content Include="Content\DOQFiles\DOQ_Plastic Molding.pdf" />
     <Content Include="Areas\MasterMaintenance\Views\web.config" />
     <Content Include="Areas\MasterMaintenance\Views\GeneralMaster\GeneralMaster.cshtml" />
     <Content Include="Areas\MasterMaintenance\Views\PageMaster\PageMaster.cshtml" />
@@ -3235,6 +3231,7 @@
     <Content Include="Areas\Reports\Templates\LSP_Rpt_DM_MiscellaneousTransactionReport_LSPI.xlsx" />
     <Content Include="Areas\Reports\Templates\LSP_Rpt_DM_FinishedGoodsSalesReport.xlsx" />
     <Content Include="Areas\Reports\Templates\LSP_Rpt_DM_RMBeginningBalanceReport.xlsx" />
+    <Content Include="Areas\Reports\Templates\LSP_Rpt_DM_InventoryTurnOverReport.xlsx" />
     <None Include="Properties\PublishProfiles\ERPReports.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />

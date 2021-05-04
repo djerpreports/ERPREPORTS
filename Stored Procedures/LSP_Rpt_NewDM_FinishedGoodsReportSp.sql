@@ -1,8 +1,8 @@
-ALTER PROCEDURE LSP_Rpt_NewDM_FinishedGoodsReportSp (
---DECLARE
-	@StartDate				DateType --= '12/01/2019'
-  , @EndDate				DateType --= '12/31/2019'
-) AS
+--ALTER PROCEDURE LSP_Rpt_NewDM_FinishedGoodsReportSp (
+DECLARE
+	@StartDate				DateType = '05/01/2020'
+  , @EndDate				DateType = '05/31/2020'
+--) AS
 
 BEGIN
 
@@ -379,6 +379,8 @@ BEGIN
 		WHERE [Level] = 0
 	
 		TRUNCATE TABLE #DMActualCost
+		
+		--SELECT @JobOrder, @JobSuffix, @Item, @TransDate, @QtyCompleted
 		
 		INSERT INTO #DMActualCost
 		EXEC dbo.LSP_DM_ActlCost_GetJobMatlTransCostingSp @JobOrder, @JobSuffix, @Item, @TransDate, @QtyCompleted
