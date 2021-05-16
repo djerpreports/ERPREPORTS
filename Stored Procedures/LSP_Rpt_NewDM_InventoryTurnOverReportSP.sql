@@ -1,6 +1,6 @@
 ALTER PROCEDURE LSP_Rpt_NewDM_InventoryTurnOverReportSP (
 --DECLARE
-	@IsShowDetail					BIT = 1
+	@IsShowDetail					BIT				--=			1
   , @StartDate						DateType		OUTPUT
   , @EndDate						DateType		OUTPUT
 ) AS
@@ -520,14 +520,14 @@ BEGIN
 			SET @MonthGroup = @MonthGroup + '[' + CONVERT(VARCHAR(6), @CurrDate, 112)  + ']'
 			SET @MonthGroup2 = @MonthGroup2 + '[' + CONVERT(VARCHAR(6), @CurrDate, 112)  + '_2]'
 			SET @Select1 = @Select1 + 'MAX(ISNULL([' + CONVERT(VARCHAR(6), @CurrDate, 112)  + '],0)) AS _' + CONVERT(VARCHAR(6), @CurrDate, 112) + ''
-			SET @Select2 = @Select2 + 'MAX(ISNULL([' + CONVERT(VARCHAR(6), @CurrDate, 112)  + '],0)) AS _' + CONVERT(VARCHAR(6), @CurrDate, 112) + '_2'
+			SET @Select2 = @Select2 + 'MAX(ISNULL([' + CONVERT(VARCHAR(6), @CurrDate, 112)  + '_2],0)) AS _' + CONVERT(VARCHAR(6), @CurrDate, 112) + '_2'
 		END
 		ELSE
 		BEGIN
 			SET @MonthGroup = @MonthGroup + '[' + CONVERT(VARCHAR(6), @CurrDate, 112)  + '], '
 			SET @MonthGroup2 = @MonthGroup2 + '[' + CONVERT(VARCHAR(6), @CurrDate, 112)  + '_2], '
 			SET @Select1 = @Select1 + 'MAX(ISNULL([' + CONVERT(VARCHAR(6), @CurrDate, 112)  + '],0)) AS _' + CONVERT(VARCHAR(6), @CurrDate, 112) + ', '
-			SET @Select2 = @Select2 + 'MAX(ISNULL([' + CONVERT(VARCHAR(6), @CurrDate, 112)  + '],0)) AS _' + CONVERT(VARCHAR(6), @CurrDate, 112) + '_2, '
+			SET @Select2 = @Select2 + 'MAX(ISNULL([' + CONVERT(VARCHAR(6), @CurrDate, 112)  + '_2],0)) AS _' + CONVERT(VARCHAR(6), @CurrDate, 112) + '_2, '
 		END
 
 		SET @CurrDate = DATEADD(MONTH, 1,@CurrDate)
@@ -790,7 +790,7 @@ BEGIN
 	
 	
 	SELECT * 
-	--INTO Rpt_InvtyTurnover2
+	--INTO Rpt_InvtyTurnover
 	FROM @report_set  
 	ORDER BY report_group DESC, product_code, trans_date  
 	

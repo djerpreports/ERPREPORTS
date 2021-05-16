@@ -3582,7 +3582,7 @@ namespace ERPReports.Areas.Reports.Controllers
                                 DetailedSheet.InsertRow((sheetsRow + 1), 1);
                                 DetailedSheet.Cells[sheetsRow, 1, sheetsRow, 100].Copy(DetailedSheet.Cells[(sheetsRow + 1), 1, (sheetsRow + 1), 1]);
                             }
-                            DetailedSheet.Cells[sheetsRow, 1].Value = InventoryTurnOverReportListObj.trans_date;
+                            DetailedSheet.Cells[sheetsRow, 1].Value = Convert.ToDateTime(InventoryTurnOverReportListObj.trans_date);
                             DetailedSheet.Cells[sheetsRow, 1].Style.WrapText = false;
                             DetailedSheet.Cells[sheetsRow, 2].Value = InventoryTurnOverReportListObj.trans_type;
                             DetailedSheet.Cells[sheetsRow, 2].Style.WrapText = false;

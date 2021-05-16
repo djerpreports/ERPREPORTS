@@ -1,9 +1,9 @@
---ALTER PROCEDURE LSP_ActlCost_GetMatlCostingSp (
-DECLARE
-	@matl_item					ItemType		= 'RM-CP74-104'
-  , @matl_lot					LotType			= '190228-4598'
-  , @matlTransDate				DateType		= '3/6/2019  3:30:24 PM'
-  , @JobQty						BIGINT			
+ALTER PROCEDURE LSP_ActlCost_GetMatlCostingSp (
+--DECLARE
+	@matl_item					ItemType		--= 'RM-SIPC031'
+  , @matl_lot					LotType			--= '190131-34401'
+  , @matlTransDate				DateType		--= '2021-05-01 00:00:00.000'
+  /*, @JobQty						BIGINT			
   , @matl_unit_cost_usd        DECIMAL(18,8) = 0
   , @matl_landed_cost_usd        DECIMAL(18,8) = 0
   , @pi_fg_process_usd         DECIMAL(18,8) = 0
@@ -24,7 +24,7 @@ DECLARE
   , @sf_ovhd_cost_php        DECIMAL(18,8) = 0
   , @fg_lbr_cost_php         DECIMAL(18,8) = 0
   , @fg_ovhd_cost_php        DECIMAL(18,8) = 0
-  /*, @JobQty						BIGINT			
+  */, @JobQty						BIGINT			
 										OUTPUT
   , @matl_unit_cost_usd    DECIMAL(18,8) --= 0
                 OUTPUT
@@ -66,7 +66,8 @@ DECLARE
                 OUTPUT
   , @fg_ovhd_cost_php    DECIMAL(18,8) --= 0
                 OUTPUT
-) AS*/
+) AS
+--*/
 
 BEGIN
 	DECLARE 
@@ -167,8 +168,8 @@ BEGIN
 				WHERE item = @matl_item
 				  AND lot = @matl_lot
 				  AND trans_type IN ('H', 'B', 'P')
-				  AND trans_date <= @matlTransDate
-				
+				  AND trans_date <= dbo.DayEndOf(@matlTransDate)
+				  
 				SET @matlTransDate = COALESCE(@MatlRcptDate, @MatlMiscRcptDate, @matlTransDate)
 				
 				IF (@MiscTransCount > 0)
@@ -178,7 +179,23 @@ BEGIN
 					WHERE trans_type IN ('H', 'B', 'P')
 					  AND item = @matl_item 
 					  AND lot = @matl_lot
-					  AND trans_date <= @matlTransDate
+					  AND trans_date <= dbo.DayEndOf(@matlTransDate)
+
+					IF EXISTS (SELECT matl_cost 
+							   FROM matltran
+							   WHERE trans_type = 'A'
+							     AND item = @matl_item 
+								 AND lot = @matl_lot
+								 AND trans_date <= dbo.DayEndOf(@matlTransDate))
+					BEGIN			
+					
+						SELECT TOP(1) @matl_unit_cost_php = matl_cost
+						FROM matltran
+						WHERE trans_type = 'A'
+						  AND item = @matl_item 
+						  AND lot = @matl_lot
+						  AND trans_date <= dbo.DayEndOf(@matlTransDate)
+					END
 					
 					EXEC dbo.LSP_CurrencyConversionModSp @matlTransDate, 'PHP', 'USD', @matl_unit_cost_php, @matl_unit_cost_usd OUTPUT, @ExchRate OUTPUT
 				END
@@ -405,26 +422,26 @@ BEGIN
 		END
 	END
 	
-SELECT @JobQty, @matl_unit_cost_usd AS matl_unit_cost_usd
-  , @matl_landed_cost_usd AS matl_landed_cost_usd
-  , @pi_fg_process_usd  AS pi_fg_process_usd
-  , @pi_resin_usd AS pi_resin_usd
-  , @pi_vend_cost_usd AS pi_vend_cost_usd
-  , @pi_hidden_profit_usd AS pi_hidden_profit_usd
-  , @sf_lbr_cost_usd  AS sf_lbr_cost_usd
-  , @sf_ovhd_cost_usd AS sf_ovhd_cost_usd
-  , @fg_lbr_cost_usd  AS fg_lbr_cost_usd
-  , @fg_ovhd_cost_usd AS fg_ovhd_cost_usd
-  , @matl_unit_cost_php AS matl_unit_cost_php
-  , @matl_landed_cost_php AS matl_landed_cost_php
-  , @pi_fg_process_php  AS pi_fg_process_php
-  , @pi_resin_php AS pi_resin_php
-  , @pi_vend_cost_php AS pi_vend_cost_php
-  , @pi_hidden_profit_php AS pi_hidden_profit_php
-  , @sf_lbr_cost_php  AS sf_lbr_cost_php
-  , @sf_ovhd_cost_php AS sf_ovhd_cost_php
-  , @fg_lbr_cost_php  AS fg_lbr_cost_php
-  , @fg_ovhd_cost_php AS fg_ovhd_cost_php
+--SELECT @JobQty, @matl_unit_cost_usd AS matl_unit_cost_usd
+--  , @matl_landed_cost_usd AS matl_landed_cost_usd
+--  , @pi_fg_process_usd  AS pi_fg_process_usd
+--  , @pi_resin_usd AS pi_resin_usd
+--  , @pi_vend_cost_usd AS pi_vend_cost_usd
+--  , @pi_hidden_profit_usd AS pi_hidden_profit_usd
+--  , @sf_lbr_cost_usd  AS sf_lbr_cost_usd
+--  , @sf_ovhd_cost_usd AS sf_ovhd_cost_usd
+--  , @fg_lbr_cost_usd  AS fg_lbr_cost_usd
+--  , @fg_ovhd_cost_usd AS fg_ovhd_cost_usd
+--  , @matl_unit_cost_php AS matl_unit_cost_php
+--  , @matl_landed_cost_php AS matl_landed_cost_php
+--  , @pi_fg_process_php  AS pi_fg_process_php
+--  , @pi_resin_php AS pi_resin_php
+--  , @pi_vend_cost_php AS pi_vend_cost_php
+--  , @pi_hidden_profit_php AS pi_hidden_profit_php
+--  , @sf_lbr_cost_php  AS sf_lbr_cost_php
+--  , @sf_ovhd_cost_php AS sf_ovhd_cost_php
+--  , @fg_lbr_cost_php  AS fg_lbr_cost_php
+--  , @fg_ovhd_cost_php AS fg_ovhd_cost_php
 
-, @matlTransDate, @ExchRate
+--, @matlTransDate, @ExchRate
 END

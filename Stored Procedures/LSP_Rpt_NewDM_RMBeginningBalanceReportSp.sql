@@ -1,7 +1,7 @@
-CREATE PROCEDURE LSP_Rpt_NewDM_RMBeginningBalanceReportSp (
+ALTER PROCEDURE LSP_Rpt_NewDM_RMBeginningBalanceReportSp (
 --DECLARE
-	@TransDate		DateType		--= '12/31/2019'
-  , @ProdCode		ProductCodeType --= 'ALL'
+	@TransDate		DateType		--= '05/01/2021'
+  , @ProdCode		ProductCodeType --= 'IPC'
 ) AS
 
 BEGIN
@@ -242,7 +242,7 @@ BEGIN
 				   
 				   , ( ISNULL(matl_unit_cost_php, 0) + ISNULL(matl_landed_cost_php, 0)+ ISNULL(pi_resin_php, 0)
 					    + ISNULL(pi_fg_process_php, 0)+ ISNULL(pi_hidden_profit_php, 0)+ ISNULL(sf_lbr_cost_php, 0)
-					    + ISNULL(sf_ovhd_cost_php , 0) / job_qty)
+					    + ISNULL(sf_ovhd_cost_php , 0) ) / job_qty
 					 * ISNULL(@QtyOnHand, 0)
 
 				   , ( ISNULL(matl_unit_cost_usd, 0) + ISNULL(matl_landed_cost_usd, 0)+ ISNULL(pi_resin_usd, 0)
@@ -308,8 +308,7 @@ BEGIN
 					  , @matl_unit_cost_php OUTPUT, @matl_landed_cost_php OUTPUT
 					  , @pi_fg_process_php OUTPUT, @pi_resin_php OUTPUT, @pi_vend_cost_php OUTPUT, @pi_hidden_profit_php OUTPUT
 					  , @sf_lbr_cost_php OUTPUT, @sf_ovhd_cost_php OUTPUT
-					  , @fg_lbr_cost_php OUTPUT, @fg_ovhd_cost_php OUTPUT
-			
+					  , @fg_lbr_cost_php OUTPUT, @fg_ovhd_cost_php OUTPUT			
 			
 			INSERT INTO @report_set
 			SELECT @Item
