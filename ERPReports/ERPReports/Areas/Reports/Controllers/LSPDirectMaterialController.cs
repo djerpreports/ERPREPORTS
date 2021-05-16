@@ -3188,6 +3188,7 @@ namespace ERPReports.Areas.Reports.Controllers
                 FileInfo file = new FileInfo(filePath);
                 using (ExcelPackage excelPackage = new ExcelPackage(file))
                 {
+                    #region UsageSheet 
                     List<InventoryTurnOverReport> InventoryTurnOverReport_NewGroup = new List<InventoryTurnOverReport>();
                     var groupedByUsage = InventoryTurnOverReportList
                     .Where(x => x.report_group == "USAGE")
@@ -3410,7 +3411,7 @@ namespace ERPReports.Areas.Reports.Controllers
                             L_MAX_3Months = L_MAX_3Months,
                         });
                     }
-                    #region UsageSheet 
+                    
                     ExcelWorksheet UsageSheet = excelPackage.Workbook.Worksheets["Usage"];
                     int sheetsRowUsage = 8;
                     UsageSheet.Cells["A3"].Value = DateTime.Now;
@@ -3560,45 +3561,54 @@ namespace ERPReports.Areas.Reports.Controllers
                     }
                     #endregion
 
-                    var groupedByTransDate = InventoryTurnOverReportList.GroupBy(a => a.trans_dateMMYYYY).ToList();
-
-                    ExcelWorksheet DetailedSheet = excelPackage.Workbook.Worksheets["Detailed"];
-                    int sheetsRow = 6;
                     #region DetailedSheet 
-                    DetailedSheet.Cells["A3"].Value = DateTime.Now;
-                    foreach (var InventoryTurnOverReportListObj in InventoryTurnOverReportList)
+                    if (ShowDetailedTransaction == 0)
                     {
-                        if (sheetsRow<InventoryTurnOverReportList.ToList().Count + 5)
+                        excelPackage.Workbook.Worksheets.Delete("Detailed");
+                    }
+                    else
+                    {
+                        var groupedByDetailed = InventoryTurnOverReportList
+                            .Where(x => x.report_group == "DETAILED")
+                            .ToList();
+                        ExcelWorksheet DetailedSheet = excelPackage.Workbook.Worksheets["Detailed"];
+                        int sheetsRow = 6;
+                    
+                        DetailedSheet.Cells["A3"].Value = DateTime.Now;
+                        foreach (var InventoryTurnOverReportListObj in groupedByDetailed)
                         {
-                            DetailedSheet.InsertRow((sheetsRow + 1), 1);
-                            DetailedSheet.Cells[sheetsRow, 1, sheetsRow, 100].Copy(DetailedSheet.Cells[(sheetsRow + 1), 1, (sheetsRow + 1), 1]);
+                            if (sheetsRow<InventoryTurnOverReportList.ToList().Count + 5)
+                            {
+                                DetailedSheet.InsertRow((sheetsRow + 1), 1);
+                                DetailedSheet.Cells[sheetsRow, 1, sheetsRow, 100].Copy(DetailedSheet.Cells[(sheetsRow + 1), 1, (sheetsRow + 1), 1]);
+                            }
+                            DetailedSheet.Cells[sheetsRow, 1].Value = InventoryTurnOverReportListObj.trans_date;
+                            DetailedSheet.Cells[sheetsRow, 1].Style.WrapText = false;
+                            DetailedSheet.Cells[sheetsRow, 2].Value = InventoryTurnOverReportListObj.trans_type;
+                            DetailedSheet.Cells[sheetsRow, 2].Style.WrapText = false;
+                            DetailedSheet.Cells[sheetsRow, 3].Value = InventoryTurnOverReportListObj.reason_code ;
+                            DetailedSheet.Cells[sheetsRow, 3].Style.WrapText = false;
+                            DetailedSheet.Cells[sheetsRow, 4].Value = InventoryTurnOverReportListObj.reason_desc;
+                            DetailedSheet.Cells[sheetsRow, 4].Style.WrapText = false;
+                            DetailedSheet.Cells[sheetsRow, 5].Value = InventoryTurnOverReportListObj.item;
+                            DetailedSheet.Cells[sheetsRow, 5].Style.WrapText = false;
+                            DetailedSheet.Cells[sheetsRow, 6].Value = InventoryTurnOverReportListObj.item_desc;
+                            DetailedSheet.Cells[sheetsRow, 6].Style.WrapText = false;
+                            DetailedSheet.Cells[sheetsRow, 7].Value = InventoryTurnOverReportListObj.product_code;
+                            DetailedSheet.Cells[sheetsRow, 7].Style.WrapText = false;
+                            DetailedSheet.Cells[sheetsRow, 8].Value = (InventoryTurnOverReportListObj.ref_num+ "" +InventoryTurnOverReportListObj.ref_line);
+                            DetailedSheet.Cells[sheetsRow, 8].Style.WrapText = false;
+
+                            DetailedSheet.Cells[sheetsRow, 9].Value = InventoryTurnOverReportListObj.qty;
+                            DetailedSheet.Cells[sheetsRow, 9].Style.WrapText = false;
+                            DetailedSheet.Cells[sheetsRow, 10].Value = InventoryTurnOverReportListObj.usage_matl;
+                            DetailedSheet.Cells[sheetsRow, 10].Style.WrapText = false;
+                            DetailedSheet.Cells[sheetsRow, 11].Value = InventoryTurnOverReportListObj.usage_landed;
+                            DetailedSheet.Cells[sheetsRow, 11].Style.WrapText = false;
+
+                            sheetsRow++;
+
                         }
-                        DetailedSheet.Cells[sheetsRow, 1].Value = InventoryTurnOverReportListObj.trans_date;
-                        DetailedSheet.Cells[sheetsRow, 1].Style.WrapText = false;
-                        DetailedSheet.Cells[sheetsRow, 2].Value = InventoryTurnOverReportListObj.trans_type;
-                        DetailedSheet.Cells[sheetsRow, 2].Style.WrapText = false;
-                        DetailedSheet.Cells[sheetsRow, 3].Value = InventoryTurnOverReportListObj.reason_code ;
-                        DetailedSheet.Cells[sheetsRow, 3].Style.WrapText = false;
-                        DetailedSheet.Cells[sheetsRow, 4].Value = InventoryTurnOverReportListObj.reason_desc;
-                        DetailedSheet.Cells[sheetsRow, 4].Style.WrapText = false;
-                        DetailedSheet.Cells[sheetsRow, 5].Value = InventoryTurnOverReportListObj.item;
-                        DetailedSheet.Cells[sheetsRow, 5].Style.WrapText = false;
-                        DetailedSheet.Cells[sheetsRow, 6].Value = InventoryTurnOverReportListObj.item_desc;
-                        DetailedSheet.Cells[sheetsRow, 6].Style.WrapText = false;
-                        DetailedSheet.Cells[sheetsRow, 7].Value = InventoryTurnOverReportListObj.product_code;
-                        DetailedSheet.Cells[sheetsRow, 7].Style.WrapText = false;
-                        DetailedSheet.Cells[sheetsRow, 8].Value = (InventoryTurnOverReportListObj.ref_num+ "" +InventoryTurnOverReportListObj.ref_line);
-                        DetailedSheet.Cells[sheetsRow, 8].Style.WrapText = false;
-
-                        DetailedSheet.Cells[sheetsRow, 9].Value = InventoryTurnOverReportListObj.qty;
-                        DetailedSheet.Cells[sheetsRow, 9].Style.WrapText = false;
-                        DetailedSheet.Cells[sheetsRow, 10].Value = InventoryTurnOverReportListObj.usage_matl;
-                        DetailedSheet.Cells[sheetsRow, 10].Style.WrapText = false;
-                        DetailedSheet.Cells[sheetsRow, 11].Value = InventoryTurnOverReportListObj.usage_landed;
-                        DetailedSheet.Cells[sheetsRow, 11].Style.WrapText = false;
-
-                        sheetsRow++;
-
                     }
                     #endregion
                     return File(excelPackage.GetAsByteArray(), "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet", Filename);

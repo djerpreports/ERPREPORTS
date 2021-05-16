@@ -111,6 +111,12 @@
                 $("#ProductCode,#TransactionDate").val("").prop("disabled", true);
                 $("#ProductCode").trigger("change.select2");
             }
+            if ($('.ReportTypeG6:checked').length) {
+                $("#ShowDetailedTransaction").prop("disabled",false);
+                    $("#btnPrint").prop("disabled", false);
+            } else {
+                $("#ShowDetailedTransaction").prop("disabled", true);
+            }
         });
         $("#StartDate,#EndDate").change(function () {
             if ($("#StartDate").val() && $("#EndDate").val()) {
