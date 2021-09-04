@@ -3,7 +3,7 @@ ALTER PROCEDURE LSP_ActlCost_GetMatlCostingSp (
 	@matl_item					ItemType		--= 'RM-SIPC031'
   , @matl_lot					LotType			--= '190131-34401'
   , @matlTransDate				DateType		--= '2021-05-01 00:00:00.000'
-  /*, @JobQty						BIGINT			
+ /* , @JobQty						BIGINT			
   , @matl_unit_cost_usd        DECIMAL(18,8) = 0
   , @matl_landed_cost_usd        DECIMAL(18,8) = 0
   , @pi_fg_process_usd         DECIMAL(18,8) = 0
@@ -24,7 +24,8 @@ ALTER PROCEDURE LSP_ActlCost_GetMatlCostingSp (
   , @sf_ovhd_cost_php        DECIMAL(18,8) = 0
   , @fg_lbr_cost_php         DECIMAL(18,8) = 0
   , @fg_ovhd_cost_php        DECIMAL(18,8) = 0
-  */, @JobQty						BIGINT			
+  */
+  , @JobQty						BIGINT			
 										OUTPUT
   , @matl_unit_cost_usd    DECIMAL(18,8) --= 0
                 OUTPUT
@@ -66,6 +67,7 @@ ALTER PROCEDURE LSP_ActlCost_GetMatlCostingSp (
                 OUTPUT
   , @fg_ovhd_cost_php    DECIMAL(18,8) --= 0
                 OUTPUT
+  --, @ExchRate		DECIMAL(18,8)	OUTPUT
 ) AS
 --*/
 

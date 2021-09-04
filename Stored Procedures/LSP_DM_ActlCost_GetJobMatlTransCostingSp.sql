@@ -7,11 +7,11 @@ ALTER PROCEDURE LSP_DM_ActlCost_GetJobMatlTransCostingSp (
   , @Item					ItemType	--= 'FG-EP3:10-5(2)'
   , @JobTransDate			DateType	--= '2020-05-22 00:00:00.000'
   , @QtyTrans				QtyUnitType	--= 5
- 	--@Job					JobType		= '20-0000864'
+ 	--@Job					JobType		= '20-0000781'
   --, @Suffix					SuffixType	= 0
-  --, @Item					ItemType	= 'FG-3RS2024'
-  --, @JobTransDate			DateType	= '05/29/2020'
-  --, @QtyTrans				QtyUnitType	= 10
+  --, @Item					ItemType	= 'FG-EP3:10-5(2)'
+  --, @JobTransDate			DateType	= '2020-05-08 13:58:07.360'
+  --, @QtyTrans				QtyUnitType	= 5
  	--@Job					JobType		= '19-0002265'
   --, @Suffix					SuffixType	= 0
   --, @Item					ItemType	= 'FG-E21-211'
@@ -32,7 +32,7 @@ BEGIN
 	  , [Level]						INT
 	  , Parent						NVARCHAR(20)
 	  , oper_num					INT
-	  , sequence					NVARCHAR(3)
+	  , sequence					INT
 	  , subsequence					NVARCHAR(50)
 	  , matl						NVARCHAR(60)
 	  , matl_qty					DECIMAL(18,8)
@@ -68,7 +68,7 @@ BEGIN
 	  , @TransDate			DateType
 	  , @Level				INT
 	  , @OperNum			OperNumType
-	  , @Sequence			NVARCHAR(2)
+	  , @Sequence			NVARCHAR(3)
 	  , @SubSequence		NVARCHAR(50)
 	  , @CurrLevel			INT				= 1
 	  , @JobQty					BIGINT

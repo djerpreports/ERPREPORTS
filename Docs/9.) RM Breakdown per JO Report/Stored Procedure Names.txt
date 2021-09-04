@@ -1,0 +1,39 @@
+Sheetname: RM Breakdown per JO Report
+
+Stored Procedure: LSP_Rpt_NewDM_RMBreakdownPerJOSp
+Parameters: @JobOrder String, @PONumber String, @Quantity  INT (*Value = NULL)
+Columns:
+JONum			String
+PONum			String
+matl			String
+matl_desc		String
+StdLbrHrs		Decimal
+ActlLbrHrs		Decimal
+std_matl_unit		Decimal
+std_process_unit	Decimal
+pi_resin_unit		Decimal
+pi_hidden_unit		Decimal
+sf_lbr_unit		Decimal
+sf_ovhd_unit		Decimal
+fg_lbr_unit		Decimal
+fg_ovhd_unit		Decimal
+total_std_unit		Decimal
+Level			INT
+sequence		INT
+subsequence		String
+lot_no			String
+matl_qty		Decimal
+job_qty			Decimal
+job_matl_qty		Decimal
+actl_matl_qty		Decimal
+matl_unit_cost_php	Decimal
+matl_landed_cost_php	Decimal
+pi_fg_process_php	Decimal
+pi_resin_php		Decimal
+pi_hidden_profit_php	Decimal
+sf_lbr_cost_php		Decimal
+sf_ovhd_cost_php	Decimal
+fg_lbr_cost_php		Decimal
+fg_ovhd_cost_php	Decimal
+total_actl_unit		Decimal
+nolanded_actl_unit	Decimal

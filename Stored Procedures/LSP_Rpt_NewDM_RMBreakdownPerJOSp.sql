@@ -1,7 +1,8 @@
---CREATE PROCEDURE LSP_Rpt_NewDM_RMBreakdownPerJOSp (
+--ALTER PROCEDURE LSP_Rpt_NewDM_RMBreakdownPerJOSp (
 DECLARE
-	@JobOrder				NVARCHAR(20) = '19-0002507'
-  , @PONumber				NVARCHAR(20) = '405230'
+	@JobOrder				NVARCHAR(20) = '20-0000558'--'19-0002507'
+  , @PONumber				NVARCHAR(20) = ''
+  , @Quantity				INT			 = NULL
 --) AS
 BEGIN
 
@@ -36,7 +37,7 @@ BEGIN
 	  , [Level]						INT
 	  , Parent						NVARCHAR(20)
 	  , oper_num					INT
-	  , sequence					NVARCHAR(2)
+	  , sequence					INT
 	  , subsequence					NVARCHAR(50)
 	  , matl						NVARCHAR(60)
 	  , matl_qty					DECIMAL(18,8)
@@ -70,7 +71,7 @@ BEGIN
 	  , [Level]						INT
 	  , Parent						NVARCHAR(20)
 	  , oper_num					INT
-	  , sequence					NVARCHAR(2)
+	  , sequence					NVARCHAR(3)
 	  , subsequence					NVARCHAR(50)
 	  , matl						NVARCHAR(60)
 	  , matl_qty					DECIMAL(18,8)
@@ -88,7 +89,7 @@ BEGIN
 	  , sf_lbr_cost_php				DECIMAL(18,8)
 	  , sf_ovhd_cost_php			DECIMAL(18,8)
 	  , fg_lbr_cost_php				DECIMAL(18,8)
-	  , fg_ovhd_cost_php			DECIMAL(18,8)
+	  , fg_ovhd_cost_php			DECIMAL(18,8)	  
 	)
 
 	DECLARE
@@ -98,30 +99,46 @@ BEGIN
 	  , @JobItem			ItemType
 	  , @CurrLevel			INT
 	  , @MaxLevel			INT
-	  
+	  , @FGStdLbrHrs		DECIMAL(18,10)
+	  , @FGActLbrHrs		DECIMAL(18,10)
 
 	SELECT TOP(1) 
-		   @JobOrder = ISNULL(@JobOrder, job)
-		 , @PONumber = ISNULL(@PONumber, Uf_ponum)
+		   @JobOrder = ISNULL(NULLIF(@JobOrder,''), job)
+		 , @PONumber = ISNULL(NULLIF(@PONumber,''), Uf_ponum)
 		 , @JobSuffix = suffix
 		 , @JobDate = job_date
 		 , @JobItem = item
-		 , @JobQtyRelease = qty_released
+		 , @JobQtyRelease = ISNULL(@Quantity, qty_complete) --qty_released
 		 
 	FROM job
 	WHERE job = @JobOrder
 	   OR Uf_ponum = @PONumber
 
+	SELECT @FGStdLbrHrs = SUM(js.run_lbr_hrs * jt.qty_complete)
+		 , @FGActLbrHrs = SUM(ISNULL(jt.a_hrs,0))
+	FROM jobtran AS jt 
+			JOIN job AS j 
+				ON jt.job = j.job 
+				  AND jt.suffix = j.suffix 
+			JOIN  item AS i 
+				ON j.item = i.item 
+			JOIN  jrt_sch AS js 
+				ON i.job = js.job 
+				  AND i.suffix = js.suffix 
+				  AND jt.oper_num = js.oper_num
+	WHERE j.job = @JobOrder
+		   
 	--SELECT @JobOrder, @PONumber
 	--	 , @JobSuffix
 	--	 , @JobDate
 	--	 , @JobItem
 	--	 , @JobQtyRelease
 
-
 	INSERT INTO #BOMStdCost
 	EXEC dbo.LSP_DM_StdCost_GetCurrentMatlCostingSp @JobItem, @JobDate
 	
+	--SELECT @JobOrder, @JobSuffix, @JobItem, @JobDate, @JobQtyRelease
+
 	INSERT INTO #DMActualCost
 	EXEC dbo.LSP_DM_ActlCost_GetJobMatlTransCostingSp @JobOrder, @JobSuffix, @JobItem, @JobDate, @JobQtyRelease
 	
@@ -143,16 +160,17 @@ BEGIN
 	  , job_qty
 	  , job_qty		
 	  , matl_qty
-	  , matl_unit_cost_php / matl_qty
-	  , matl_landed_cost_php / matl_qty
-	  , pi_fg_process_php / matl_qty
-	  , pi_resin_php / matl_qty
-	  , pi_vend_cost_php / matl_qty
-	  , pi_hidden_profit_php / matl_qty
-	  , sf_lbr_cost_php / matl_qty
-	  , sf_ovhd_cost_php / matl_qty
-	  , fg_lbr_cost_php / matl_qty
-	  , fg_ovhd_cost_php / matl_qty
+	  , (matl_unit_cost_php / matl_qty)
+	  , (matl_landed_cost_php / matl_qty)
+	  , (pi_fg_process_php / matl_qty)
+	  , (pi_resin_php / matl_qty)
+	  , (pi_vend_cost_php / matl_qty)
+	  , (pi_hidden_profit_php / matl_qty)
+	  , (sf_lbr_cost_php / matl_qty)
+	  , (sf_ovhd_cost_php / matl_qty)
+	  , (fg_lbr_cost_php / matl_qty)
+	  , (fg_ovhd_cost_php / matl_qty)
+	 
 	FROM #DMActualCost
 	WHERE [Level] = 0
 	
@@ -180,10 +198,11 @@ BEGIN
 	  , a.sf_ovhd_cost_php / a.matl_qty
 	  , a.fg_lbr_cost_php / a.matl_qty
 	  , a.fg_ovhd_cost_php / a.matl_qty
+	 
 	FROM #DMActualCost AS a
 		LEFT OUTER JOIN #RMBreakdownActualCost AS a1
 			ON a1.[Level] = 0
-	WHERE a.[Level] = 1
+	WHERE a.[Level] = 1	
 
 	WHILE(@CurrLevel <= @MaxLevel)
 	BEGIN
@@ -222,8 +241,8 @@ BEGIN
 		     , a.trans_date
 		     , a.job_qty
 		     --, a.matl_qty, a1.job_qty, a1.job_matl_qty
-		     , CAST((a.matl_qty / a1.job_qty) AS DECIMAL(18,8))
-		     , CAST((a.matl_qty / a1.job_qty) AS DECIMAL(18,8)) * a1.actl_matl_qty
+		     , CAST(ISNULL((a.matl_qty / NULLIF(a1.job_qty,0)),0) AS DECIMAL(18,8))
+		     , CAST(ISNULL((a.matl_qty / NULLIF(a1.job_qty,0)),0) AS DECIMAL(18,8)) * a1.actl_matl_qty
 		     --, ((a.matl_qty / a1.job_qty) * a1.job_matl_qty)
 		     -- CASE WHEN a.[Level] = 2 THEN a1.job_matl_qty ELSE a1.actl_matl_qty END
 		  --   ,  (matl_qty 
@@ -249,16 +268,17 @@ BEGIN
 				--								THEN 1
 				--						   ELSE 0 
 				--					  END)
-		     , (a.matl_unit_cost_php / a.matl_qty) --* ((a.matl_qty / a1.job_qty) * a1.job_matl_qty)
-		     , (a.matl_landed_cost_php / a.matl_qty) --* ((a.matl_qty / a1.job_qty) * a1.actl_matl_qty)
-		     , (a.pi_fg_process_php / a.matl_qty)  --* ((a.matl_qty / a1.job_qty) * a1.actl_matl_qty)
-		     , (a.pi_resin_php / a.matl_qty)  --* ((a.matl_qty / a1.job_qty) * a1.actl_matl_qty)
-		     , (a.pi_vend_cost_php / a.matl_qty)  --* ((a.matl_qty / a1.job_qty) * a1.actl_matl_qty)
-		     , (a.pi_hidden_profit_php / a.matl_qty)  --* ((a.matl_qty / a1.job_qty) * a1.actl_matl_qty)
-		     , (a.sf_lbr_cost_php / a.matl_qty)  --* ((a.matl_qty / a1.job_qty) * a1.actl_matl_qty)
-		     , (a.sf_ovhd_cost_php / a.matl_qty) --* ((a.matl_qty / a1.job_qty) * a1.actl_matl_qty)
-		     , (a.fg_lbr_cost_php / a.matl_qty) --* ((a.matl_qty / a1.job_qty) * a1.actl_matl_qty)
-		     , (a.fg_ovhd_cost_php / a.matl_qty) --* ((a.matl_qty / a1.job_qty) * a1.actl_matl_qty)
+		     , ISNULL((a.matl_unit_cost_php / NULLIF(a.matl_qty,0)),0) --* ((a.matl_qty / a1.job_qty) * a1.job_matl_qty)
+		     , ISNULL((a.matl_landed_cost_php / NULLIF(a.matl_qty,0)), 0) --* ((a.matl_qty / a1.job_qty) * a1.actl_matl_qty)
+		     , ISNULL((a.pi_fg_process_php / NULLIF(a.matl_qty,0)), 0)  --* ((a.matl_qty / a1.job_qty) * a1.actl_matl_qty)
+		     , ISNULL((a.pi_resin_php / NULLIF(a.matl_qty,0)), 0)  --* ((a.matl_qty / a1.job_qty) * a1.actl_matl_qty)
+		     , ISNULL((a.pi_vend_cost_php / NULLIF(a.matl_qty,0)), 0)  --* ((a.matl_qty / a1.job_qty) * a1.actl_matl_qty)
+		     , ISNULL((a.pi_hidden_profit_php / NULLIF(a.matl_qty,0)), 0)  --* ((a.matl_qty / a1.job_qty) * a1.actl_matl_qty)
+		     , ISNULL((a.sf_lbr_cost_php / NULLIF(a.matl_qty,0)), 0)  --* ((a.matl_qty / a1.job_qty) * a1.actl_matl_qty)
+		     , ISNULL((a.sf_ovhd_cost_php / NULLIF(a.matl_qty,0)), 0) --* ((a.matl_qty / a1.job_qty) * a1.actl_matl_qty)
+		     , ISNULL((a.fg_lbr_cost_php / NULLIF(a.matl_qty,0)), 0) --* ((a.matl_qty / a1.job_qty) * a1.actl_matl_qty)
+		     , ISNULL((a.fg_ovhd_cost_php / NULLIF(a.matl_qty,0)), 0) --* ((a.matl_qty / a1.job_qty) * a1.actl_matl_qty)
+	
 		FROM #DMActualCost AS a
 			LEFT OUTER JOIN #RMBreakdownActualCost AS a1 
 						ON (CAST(a1.[Level] AS NVARCHAR(2)) + '.' + CAST(a1.[oper_num] AS NVARCHAR(2)) + '.' + a1.sequence) = a.Parent 
@@ -280,29 +300,81 @@ BEGIN
 		SET @CurrLevel = @CurrLevel + 1
 	
 	END
-	
+
+	--SELECT * FROM #BOMStdCost
+	--ORDER BY subsequence, CAST(sequence AS INT), [Level]
+
+	--SELECT * FROM #DMActualCost
 	--SELECT * FROM #RMBreakdownActualCost
 	--ORDER BY subsequence, CAST(sequence AS INT), [Level]
 	
-	SELECT matl
-		 , [Level]
-		 , sequence
-		 , subsequence
-		 , lot_no
-		 , matl_qty
-		 , job_qty
-		 , job_matl_qty
-		 , actl_matl_qty
-		 , matl_unit_cost_php
-		 , matl_landed_cost_php
-		 , pi_fg_process_php
-		 , pi_resin_php
-		 , pi_hidden_profit_php
-		 , sf_lbr_cost_php
-		 , sf_ovhd_cost_php
-		 , fg_lbr_cost_php
-		 , fg_ovhd_cost_php
-		 
+	SELECT @JobOrder	AS JONum
+		 , @PONumber	AS PONum
+		 , ac.matl
+		 , i.description AS matl_desc
+		 , CASE WHEN ac.[Level] = 0
+					THEN @FGStdLbrHrs
+				ELSE 0 END
+			 AS StdLbrHrs
+		 , CASE WHEN ac.[Level] = 0
+					THEN @FGActLbrHrs
+				ELSE 0 END
+			 AS ActlLbrHrs
+		 , ISNULL(dbo.LSP_fn_GetCurrencyConversion(ac.trans_date,'USD','PHP', std.matl_unit_cost), 0) AS std_matl_unit
+		 , ISNULL(dbo.LSP_fn_GetCurrencyConversion(ac.trans_date,'USD','PHP', std.pi_process_cost), 0) AS std_process_unit
+		 , ISNULL(dbo.LSP_fn_GetCurrencyConversion(ac.trans_date,'USD','PHP', std.pi_resin_cost), 0) AS pi_resin_unit
+		 , ISNULL(dbo.LSP_fn_GetCurrencyConversion(ac.trans_date,'USD','PHP', std.pi_hidden_profit), 0) AS pi_hidden_unit
+		 , ISNULL(dbo.LSP_fn_GetCurrencyConversion(ac.trans_date,'USD','PHP', std.sf_labr_cost), 0) AS sf_lbr_unit
+		 , ISNULL(dbo.LSP_fn_GetCurrencyConversion(ac.trans_date,'USD','PHP', std.sf_ovhd_cost), 0) AS sf_ovhd_unit
+		 , ISNULL(dbo.LSP_fn_GetCurrencyConversion(ac.trans_date,'USD','PHP', std.fg_labr_cost), 0) AS fg_lbr_unit
+		 , ISNULL(dbo.LSP_fn_GetCurrencyConversion(ac.trans_date,'USD','PHP', std.fg_ovhd_cost), 0) AS fg_ovhd_unit
+		 , ( ISNULL(dbo.LSP_fn_GetCurrencyConversion(ac.trans_date,'USD','PHP', std.matl_unit_cost), 0)
+			 + ISNULL(dbo.LSP_fn_GetCurrencyConversion(ac.trans_date,'USD','PHP', std.pi_process_cost), 0)
+			 + ISNULL(dbo.LSP_fn_GetCurrencyConversion(ac.trans_date,'USD','PHP', std.pi_resin_cost), 0)
+			 + ISNULL(dbo.LSP_fn_GetCurrencyConversion(ac.trans_date,'USD','PHP', std.pi_hidden_profit), 0)
+			 + ISNULL(dbo.LSP_fn_GetCurrencyConversion(ac.trans_date,'USD','PHP', std.sf_labr_cost), 0)
+			 + ISNULL(dbo.LSP_fn_GetCurrencyConversion(ac.trans_date,'USD','PHP', std.sf_ovhd_cost), 0)
+			 + ISNULL(dbo.LSP_fn_GetCurrencyConversion(ac.trans_date,'USD','PHP', std.fg_labr_cost), 0)
+			 + ISNULL(dbo.LSP_fn_GetCurrencyConversion(ac.trans_date,'USD','PHP', std.fg_ovhd_cost), 0) 
+		  ) AS total_std_unit
+		--/**********
+		 , ISNULL(ac.[Level], 0) AS [Level]
+		 , ISNULL(ac.sequence, 0) AS sequence
+		 , ISNULL(ac.subsequence, 0) AS subsequence
+		 , ISNULL(ac.lot_no, 0) AS lot_no
+		 , ISNULL(ac.matl_qty, 0) AS matl_qty
+		 , ISNULL(ac.job_qty, 0) AS job_qty
+		 , ISNULL(ac.job_matl_qty, 0) AS job_matl_qty
+		 , ISNULL(ac.actl_matl_qty, 0) AS actl_matl_qty
+		 , ISNULL(ac.matl_unit_cost_php, 0) AS matl_unit_cost_php
+		 , ISNULL(ac.matl_landed_cost_php, 0) AS matl_landed_cost_php
+		 , ISNULL(ac.pi_fg_process_php, 0) AS pi_fg_process_php
+		 , ISNULL(ac.pi_resin_php, 0) AS pi_resin_php
+		 , ISNULL(ac.pi_hidden_profit_php, 0) AS pi_hidden_profit_php
+		 , ISNULL(ac.sf_lbr_cost_php, 0) AS sf_lbr_cost_php
+		 , ISNULL(ac.sf_ovhd_cost_php, 0) AS sf_ovhd_cost_php
+		 , ISNULL(ac.fg_lbr_cost_php, 0) AS fg_lbr_cost_php
+		 , ISNULL(ac.fg_ovhd_cost_php, 0) AS fg_ovhd_cost_php
+		 , (ISNULL(ac.matl_unit_cost_php, 0)
+			 + ISNULL(ac.matl_landed_cost_php, 0)
+			 + ISNULL(ac.pi_fg_process_php, 0)
+			 + ISNULL(ac.pi_resin_php, 0)
+			 + ISNULL(ac.pi_hidden_profit_php, 0)
+			 + ISNULL(ac.sf_lbr_cost_php, 0)
+			 + ISNULL(ac.sf_ovhd_cost_php, 0)
+			 + ISNULL(ac.fg_lbr_cost_php, 0)
+			 + ISNULL(ac.fg_ovhd_cost_php, 0)
+			) as total_actl_unit
+		  , (ISNULL(ac.matl_unit_cost_php, 0)
+			 + ISNULL(ac.pi_fg_process_php, 0)
+			 + ISNULL(ac.pi_resin_php, 0)
+			 + ISNULL(ac.pi_hidden_profit_php, 0)
+			 + ISNULL(ac.sf_lbr_cost_php, 0)
+			 + ISNULL(ac.sf_ovhd_cost_php, 0)
+			 + ISNULL(ac.fg_lbr_cost_php, 0)
+			 + ISNULL(ac.fg_ovhd_cost_php, 0)
+			) as nolanded_actl_unit
+		--**********/
 		 --, CASE WHEN [Level] = 0 OR [Level] > 1
 			--		THEN (matl_unit_cost_php * actl_matl_qty)				
 			--	ELSE (matl_unit_cost_php / actl_matl_qty) * job_matl_qty END
@@ -333,7 +405,15 @@ BEGIN
 	  --   , CASE WHEN [Level] > 1 
 			--		THEN (fg_ovhd_cost_php * actl_matl_qty)
 			--	ELSE (fg_ovhd_cost_php / actl_matl_qty) * job_matl_qty END
-	FROM #RMBreakdownActualCost
-	ORDER BY subsequence, CAST(sequence AS INT), [Level]
+	
+	FROM #RMBreakdownActualCost AS ac
+		 JOIN item AS i 
+			ON ac.matl = i.item
+		 LEFT OUTER JOIN #BOMStdCost AS std
+			ON ac.matl = std.matl
+			  AND ac.[Level] = std.[Level]
+			  AND ac.oper_num = std.oper_num
+			  --AND ac.sequence = std.sequence
+	ORDER BY ac.subsequence, CAST(ac.sequence AS INT), ac.[Level]
 
 END

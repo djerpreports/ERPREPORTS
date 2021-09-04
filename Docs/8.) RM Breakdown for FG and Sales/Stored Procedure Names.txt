@@ -1,0 +1,63 @@
+Sheetname: RM Breakdown for FG Report
+
+Stored Procedure: LSP_Rpt_NewDM_RMBreakdownFinishedGoodsSp
+Parameters: @StartDate, @EndDate
+Columns:
+JONum			String
+PONum			String
+Item			String
+matl			String
+matl_desc		String
+actl_matl_qty		Decimal
+std_matl_unit		Decimal
+std_process_unit	Decimal
+pi_resin_unit		Decimal
+pi_hidden_unit		Decimal
+sf_lbr_unit		Decimal
+sf_ovhd_unit		Decimal
+fg_lbr_unit		Decimal
+fg_ovhd_unit		Decimal
+total_std_unit		Decimal
+matl_unit_cost_php	Decimal
+matl_landed_cost_php	Decimal
+pi_fg_process_php	Decimal
+pi_resin_php		Decimal
+pi_hidden_profit_php	Decimal
+sf_lbr_cost_php		Decimal
+sf_ovhd_cost_php	Decimal
+fg_lbr_cost_php		Decimal
+fg_ovhd_cost_php	Decimal
+total_actl_unit		Decimal
+nolanded_actl_unit	Decimal
+
+Sheetname: RM Breakdown for Sales Report
+
+Stored Procedure: LSP_Rpt_NewDM_RMBreakdownSalesSp
+Parameters: @StartDate, @EndDate
+Columns:
+JONum			String
+PONum			String
+Item			String
+matl			String
+matl_desc		String
+actl_matl_qty		Decimal
+std_matl_unit		Decimal
+std_process_unit	Decimal
+pi_resin_unit		Decimal
+pi_hidden_unit		Decimal
+sf_lbr_unit		Decimal
+sf_ovhd_unit		Decimal
+fg_lbr_unit		Decimal
+fg_ovhd_unit		Decimal
+total_std_unit		Decimal
+matl_unit_cost_php	Decimal
+matl_landed_cost_php	Decimal
+pi_fg_process_php	Decimal
+pi_resin_php		Decimal
+pi_hidden_profit_php	Decimal
+sf_lbr_cost_php		Decimal
+sf_ovhd_cost_php	Decimal
+fg_lbr_cost_php		Decimal
+fg_ovhd_cost_php	Decimal
+total_actl_unit		Decimal
+nolanded_actl_unit	Decimal
