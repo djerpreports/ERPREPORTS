@@ -1,17 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using ERPReports.Areas.Reports.Models;
+using ERPReports.Models;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using OfficeOpenXml;
-using ERPReports.Models;
 using System.IO;
-using ERPReports.Areas.Reports.Models;
-using OfficeOpenXml.Style;
+using System.Linq;
+using System.Web.Mvc;
 
 namespace ERPReports.Areas.Reports.Controllers
 {
@@ -655,24 +654,24 @@ namespace ERPReports.Areas.Reports.Controllers
                 }
 
                 var filteredMiscellaneousTransaction = MiscellaneousTransaction.Where(x => x.TransDesc == "SF Scrap Data").ToList();
-                
+
 
                 string filePath = "";
                 string Filename = "LSP_Rpt_DM_MiscellaneousTransactionReport_LSPI_" + MonthYear + ".xlsx";
                 filePath = Path.Combine(Server.MapPath("~/Areas/Reports/Templates/") + "LSP_Rpt_DM_MiscellaneousTransactionReport_LSPI.xlsx");
                 FileInfo file = new FileInfo(filePath);
-                
+
                 using (ExcelPackage excelPackage = new ExcelPackage(file))
                 {
 
                     #region MiscellaneousTransactions
                     var Summary_GroupByTransDesc = MiscellaneousTransaction
-                        .Where(x=>x.TransDesc != "SF Scrap Data")
+                        .Where(x => x.TransDesc != "SF Scrap Data")
                         .GroupBy(u => u.TransDesc)
                         .ToList();
 
-                    decimal Total_TransQty =0;
-                    decimal Total_TotalCost_PHP =0;
+                    decimal Total_TransQty = 0;
+                    decimal Total_TotalCost_PHP = 0;
                     int sheetRowMisc = 6;
                     foreach (var TransDescList in Summary_GroupByTransDesc)
                     {
@@ -714,7 +713,7 @@ namespace ERPReports.Areas.Reports.Controllers
                                 MiscTrxSheetCycleCount.Cells[sheetRowMisc, 10].Style.WrapText = false;
                                 MiscTrxSheetCycleCount.Cells[sheetRowMisc, 11].Value = Convert.ToDecimal(SheetData.PIHiddenProfit_PHP);
                                 MiscTrxSheetCycleCount.Cells[sheetRowMisc, 11].Style.WrapText = false;
-                                MiscTrxSheetCycleCount.Cells[sheetRowMisc, 12].Value = Convert.ToDecimal(SheetData.SFAddedCost_PHP)+ Convert.ToDecimal(SheetData.FGAddedCost_PHP);
+                                MiscTrxSheetCycleCount.Cells[sheetRowMisc, 12].Value = Convert.ToDecimal(SheetData.SFAddedCost_PHP) + Convert.ToDecimal(SheetData.FGAddedCost_PHP);
                                 MiscTrxSheetCycleCount.Cells[sheetRowMisc, 12].Style.WrapText = false;
                                 MiscTrxSheetCycleCount.Cells[sheetRowMisc, 13].Value = Convert.ToDecimal(SheetData.TotalCost_PHP);
                                 MiscTrxSheetCycleCount.Cells[sheetRowMisc, 13].Style.WrapText = false;
@@ -728,13 +727,13 @@ namespace ERPReports.Areas.Reports.Controllers
                             MiscTrxSheetCycleCount.Cells[sheetRowMisc, 13].Value = Convert.ToDecimal(Total_TotalCost_PHP);
                             MiscTrxSheetCycleCount.Cells[sheetRowMisc, 13].Style.WrapText = false;
                         }
- 
+
                         else if (TransDescList.Key.ToString().Trim() == "Miscellaneous Issue")
                         {
                             Total_TransQty = 0;
                             Total_TotalCost_PHP = 0;
                             sheetRowMisc = 6;
-                            var IssueTransDescList = TransDescList.Where(x=>x.Item!="Scrap Item" && x.Item!="Request Item").ToList();
+                            var IssueTransDescList = TransDescList.Where(x => x.Item != "Scrap Item" && x.Item != "Request Item").ToList();
                             foreach (var SheetData in IssueTransDescList)
                             {
                                 if (sheetRowMisc < TransDescList.ToList().Count + 5)
@@ -827,7 +826,7 @@ namespace ERPReports.Areas.Reports.Controllers
                             MiscTrxSheetMiscellaneousReceipt.Cells[sheetRowMisc, 13].Style.WrapText = false;
                         }
 
-                        
+
                     }
                     var FoundCycleCount = false;
                     var FoundMiscellaneousIssue = false;
@@ -860,7 +859,7 @@ namespace ERPReports.Areas.Reports.Controllers
 
                     ExcelWorksheet Summary1stSheet = excelPackage.Workbook.Worksheets["Summary"];
                     var Summary_GroupBySummaryGroup = MiscellaneousTransaction
-                        .OrderBy(x=>x.TransType)
+                        .OrderBy(x => x.TransType)
                         .ThenBy(x => x.MiscTransClass)
                         .ThenBy(x => x.ReasonDesc)
                         .GroupBy(u => u.SummaryGroup)
@@ -873,7 +872,7 @@ namespace ERPReports.Areas.Reports.Controllers
                                 .OrderBy(x => x.TransType).ThenBy(x => x.MiscTransClass).ThenBy(x => x.ReasonDesc)
                                 .GroupBy(u => u.ReasonDesc)
                                 .ToList();
-                        Summary1stSheet.Cells[summary1stSheetRow-1, 1].Value = SheetData.Key.ToString();
+                        Summary1stSheet.Cells[summary1stSheetRow - 1, 1].Value = SheetData.Key.ToString();
                         var groupRow = 0;
                         decimal GRANDTOTAL_MatlCost_PHP_TransQty = 0;
                         decimal GRANDTOTAL_MatlLandedCost_PHP_TransQty = 0;
@@ -895,7 +894,7 @@ namespace ERPReports.Areas.Reports.Controllers
                             decimal TOTAL_TotalCost_PHP = 0;
                             var SFScrapList = ReasonDescList_
                                 .Where(x => x.ReasonDesc == "SF Scrap")
-                                .OrderBy(x=>x.Wc)
+                                .OrderBy(x => x.Wc)
                                 .GroupBy(x => x.Wc).ToList();
                             foreach (var SummarySheetData in ReasonDescList_)
                             {
@@ -922,26 +921,27 @@ namespace ERPReports.Areas.Reports.Controllers
                                 Summary1stSheet.InsertRow((summary1stSheetRow + 1), 1);
                                 Summary1stSheet.Cells[summary1stSheetRow, 1, summary1stSheetRow, 100].Copy(Summary1stSheet.Cells[(summary1stSheetRow + 1), 1, (summary1stSheetRow + 1), 1]);
                             }
-                            Summary1stSheet.Cells[summary1stSheetRow, 1].Value = ReasonDesc ;
+                            Summary1stSheet.Cells[summary1stSheetRow, 1].Value = ReasonDesc;
                             Summary1stSheet.Cells[summary1stSheetRow, 1].Style.WrapText = false;
-                            Summary1stSheet.Cells[summary1stSheetRow, 3].Value = TOTAL_MatlCost_PHP_TransQty ;
+                            Summary1stSheet.Cells[summary1stSheetRow, 3].Value = TOTAL_MatlCost_PHP_TransQty;
                             Summary1stSheet.Cells[summary1stSheetRow, 3].Style.WrapText = false;
-                            Summary1stSheet.Cells[summary1stSheetRow, 4].Value = TOTAL_MatlLandedCost_PHP_TransQty ;
+                            Summary1stSheet.Cells[summary1stSheetRow, 4].Value = TOTAL_MatlLandedCost_PHP_TransQty;
                             Summary1stSheet.Cells[summary1stSheetRow, 4].Style.WrapText = false;
-                            Summary1stSheet.Cells[summary1stSheetRow, 5].Value = TOTAL_PIResin_PHP_TransQty ;
+                            Summary1stSheet.Cells[summary1stSheetRow, 5].Value = TOTAL_PIResin_PHP_TransQty;
                             Summary1stSheet.Cells[summary1stSheetRow, 5].Style.WrapText = false;
-                            Summary1stSheet.Cells[summary1stSheetRow, 6].Value = TOTAL_PIFGProcess_PHP_TransQty ;
+                            Summary1stSheet.Cells[summary1stSheetRow, 6].Value = TOTAL_PIFGProcess_PHP_TransQty;
                             Summary1stSheet.Cells[summary1stSheetRow, 6].Style.WrapText = false;
-                            Summary1stSheet.Cells[summary1stSheetRow, 7].Value = TOTAL_PIHiddenProfit_PHP_TransQty ;
+                            Summary1stSheet.Cells[summary1stSheetRow, 7].Value = TOTAL_PIHiddenProfit_PHP_TransQty;
                             Summary1stSheet.Cells[summary1stSheetRow, 7].Style.WrapText = false;
-                            Summary1stSheet.Cells[summary1stSheetRow, 8].Value = TOTAL_SFAddedCost_PHP_FGAddedCost_PHP_TransQty ;
+                            Summary1stSheet.Cells[summary1stSheetRow, 8].Value = TOTAL_SFAddedCost_PHP_FGAddedCost_PHP_TransQty;
                             Summary1stSheet.Cells[summary1stSheetRow, 8].Style.WrapText = false;
-                            Summary1stSheet.Cells[summary1stSheetRow, 9].Value = TOTAL_TotalCost_PHP ;
+                            Summary1stSheet.Cells[summary1stSheetRow, 9].Value = TOTAL_TotalCost_PHP;
                             Summary1stSheet.Cells[summary1stSheetRow, 9].Style.WrapText = false;
                             summary1stSheetRow++;
 
                             int sfScrapRow = 0;
-                            if(ReasonDesc=="SF Scrap"){
+                            if (ReasonDesc == "SF Scrap")
+                            {
                                 foreach (var SFScrapDataWC in SFScrapList)
                                 {
                                     decimal SCRAP_MatlCost_PHP_TransQty = 0;
@@ -1357,7 +1357,7 @@ namespace ERPReports.Areas.Reports.Controllers
                                     ActlHiddenProfit_PHP = String.IsNullOrEmpty(sdr["ActlHiddenProfit_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["ActlHiddenProfit_PHP"]),
                                     ActlSFAdded_PHP = String.IsNullOrEmpty(sdr["ActlSFAdded_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["ActlSFAdded_PHP"]),
                                     ActlFGAdded_PHP = String.IsNullOrEmpty(sdr["ActlFGAdded_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["ActlFGAdded_PHP"]),
-                                    ActlUnitCost_PHP = String.IsNullOrEmpty(sdr["ActlUnitCost_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["ActlUnitCost_PHP"]),                                    
+                                    ActlUnitCost_PHP = String.IsNullOrEmpty(sdr["ActlUnitCost_PHP"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["ActlUnitCost_PHP"]),
                                 });
                             }
 
@@ -1366,7 +1366,7 @@ namespace ERPReports.Areas.Reports.Controllers
                     conn.Close();
                 }
                 var LSP_Rpt_DM_FinishedGoodsSalesReportList_FinishedGood = LSP_Rpt_DM_FinishedGoodsSalesReportList
-                    .Where(x=>x.FGTransType== "FINISHED GOODS")
+                    .Where(x => x.FGTransType == "FINISHED GOODS")
                     .OrderBy(x => x.TransDate)
                     .ToList();
                 var LSP_Rpt_DM_FinishedGoodsSalesReportList_NotFinishedGood = LSP_Rpt_DM_FinishedGoodsSalesReportList
@@ -1382,7 +1382,7 @@ namespace ERPReports.Areas.Reports.Controllers
                 int LSP_Rpt_DM_FinishedGoodsSalesReportList_FinishedGoodCount = LSP_Rpt_DM_FinishedGoodsSalesReportList_FinishedGood.Count;
                 int CurrentDataCount = LSP_Rpt_DM_FinishedGoodsSalesReportList_NotFinishedGoodCount + LSP_Rpt_DM_FinishedGoodsSalesReportList_FinishedGoodCount + 4 + 2;
                 string filePath = "";
-                string Filename = "LSP_Rpt_DM_FinishedGoodsSalesReport_"+ MonthYear+".xlsx";
+                string Filename = "LSP_Rpt_DM_FinishedGoodsSalesReport_" + MonthYear + ".xlsx";
                 filePath = Path.Combine(Server.MapPath("~/Areas/Reports/Templates/") + "LSP_Rpt_DM_FinishedGoodsSalesReport.xlsx");
                 FileInfo file = new FileInfo(filePath);
                 using (ExcelPackage excelPackage = new ExcelPackage(file))
@@ -2620,7 +2620,7 @@ namespace ERPReports.Areas.Reports.Controllers
                             #region Product TOTAL
                             var FinishedGoodsGroupSales_SampleJOList_GroubyProduct = FinishedGoodsGroupSales_SampleJOList
                             .OrderBy(x => x.ProductCode.Replace("FG-", "").Replace("SA-", "").Replace("RM-", ""))
-                            .GroupBy(x => x.ProductCode.Replace("FG-","").Replace("SA-", "").Replace("RM-", ""))
+                            .GroupBy(x => x.ProductCode.Replace("FG-", "").Replace("SA-", "").Replace("RM-", ""))
                             .ToList();
                             salesSheetsRow = salesSheetsRow + 3;
                             decimal Sales_GrandTotalProduct_QtyShipped = 0;
@@ -2856,7 +2856,8 @@ namespace ERPReports.Areas.Reports.Controllers
                         conn.Close();
                     }
                     var SalesSummaryListOrderByinv_date = SalesSummaryList.OrderBy(x => x.inv_date).ToList();
-                    if (SalesSummaryList.Count > 0) {
+                    if (SalesSummaryList.Count > 0)
+                    {
                         ExcelWorksheet SalesSummarySheets = excelPackage.Workbook.Worksheets["SalesSummary"];
                         int salesSummarySheetsRow = 6;
 
@@ -2941,7 +2942,7 @@ namespace ERPReports.Areas.Reports.Controllers
                         SalesSummarySheets.Cells[salesSummarySheetsRow, 6].Style.WrapText = false;
                         salesSummarySheetsRow++;
                     }
-                    
+
 
                     #endregion
                     return File(excelPackage.GetAsByteArray(), "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", Filename);
@@ -3007,7 +3008,7 @@ namespace ERPReports.Areas.Reports.Controllers
                     conn.Close();
                 }
                 string filePath = "";
-                string Filename = "LSP_Rpt_DM_RMBeginningBalanceReport_" + MonthYear+".xlsx";
+                string Filename = "LSP_Rpt_DM_RMBeginningBalanceReport_" + MonthYear + ".xlsx";
                 filePath = Path.Combine(Server.MapPath("~/Areas/Reports/Templates/") + "LSP_Rpt_DM_RMBeginningBalanceReport.xlsx");
                 FileInfo file = new FileInfo(filePath);
                 using (ExcelPackage excelPackage = new ExcelPackage(file))
@@ -3033,7 +3034,7 @@ namespace ERPReports.Areas.Reports.Controllers
                         RMBegBalanceReportSheet.Cells[sheetsRow, 5].Value = RMBeginningBalanceReportListObj.lot;
                         RMBegBalanceReportSheet.Cells[sheetsRow, 5].Style.WrapText = false;
                         RMBegBalanceReportSheet.Cells[sheetsRow, 6].Value = Convert.ToDateTime(RMBeginningBalanceReportListObj.lot_create_date);
-                        
+
                         RMBegBalanceReportSheet.Cells[sheetsRow, 6].Style.WrapText = false;
                         RMBegBalanceReportSheet.Cells[sheetsRow, 7].Value = RMBeginningBalanceReportListObj.loc;
                         RMBegBalanceReportSheet.Cells[sheetsRow, 7].Style.WrapText = false;
@@ -3196,7 +3197,7 @@ namespace ERPReports.Areas.Reports.Controllers
                     .Select(grp => grp.ToList())
                     .ToList();
 
-                    foreach(var groupedByUsageObj in groupedByUsage)
+                    foreach (var groupedByUsageObj in groupedByUsage)
                     {
                         string trans_date = "";
                         string trans_dateMMYYYY = "";
@@ -3267,7 +3268,7 @@ namespace ERPReports.Areas.Reports.Controllers
                         decimal L12 = 0;
                         decimal MAX_3Months = 0;
                         decimal L_MAX_3Months = 0;
-                        foreach(var UsageObj in groupedByUsageObj)
+                        foreach (var UsageObj in groupedByUsageObj)
                         {
                             trans_date = UsageObj.trans_date;
                             trans_dateMMYYYY = UsageObj.trans_dateMMYYYY;
@@ -3411,152 +3412,152 @@ namespace ERPReports.Areas.Reports.Controllers
                             L_MAX_3Months = L_MAX_3Months,
                         });
                     }
-                    
+
                     ExcelWorksheet UsageSheet = excelPackage.Workbook.Worksheets["Usage"];
                     int sheetsRowUsage = 8;
                     UsageSheet.Cells["A3"].Value = DateTime.Now;
                     var parsedDate = DateTime.Parse(RetStartDate);
                     int colCtr = 2;
-                    for(int m= 0;m <= 11; m++)
+                    for (int m = 0; m <= 11; m++)
                     {
                         string newDate = parsedDate.AddMonths(m).ToString("MMM");
 
                         UsageSheet.Cells[6, colCtr].Value = newDate;
                         UsageSheet.Cells[6, colCtr].Style.WrapText = false;
-                        colCtr+=2;
+                        colCtr += 2;
                     }
                     InventoryTurnOverReport_NewGroup = InventoryTurnOverReport_NewGroup.ToList();
                     foreach (var InventoryTurnOverReport_NewGroupObj in InventoryTurnOverReport_NewGroup)
                     {
-                            if (sheetsRowUsage < InventoryTurnOverReport_NewGroup.ToList().Count + 7)
-                            {
-                                UsageSheet.InsertRow((sheetsRowUsage + 1), 1);
-                                UsageSheet.Cells[sheetsRowUsage, 1, sheetsRowUsage, 100].Copy(UsageSheet.Cells[(sheetsRowUsage + 1), 1, (sheetsRowUsage + 1), 1]);
-                            }
-                            UsageSheet.Cells[sheetsRowUsage, 1].Value = InventoryTurnOverReport_NewGroupObj.product_code;
-                            UsageSheet.Cells[sheetsRowUsage, 1].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 2].Value = InventoryTurnOverReport_NewGroupObj.usage_M1;
-                            UsageSheet.Cells[sheetsRowUsage, 2].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 3].Value = InventoryTurnOverReport_NewGroupObj.usage_L1;
-                            UsageSheet.Cells[sheetsRowUsage, 3].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 4].Value = InventoryTurnOverReport_NewGroupObj.usage_M2;
-                            UsageSheet.Cells[sheetsRowUsage, 4].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 5].Value = InventoryTurnOverReport_NewGroupObj.usage_L2;
-                            UsageSheet.Cells[sheetsRowUsage, 5].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 6].Value = InventoryTurnOverReport_NewGroupObj.usage_M3;
-                            UsageSheet.Cells[sheetsRowUsage, 6].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 7].Value = InventoryTurnOverReport_NewGroupObj.usage_L3;
-                            UsageSheet.Cells[sheetsRowUsage, 7].Style.WrapText = false;
+                        if (sheetsRowUsage < InventoryTurnOverReport_NewGroup.ToList().Count + 7)
+                        {
+                            UsageSheet.InsertRow((sheetsRowUsage + 1), 1);
+                            UsageSheet.Cells[sheetsRowUsage, 1, sheetsRowUsage, 100].Copy(UsageSheet.Cells[(sheetsRowUsage + 1), 1, (sheetsRowUsage + 1), 1]);
+                        }
+                        UsageSheet.Cells[sheetsRowUsage, 1].Value = InventoryTurnOverReport_NewGroupObj.product_code;
+                        UsageSheet.Cells[sheetsRowUsage, 1].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 2].Value = InventoryTurnOverReport_NewGroupObj.usage_M1;
+                        UsageSheet.Cells[sheetsRowUsage, 2].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 3].Value = InventoryTurnOverReport_NewGroupObj.usage_L1;
+                        UsageSheet.Cells[sheetsRowUsage, 3].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 4].Value = InventoryTurnOverReport_NewGroupObj.usage_M2;
+                        UsageSheet.Cells[sheetsRowUsage, 4].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 5].Value = InventoryTurnOverReport_NewGroupObj.usage_L2;
+                        UsageSheet.Cells[sheetsRowUsage, 5].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 6].Value = InventoryTurnOverReport_NewGroupObj.usage_M3;
+                        UsageSheet.Cells[sheetsRowUsage, 6].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 7].Value = InventoryTurnOverReport_NewGroupObj.usage_L3;
+                        UsageSheet.Cells[sheetsRowUsage, 7].Style.WrapText = false;
 
-                            UsageSheet.Cells[sheetsRowUsage, 8].Value = InventoryTurnOverReport_NewGroupObj.usage_M4;
-                            UsageSheet.Cells[sheetsRowUsage, 8].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 9].Value = InventoryTurnOverReport_NewGroupObj.usage_L4;
-                            UsageSheet.Cells[sheetsRowUsage, 9].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 10].Value = InventoryTurnOverReport_NewGroupObj.usage_M5;
-                            UsageSheet.Cells[sheetsRowUsage, 10].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 11].Value = InventoryTurnOverReport_NewGroupObj.usage_L5;
-                            UsageSheet.Cells[sheetsRowUsage, 11].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 12].Value = InventoryTurnOverReport_NewGroupObj.usage_M6;
-                            UsageSheet.Cells[sheetsRowUsage, 12].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 13].Value = InventoryTurnOverReport_NewGroupObj.usage_L6;
-                            UsageSheet.Cells[sheetsRowUsage, 13].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 14].Value = InventoryTurnOverReport_NewGroupObj.usage_M7;
-                            UsageSheet.Cells[sheetsRowUsage, 14].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 15].Value = InventoryTurnOverReport_NewGroupObj.usage_L7;
-                            UsageSheet.Cells[sheetsRowUsage, 15].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 16].Value = InventoryTurnOverReport_NewGroupObj.usage_M8;
-                            UsageSheet.Cells[sheetsRowUsage, 16].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 17].Value = InventoryTurnOverReport_NewGroupObj.usage_L8;
-                            UsageSheet.Cells[sheetsRowUsage, 17].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 18].Value = InventoryTurnOverReport_NewGroupObj.usage_M9;
-                            UsageSheet.Cells[sheetsRowUsage, 18].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 29].Value = InventoryTurnOverReport_NewGroupObj.usage_L9;
-                            UsageSheet.Cells[sheetsRowUsage, 29].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 20].Value = InventoryTurnOverReport_NewGroupObj.usage_M10;
-                            UsageSheet.Cells[sheetsRowUsage, 20].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 21].Value = InventoryTurnOverReport_NewGroupObj.usage_L10;
-                            UsageSheet.Cells[sheetsRowUsage, 21].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 22].Value = InventoryTurnOverReport_NewGroupObj.usage_M11;
-                            UsageSheet.Cells[sheetsRowUsage, 22].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 23].Value = InventoryTurnOverReport_NewGroupObj.usage_L11;
-                            UsageSheet.Cells[sheetsRowUsage, 23].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 24].Value = InventoryTurnOverReport_NewGroupObj.usage_M12;
-                            UsageSheet.Cells[sheetsRowUsage, 24].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 25].Value = InventoryTurnOverReport_NewGroupObj.usage_L12;
-                            UsageSheet.Cells[sheetsRowUsage, 25].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 8].Value = InventoryTurnOverReport_NewGroupObj.usage_M4;
+                        UsageSheet.Cells[sheetsRowUsage, 8].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 9].Value = InventoryTurnOverReport_NewGroupObj.usage_L4;
+                        UsageSheet.Cells[sheetsRowUsage, 9].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 10].Value = InventoryTurnOverReport_NewGroupObj.usage_M5;
+                        UsageSheet.Cells[sheetsRowUsage, 10].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 11].Value = InventoryTurnOverReport_NewGroupObj.usage_L5;
+                        UsageSheet.Cells[sheetsRowUsage, 11].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 12].Value = InventoryTurnOverReport_NewGroupObj.usage_M6;
+                        UsageSheet.Cells[sheetsRowUsage, 12].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 13].Value = InventoryTurnOverReport_NewGroupObj.usage_L6;
+                        UsageSheet.Cells[sheetsRowUsage, 13].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 14].Value = InventoryTurnOverReport_NewGroupObj.usage_M7;
+                        UsageSheet.Cells[sheetsRowUsage, 14].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 15].Value = InventoryTurnOverReport_NewGroupObj.usage_L7;
+                        UsageSheet.Cells[sheetsRowUsage, 15].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 16].Value = InventoryTurnOverReport_NewGroupObj.usage_M8;
+                        UsageSheet.Cells[sheetsRowUsage, 16].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 17].Value = InventoryTurnOverReport_NewGroupObj.usage_L8;
+                        UsageSheet.Cells[sheetsRowUsage, 17].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 18].Value = InventoryTurnOverReport_NewGroupObj.usage_M9;
+                        UsageSheet.Cells[sheetsRowUsage, 18].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 29].Value = InventoryTurnOverReport_NewGroupObj.usage_L9;
+                        UsageSheet.Cells[sheetsRowUsage, 29].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 20].Value = InventoryTurnOverReport_NewGroupObj.usage_M10;
+                        UsageSheet.Cells[sheetsRowUsage, 20].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 21].Value = InventoryTurnOverReport_NewGroupObj.usage_L10;
+                        UsageSheet.Cells[sheetsRowUsage, 21].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 22].Value = InventoryTurnOverReport_NewGroupObj.usage_M11;
+                        UsageSheet.Cells[sheetsRowUsage, 22].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 23].Value = InventoryTurnOverReport_NewGroupObj.usage_L11;
+                        UsageSheet.Cells[sheetsRowUsage, 23].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 24].Value = InventoryTurnOverReport_NewGroupObj.usage_M12;
+                        UsageSheet.Cells[sheetsRowUsage, 24].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 25].Value = InventoryTurnOverReport_NewGroupObj.usage_L12;
+                        UsageSheet.Cells[sheetsRowUsage, 25].Style.WrapText = false;
 
-                            decimal averageM = (InventoryTurnOverReport_NewGroupObj.usage_M1+InventoryTurnOverReport_NewGroupObj.usage_M2+InventoryTurnOverReport_NewGroupObj.usage_M3+InventoryTurnOverReport_NewGroupObj.usage_M4+InventoryTurnOverReport_NewGroupObj.usage_M5+InventoryTurnOverReport_NewGroupObj.usage_M6+InventoryTurnOverReport_NewGroupObj.usage_M7+InventoryTurnOverReport_NewGroupObj.usage_M8+InventoryTurnOverReport_NewGroupObj.usage_M9+InventoryTurnOverReport_NewGroupObj.usage_M10+InventoryTurnOverReport_NewGroupObj.usage_M11+InventoryTurnOverReport_NewGroupObj.usage_M12)/ 12;
-                            decimal averageL = (InventoryTurnOverReport_NewGroupObj.usage_L1+InventoryTurnOverReport_NewGroupObj.usage_L2+InventoryTurnOverReport_NewGroupObj.usage_L3+InventoryTurnOverReport_NewGroupObj.usage_L4+InventoryTurnOverReport_NewGroupObj.usage_L5+InventoryTurnOverReport_NewGroupObj.usage_L6+InventoryTurnOverReport_NewGroupObj.usage_L7+InventoryTurnOverReport_NewGroupObj.usage_L8+InventoryTurnOverReport_NewGroupObj.usage_L9+InventoryTurnOverReport_NewGroupObj.usage_L10+InventoryTurnOverReport_NewGroupObj.usage_L11+InventoryTurnOverReport_NewGroupObj.usage_L12)/ 12;
-                            UsageSheet.Cells[sheetsRowUsage, 26].Value = averageM;
-                            UsageSheet.Cells[sheetsRowUsage, 26].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 27].Value = averageL;
-                            UsageSheet.Cells[sheetsRowUsage, 27].Style.WrapText = false;
+                        decimal averageM = (InventoryTurnOverReport_NewGroupObj.usage_M1 + InventoryTurnOverReport_NewGroupObj.usage_M2 + InventoryTurnOverReport_NewGroupObj.usage_M3 + InventoryTurnOverReport_NewGroupObj.usage_M4 + InventoryTurnOverReport_NewGroupObj.usage_M5 + InventoryTurnOverReport_NewGroupObj.usage_M6 + InventoryTurnOverReport_NewGroupObj.usage_M7 + InventoryTurnOverReport_NewGroupObj.usage_M8 + InventoryTurnOverReport_NewGroupObj.usage_M9 + InventoryTurnOverReport_NewGroupObj.usage_M10 + InventoryTurnOverReport_NewGroupObj.usage_M11 + InventoryTurnOverReport_NewGroupObj.usage_M12) / 12;
+                        decimal averageL = (InventoryTurnOverReport_NewGroupObj.usage_L1 + InventoryTurnOverReport_NewGroupObj.usage_L2 + InventoryTurnOverReport_NewGroupObj.usage_L3 + InventoryTurnOverReport_NewGroupObj.usage_L4 + InventoryTurnOverReport_NewGroupObj.usage_L5 + InventoryTurnOverReport_NewGroupObj.usage_L6 + InventoryTurnOverReport_NewGroupObj.usage_L7 + InventoryTurnOverReport_NewGroupObj.usage_L8 + InventoryTurnOverReport_NewGroupObj.usage_L9 + InventoryTurnOverReport_NewGroupObj.usage_L10 + InventoryTurnOverReport_NewGroupObj.usage_L11 + InventoryTurnOverReport_NewGroupObj.usage_L12) / 12;
+                        UsageSheet.Cells[sheetsRowUsage, 26].Value = averageM;
+                        UsageSheet.Cells[sheetsRowUsage, 26].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 27].Value = averageL;
+                        UsageSheet.Cells[sheetsRowUsage, 27].Style.WrapText = false;
 
-                            decimal[] arr_M = { InventoryTurnOverReport_NewGroupObj.usage_M1,InventoryTurnOverReport_NewGroupObj.usage_M2,InventoryTurnOverReport_NewGroupObj.usage_M3,InventoryTurnOverReport_NewGroupObj.usage_M4,InventoryTurnOverReport_NewGroupObj.usage_M5,InventoryTurnOverReport_NewGroupObj.usage_M6,InventoryTurnOverReport_NewGroupObj.usage_M7,InventoryTurnOverReport_NewGroupObj.usage_M8,InventoryTurnOverReport_NewGroupObj.usage_M9,InventoryTurnOverReport_NewGroupObj.usage_M10,InventoryTurnOverReport_NewGroupObj.usage_M11,InventoryTurnOverReport_NewGroupObj.usage_M12 };
-                            decimal[] arr_L = { InventoryTurnOverReport_NewGroupObj.usage_L1,InventoryTurnOverReport_NewGroupObj.usage_L2,InventoryTurnOverReport_NewGroupObj.usage_L3,InventoryTurnOverReport_NewGroupObj.usage_L4,InventoryTurnOverReport_NewGroupObj.usage_L5,InventoryTurnOverReport_NewGroupObj.usage_L6,InventoryTurnOverReport_NewGroupObj.usage_L7,InventoryTurnOverReport_NewGroupObj.usage_L8,InventoryTurnOverReport_NewGroupObj.usage_L9,InventoryTurnOverReport_NewGroupObj.usage_L10,InventoryTurnOverReport_NewGroupObj.usage_L11,InventoryTurnOverReport_NewGroupObj.usage_L12 };
+                        decimal[] arr_M = { InventoryTurnOverReport_NewGroupObj.usage_M1, InventoryTurnOverReport_NewGroupObj.usage_M2, InventoryTurnOverReport_NewGroupObj.usage_M3, InventoryTurnOverReport_NewGroupObj.usage_M4, InventoryTurnOverReport_NewGroupObj.usage_M5, InventoryTurnOverReport_NewGroupObj.usage_M6, InventoryTurnOverReport_NewGroupObj.usage_M7, InventoryTurnOverReport_NewGroupObj.usage_M8, InventoryTurnOverReport_NewGroupObj.usage_M9, InventoryTurnOverReport_NewGroupObj.usage_M10, InventoryTurnOverReport_NewGroupObj.usage_M11, InventoryTurnOverReport_NewGroupObj.usage_M12 };
+                        decimal[] arr_L = { InventoryTurnOverReport_NewGroupObj.usage_L1, InventoryTurnOverReport_NewGroupObj.usage_L2, InventoryTurnOverReport_NewGroupObj.usage_L3, InventoryTurnOverReport_NewGroupObj.usage_L4, InventoryTurnOverReport_NewGroupObj.usage_L5, InventoryTurnOverReport_NewGroupObj.usage_L6, InventoryTurnOverReport_NewGroupObj.usage_L7, InventoryTurnOverReport_NewGroupObj.usage_L8, InventoryTurnOverReport_NewGroupObj.usage_L9, InventoryTurnOverReport_NewGroupObj.usage_L10, InventoryTurnOverReport_NewGroupObj.usage_L11, InventoryTurnOverReport_NewGroupObj.usage_L12 };
 
-                            UsageSheet.Cells[sheetsRowUsage, 28].Value = arr_M.Max();
-                            UsageSheet.Cells[sheetsRowUsage, 28].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 29].Value = arr_L.Max();
-                            UsageSheet.Cells[sheetsRowUsage, 29].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 28].Value = arr_M.Max();
+                        UsageSheet.Cells[sheetsRowUsage, 28].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 29].Value = arr_L.Max();
+                        UsageSheet.Cells[sheetsRowUsage, 29].Style.WrapText = false;
 
-                            UsageSheet.Cells[sheetsRowUsage, 30].Value = InventoryTurnOverReport_NewGroupObj.M1;
-                            UsageSheet.Cells[sheetsRowUsage, 30].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 31].Value = InventoryTurnOverReport_NewGroupObj.L1;
-                            UsageSheet.Cells[sheetsRowUsage, 31].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 32].Value = InventoryTurnOverReport_NewGroupObj.M2;
-                            UsageSheet.Cells[sheetsRowUsage, 32].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 33].Value = InventoryTurnOverReport_NewGroupObj.L2;
-                            UsageSheet.Cells[sheetsRowUsage, 33].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 34].Value = InventoryTurnOverReport_NewGroupObj.M3;
-                            UsageSheet.Cells[sheetsRowUsage, 34].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 35].Value = InventoryTurnOverReport_NewGroupObj.L3;
-                            UsageSheet.Cells[sheetsRowUsage, 35].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 36].Value = InventoryTurnOverReport_NewGroupObj.M4;
-                            UsageSheet.Cells[sheetsRowUsage, 36].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 37].Value = InventoryTurnOverReport_NewGroupObj.L4;
-                            UsageSheet.Cells[sheetsRowUsage, 37].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 38].Value = InventoryTurnOverReport_NewGroupObj.M5;
-                            UsageSheet.Cells[sheetsRowUsage, 38].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 39].Value = InventoryTurnOverReport_NewGroupObj.L5;
-                            UsageSheet.Cells[sheetsRowUsage, 39].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 40].Value = InventoryTurnOverReport_NewGroupObj.M6;
-                            UsageSheet.Cells[sheetsRowUsage, 40].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 41].Value = InventoryTurnOverReport_NewGroupObj.L6;
-                            UsageSheet.Cells[sheetsRowUsage, 41].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 42].Value = InventoryTurnOverReport_NewGroupObj.M7;
-                            UsageSheet.Cells[sheetsRowUsage, 42].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 43].Value = InventoryTurnOverReport_NewGroupObj.L7;
-                            UsageSheet.Cells[sheetsRowUsage, 43].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 44].Value = InventoryTurnOverReport_NewGroupObj.M8;
-                            UsageSheet.Cells[sheetsRowUsage, 44].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 45].Value = InventoryTurnOverReport_NewGroupObj.L8;
-                            UsageSheet.Cells[sheetsRowUsage, 45].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 46].Value = InventoryTurnOverReport_NewGroupObj.M9;
-                            UsageSheet.Cells[sheetsRowUsage, 46].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 47].Value = InventoryTurnOverReport_NewGroupObj.L9;
-                            UsageSheet.Cells[sheetsRowUsage, 47].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 49].Value = InventoryTurnOverReport_NewGroupObj.M10;
-                            UsageSheet.Cells[sheetsRowUsage, 49].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 30].Value = InventoryTurnOverReport_NewGroupObj.M1;
+                        UsageSheet.Cells[sheetsRowUsage, 30].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 31].Value = InventoryTurnOverReport_NewGroupObj.L1;
+                        UsageSheet.Cells[sheetsRowUsage, 31].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 32].Value = InventoryTurnOverReport_NewGroupObj.M2;
+                        UsageSheet.Cells[sheetsRowUsage, 32].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 33].Value = InventoryTurnOverReport_NewGroupObj.L2;
+                        UsageSheet.Cells[sheetsRowUsage, 33].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 34].Value = InventoryTurnOverReport_NewGroupObj.M3;
+                        UsageSheet.Cells[sheetsRowUsage, 34].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 35].Value = InventoryTurnOverReport_NewGroupObj.L3;
+                        UsageSheet.Cells[sheetsRowUsage, 35].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 36].Value = InventoryTurnOverReport_NewGroupObj.M4;
+                        UsageSheet.Cells[sheetsRowUsage, 36].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 37].Value = InventoryTurnOverReport_NewGroupObj.L4;
+                        UsageSheet.Cells[sheetsRowUsage, 37].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 38].Value = InventoryTurnOverReport_NewGroupObj.M5;
+                        UsageSheet.Cells[sheetsRowUsage, 38].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 39].Value = InventoryTurnOverReport_NewGroupObj.L5;
+                        UsageSheet.Cells[sheetsRowUsage, 39].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 40].Value = InventoryTurnOverReport_NewGroupObj.M6;
+                        UsageSheet.Cells[sheetsRowUsage, 40].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 41].Value = InventoryTurnOverReport_NewGroupObj.L6;
+                        UsageSheet.Cells[sheetsRowUsage, 41].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 42].Value = InventoryTurnOverReport_NewGroupObj.M7;
+                        UsageSheet.Cells[sheetsRowUsage, 42].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 43].Value = InventoryTurnOverReport_NewGroupObj.L7;
+                        UsageSheet.Cells[sheetsRowUsage, 43].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 44].Value = InventoryTurnOverReport_NewGroupObj.M8;
+                        UsageSheet.Cells[sheetsRowUsage, 44].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 45].Value = InventoryTurnOverReport_NewGroupObj.L8;
+                        UsageSheet.Cells[sheetsRowUsage, 45].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 46].Value = InventoryTurnOverReport_NewGroupObj.M9;
+                        UsageSheet.Cells[sheetsRowUsage, 46].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 47].Value = InventoryTurnOverReport_NewGroupObj.L9;
+                        UsageSheet.Cells[sheetsRowUsage, 47].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 49].Value = InventoryTurnOverReport_NewGroupObj.M10;
+                        UsageSheet.Cells[sheetsRowUsage, 49].Style.WrapText = false;
 
-                            UsageSheet.Cells[sheetsRowUsage, 50].Value = InventoryTurnOverReport_NewGroupObj.MAX_3Months;
-                            UsageSheet.Cells[sheetsRowUsage, 50].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 51].Value = InventoryTurnOverReport_NewGroupObj.L_MAX_3Months;
-                            UsageSheet.Cells[sheetsRowUsage, 51].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 52].Value = InventoryTurnOverReport_NewGroupObj.invty_matl_cost;
-                            UsageSheet.Cells[sheetsRowUsage, 52].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 53].Value = InventoryTurnOverReport_NewGroupObj.invty_landed_cost;
-                            UsageSheet.Cells[sheetsRowUsage, 53].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 54].Value = InventoryTurnOverReport_NewGroupObj.safety_matl_cost;
-                            UsageSheet.Cells[sheetsRowUsage, 54].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 55].Value = (InventoryTurnOverReport_NewGroupObj.MAX_3Months + InventoryTurnOverReport_NewGroupObj.L_MAX_3Months + InventoryTurnOverReport_NewGroupObj.safety_matl_cost);
-                            UsageSheet.Cells[sheetsRowUsage, 55].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 56].Value = ((InventoryTurnOverReport_NewGroupObj.invty_matl_cost + InventoryTurnOverReport_NewGroupObj.invty_landed_cost) / (InventoryTurnOverReport_NewGroupObj.MAX_3Months + InventoryTurnOverReport_NewGroupObj.L_MAX_3Months)) * 3;
-                            UsageSheet.Cells[sheetsRowUsage, 56].Style.WrapText = false;
-                            UsageSheet.Cells[sheetsRowUsage, 57].Value = (InventoryTurnOverReport_NewGroupObj.invty_matl_cost + InventoryTurnOverReport_NewGroupObj.invty_landed_cost) - (InventoryTurnOverReport_NewGroupObj.MAX_3Months + InventoryTurnOverReport_NewGroupObj.L_MAX_3Months + InventoryTurnOverReport_NewGroupObj.safety_matl_cost);
-                            UsageSheet.Cells[sheetsRowUsage, 57].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 50].Value = InventoryTurnOverReport_NewGroupObj.MAX_3Months;
+                        UsageSheet.Cells[sheetsRowUsage, 50].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 51].Value = InventoryTurnOverReport_NewGroupObj.L_MAX_3Months;
+                        UsageSheet.Cells[sheetsRowUsage, 51].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 52].Value = InventoryTurnOverReport_NewGroupObj.invty_matl_cost;
+                        UsageSheet.Cells[sheetsRowUsage, 52].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 53].Value = InventoryTurnOverReport_NewGroupObj.invty_landed_cost;
+                        UsageSheet.Cells[sheetsRowUsage, 53].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 54].Value = InventoryTurnOverReport_NewGroupObj.safety_matl_cost;
+                        UsageSheet.Cells[sheetsRowUsage, 54].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 55].Value = (InventoryTurnOverReport_NewGroupObj.MAX_3Months + InventoryTurnOverReport_NewGroupObj.L_MAX_3Months + InventoryTurnOverReport_NewGroupObj.safety_matl_cost);
+                        UsageSheet.Cells[sheetsRowUsage, 55].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 56].Value = ((InventoryTurnOverReport_NewGroupObj.invty_matl_cost + InventoryTurnOverReport_NewGroupObj.invty_landed_cost) / (InventoryTurnOverReport_NewGroupObj.MAX_3Months + InventoryTurnOverReport_NewGroupObj.L_MAX_3Months)) * 3;
+                        UsageSheet.Cells[sheetsRowUsage, 56].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 57].Value = (InventoryTurnOverReport_NewGroupObj.invty_matl_cost + InventoryTurnOverReport_NewGroupObj.invty_landed_cost) - (InventoryTurnOverReport_NewGroupObj.MAX_3Months + InventoryTurnOverReport_NewGroupObj.L_MAX_3Months + InventoryTurnOverReport_NewGroupObj.safety_matl_cost);
+                        UsageSheet.Cells[sheetsRowUsage, 57].Style.WrapText = false;
 
-                            sheetsRowUsage++;
+                        sheetsRowUsage++;
 
                     }
                     #endregion
@@ -3573,11 +3574,11 @@ namespace ERPReports.Areas.Reports.Controllers
                             .ToList();
                         ExcelWorksheet DetailedSheet = excelPackage.Workbook.Worksheets["Detailed"];
                         int sheetsRow = 6;
-                    
+
                         DetailedSheet.Cells["A3"].Value = DateTime.Now;
                         foreach (var InventoryTurnOverReportListObj in groupedByDetailed)
                         {
-                            if (sheetsRow<InventoryTurnOverReportList.ToList().Count + 5)
+                            if (sheetsRow < InventoryTurnOverReportList.ToList().Count + 5)
                             {
                                 DetailedSheet.InsertRow((sheetsRow + 1), 1);
                                 DetailedSheet.Cells[sheetsRow, 1, sheetsRow, 100].Copy(DetailedSheet.Cells[(sheetsRow + 1), 1, (sheetsRow + 1), 1]);
@@ -3586,7 +3587,7 @@ namespace ERPReports.Areas.Reports.Controllers
                             DetailedSheet.Cells[sheetsRow, 1].Style.WrapText = false;
                             DetailedSheet.Cells[sheetsRow, 2].Value = InventoryTurnOverReportListObj.trans_type;
                             DetailedSheet.Cells[sheetsRow, 2].Style.WrapText = false;
-                            DetailedSheet.Cells[sheetsRow, 3].Value = InventoryTurnOverReportListObj.reason_code ;
+                            DetailedSheet.Cells[sheetsRow, 3].Value = InventoryTurnOverReportListObj.reason_code;
                             DetailedSheet.Cells[sheetsRow, 3].Style.WrapText = false;
                             DetailedSheet.Cells[sheetsRow, 4].Value = InventoryTurnOverReportListObj.reason_desc;
                             DetailedSheet.Cells[sheetsRow, 4].Style.WrapText = false;
@@ -3596,7 +3597,7 @@ namespace ERPReports.Areas.Reports.Controllers
                             DetailedSheet.Cells[sheetsRow, 6].Style.WrapText = false;
                             DetailedSheet.Cells[sheetsRow, 7].Value = InventoryTurnOverReportListObj.product_code;
                             DetailedSheet.Cells[sheetsRow, 7].Style.WrapText = false;
-                            DetailedSheet.Cells[sheetsRow, 8].Value = (InventoryTurnOverReportListObj.ref_num+ "" +InventoryTurnOverReportListObj.ref_line);
+                            DetailedSheet.Cells[sheetsRow, 8].Value = (InventoryTurnOverReportListObj.ref_num + "" + InventoryTurnOverReportListObj.ref_line);
                             DetailedSheet.Cells[sheetsRow, 8].Style.WrapText = false;
 
                             DetailedSheet.Cells[sheetsRow, 9].Value = InventoryTurnOverReportListObj.qty;
@@ -3609,6 +3610,669 @@ namespace ERPReports.Areas.Reports.Controllers
                             sheetsRow++;
 
                         }
+                    }
+                    #endregion
+                    return File(excelPackage.GetAsByteArray(), "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet", Filename);
+                }
+            }
+            catch (Exception err)
+            {
+                string errmsg;
+                if (err.InnerException != null)
+                    errmsg = "An error occured: " + err.InnerException.ToString();
+                else
+                    errmsg = "An error occured: " + err.Message.ToString();
+                return null;
+            }
+        }
+        public ActionResult GenerateRMBreakdownForFGAndSalesReport()
+        {
+            var StartDate = Request["StartDate"].ToString();
+            var EndDate = Request["EndDate"].ToString();
+            var RetStartDate = "";
+            List<NewDM_RMBreakdownFinishedGoodsSp> NewDM_RMBreakdownFinishedGoodsSpList = new List<NewDM_RMBreakdownFinishedGoodsSp>();
+            List<NewDM_RMBreakdownFinishedGoodsSp> NewDM_RMBreakdownFinishedGoodsSpListSales = new List<NewDM_RMBreakdownFinishedGoodsSp>();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["LSPI803_App"].ConnectionString.ToString()))
+                {
+                    conn.Open();
+                    using (SqlCommand cmdSql = conn.CreateCommand())
+                    {
+
+                        cmdSql.CommandType = CommandType.StoredProcedure;
+                        cmdSql.CommandText = "LSP_Rpt_NewDM_RMBreakdownFinishedGoodsSp";
+                        cmdSql.Parameters.Clear();
+                        cmdSql.Parameters.AddWithValue("@StartDate", StartDate);
+                        cmdSql.Parameters.AddWithValue("@EndDate", EndDate);
+                        cmdSql.CommandTimeout = 0;
+
+                        cmdSql.ExecuteNonQuery();
+                        using (SqlDataReader sdr = cmdSql.ExecuteReader())
+                        {
+                            while (sdr.Read())
+                            {
+                                NewDM_RMBreakdownFinishedGoodsSpList.Add(new NewDM_RMBreakdownFinishedGoodsSp
+                                {
+                                    PONum = sdr["PONum"].ToString(),
+                                    Item = sdr["Item"].ToString(),
+                                    matl = sdr["matl"].ToString(),
+                                    matl_desc = sdr["matl_desc"].ToString(),
+                                    actl_matl_qty = sdr["actl_matl_qty"].ToString() == "" ? 0 : Convert.ToInt32(sdr["actl_matl_qty"]),
+                                    std_matl_unit = String.IsNullOrEmpty(sdr["std_matl_unit"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["std_matl_unit"]),
+                                    pi_resin_unit = String.IsNullOrEmpty(sdr["pi_resin_unit"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["pi_resin_unit"]),
+                                    std_process_unit = String.IsNullOrEmpty(sdr["std_process_unit"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["std_process_unit"]),
+                                    pi_hidden_unit = String.IsNullOrEmpty(sdr["pi_hidden_unit"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["pi_hidden_unit"]),
+                                    sf_lbr_unit = String.IsNullOrEmpty(sdr["sf_lbr_unit"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["sf_lbr_unit"]),
+                                    fg_lbr_unit = String.IsNullOrEmpty(sdr["fg_lbr_unit"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["fg_lbr_unit"]),
+                                    sf_ovhd_unit = String.IsNullOrEmpty(sdr["sf_ovhd_unit"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["sf_ovhd_unit"]),
+                                    fg_ovhd_unit = String.IsNullOrEmpty(sdr["fg_ovhd_unit"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["fg_ovhd_unit"]),
+                                    total_std_unit = String.IsNullOrEmpty(sdr["total_std_unit"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["total_std_unit"]),
+                                    matl_unit_cost_php = String.IsNullOrEmpty(sdr["matl_unit_cost_php"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["matl_unit_cost_php"]),
+                                    matl_landed_cost_php = String.IsNullOrEmpty(sdr["matl_landed_cost_php"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["matl_landed_cost_php"]),
+                                    pi_resin_php = String.IsNullOrEmpty(sdr["pi_resin_php"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["pi_resin_php"]),
+                                    pi_fg_process_php = String.IsNullOrEmpty(sdr["pi_fg_process_php"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["pi_fg_process_php"]),
+                                    pi_hidden_profit_php = String.IsNullOrEmpty(sdr["pi_hidden_profit_php"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["pi_hidden_profit_php"]),
+                                    sf_lbr_cost_php = String.IsNullOrEmpty(sdr["sf_lbr_cost_php"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["sf_lbr_cost_php"]),
+                                    fg_lbr_cost_php = String.IsNullOrEmpty(sdr["fg_lbr_cost_php"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["fg_lbr_cost_php"]),
+                                    sf_ovhd_cost_php = String.IsNullOrEmpty(sdr["sf_ovhd_cost_php"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["sf_ovhd_cost_php"]),
+                                    fg_ovhd_cost_php = String.IsNullOrEmpty(sdr["fg_ovhd_cost_php"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["fg_ovhd_cost_php"]),
+                                    total_actl_unit = String.IsNullOrEmpty(sdr["total_actl_unit"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["total_actl_unit"]),
+                                    nolanded_actl_unit = String.IsNullOrEmpty(sdr["nolanded_actl_unit"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["nolanded_actl_unit"]),
+                                });
+                            }
+
+                        }
+                    }
+                    conn.Close();
+                    conn.Open();
+                    using (SqlCommand cmdSql = conn.CreateCommand())
+                    {
+
+                        cmdSql.CommandType = CommandType.StoredProcedure;
+                        cmdSql.CommandText = "LSP_Rpt_NewDM_RMBreakdownSalesSp";
+                        cmdSql.Parameters.Clear();
+                        cmdSql.Parameters.AddWithValue("@StartDate", StartDate);
+                        cmdSql.Parameters.AddWithValue("@EndDate", EndDate);
+                        cmdSql.CommandTimeout = 0;
+
+                        cmdSql.ExecuteNonQuery();
+                        using (SqlDataReader sdr = cmdSql.ExecuteReader())
+                        {
+                            while (sdr.Read())
+                            {
+                                NewDM_RMBreakdownFinishedGoodsSpListSales.Add(new NewDM_RMBreakdownFinishedGoodsSp
+                                {
+                                    PONum = sdr["PONum"].ToString(),
+                                    Item = sdr["Item"].ToString(),
+                                    matl = sdr["matl"].ToString(),
+                                    matl_desc = sdr["matl_desc"].ToString(),
+                                    actl_matl_qty = sdr["actl_matl_qty"].ToString() == "" ? 0 : Convert.ToInt32(sdr["actl_matl_qty"]),
+                                    std_matl_unit = String.IsNullOrEmpty(sdr["std_matl_unit"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["std_matl_unit"]),
+                                    pi_resin_unit = String.IsNullOrEmpty(sdr["pi_resin_unit"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["pi_resin_unit"]),
+                                    std_process_unit = String.IsNullOrEmpty(sdr["std_process_unit"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["std_process_unit"]),
+                                    pi_hidden_unit = String.IsNullOrEmpty(sdr["pi_hidden_unit"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["pi_hidden_unit"]),
+                                    sf_lbr_unit = String.IsNullOrEmpty(sdr["sf_lbr_unit"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["sf_lbr_unit"]),
+                                    fg_lbr_unit = String.IsNullOrEmpty(sdr["fg_lbr_unit"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["fg_lbr_unit"]),
+                                    sf_ovhd_unit = String.IsNullOrEmpty(sdr["sf_ovhd_unit"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["sf_ovhd_unit"]),
+                                    fg_ovhd_unit = String.IsNullOrEmpty(sdr["fg_ovhd_unit"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["fg_ovhd_unit"]),
+                                    total_std_unit = String.IsNullOrEmpty(sdr["total_std_unit"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["total_std_unit"]),
+                                    matl_unit_cost_php = String.IsNullOrEmpty(sdr["matl_unit_cost_php"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["matl_unit_cost_php"]),
+                                    matl_landed_cost_php = String.IsNullOrEmpty(sdr["matl_landed_cost_php"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["matl_landed_cost_php"]),
+                                    pi_resin_php = String.IsNullOrEmpty(sdr["pi_resin_php"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["pi_resin_php"]),
+                                    pi_fg_process_php = String.IsNullOrEmpty(sdr["pi_fg_process_php"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["pi_fg_process_php"]),
+                                    pi_hidden_profit_php = String.IsNullOrEmpty(sdr["pi_hidden_profit_php"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["pi_hidden_profit_php"]),
+                                    sf_lbr_cost_php = String.IsNullOrEmpty(sdr["sf_lbr_cost_php"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["sf_lbr_cost_php"]),
+                                    fg_lbr_cost_php = String.IsNullOrEmpty(sdr["fg_lbr_cost_php"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["fg_lbr_cost_php"]),
+                                    sf_ovhd_cost_php = String.IsNullOrEmpty(sdr["sf_ovhd_cost_php"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["sf_ovhd_cost_php"]),
+                                    fg_ovhd_cost_php = String.IsNullOrEmpty(sdr["fg_ovhd_cost_php"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["fg_ovhd_cost_php"]),
+                                    total_actl_unit = String.IsNullOrEmpty(sdr["total_actl_unit"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["total_actl_unit"]),
+                                    nolanded_actl_unit = String.IsNullOrEmpty(sdr["nolanded_actl_unit"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["nolanded_actl_unit"]),
+                                });
+                            }
+
+                        }
+                    }
+                    conn.Close();
+                }
+                string filePath = "";
+                string Filename = "RMBreakdown_FGandSales_MonthYear.xlsx";
+                filePath = Path.Combine(Server.MapPath("~/Areas/Reports/Templates/") + "RMBreakdown_FGandSales_MonthYear_Template.xlsx");
+                FileInfo file = new FileInfo(filePath);
+                using (ExcelPackage excelPackage = new ExcelPackage(file))
+                {
+                    #region RM Breakdown for FG Report 
+                    ExcelWorksheet UsageSheet = excelPackage.Workbook.Worksheets["RM Breakdown for FG Report"];
+                    int sheetsRowUsage = 8;
+                    UsageSheet.Cells["C4"].Value = StartDate;
+                    UsageSheet.Cells["C5"].Value = EndDate;
+                    foreach (var NewDM_RMBreakdownFinishedGoodsSpObj in NewDM_RMBreakdownFinishedGoodsSpList)
+                    {
+                        if (sheetsRowUsage < NewDM_RMBreakdownFinishedGoodsSpList.ToList().Count + 7)
+                        {
+                            UsageSheet.InsertRow((sheetsRowUsage + 1), 1);
+                            UsageSheet.Cells[sheetsRowUsage, 1, sheetsRowUsage, 100].Copy(UsageSheet.Cells[(sheetsRowUsage + 1), 1, (sheetsRowUsage + 1), 1]);
+                        }
+                        UsageSheet.Cells[sheetsRowUsage, 1].Value = NewDM_RMBreakdownFinishedGoodsSpObj.PONum;
+                        UsageSheet.Cells[sheetsRowUsage, 1].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 2].Value = NewDM_RMBreakdownFinishedGoodsSpObj.Item;
+                        UsageSheet.Cells[sheetsRowUsage, 2].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 3].Value = NewDM_RMBreakdownFinishedGoodsSpObj.matl;
+                        UsageSheet.Cells[sheetsRowUsage, 3].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 4].Value = NewDM_RMBreakdownFinishedGoodsSpObj.matl_desc;
+                        UsageSheet.Cells[sheetsRowUsage, 4].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 5].Value = NewDM_RMBreakdownFinishedGoodsSpObj.actl_matl_qty;
+                        UsageSheet.Cells[sheetsRowUsage, 5].Style.WrapText = false;
+
+                        decimal std_matl_unit = NewDM_RMBreakdownFinishedGoodsSpObj.std_matl_unit;
+                        decimal pi_resin_unit = NewDM_RMBreakdownFinishedGoodsSpObj.pi_resin_unit;
+                        decimal std_process_unit = NewDM_RMBreakdownFinishedGoodsSpObj.std_process_unit;
+                        decimal pi_hidden_unit = NewDM_RMBreakdownFinishedGoodsSpObj.pi_hidden_unit;
+                        decimal sf_lbr_unit_plus_fg_lbr_unit = NewDM_RMBreakdownFinishedGoodsSpObj.sf_lbr_unit + NewDM_RMBreakdownFinishedGoodsSpObj.fg_lbr_unit;
+                        decimal sf_ovhd_unit_plus_fg_ovhd_unit = NewDM_RMBreakdownFinishedGoodsSpObj.sf_ovhd_unit + NewDM_RMBreakdownFinishedGoodsSpObj.fg_ovhd_unit;
+                        decimal total_std_unit = NewDM_RMBreakdownFinishedGoodsSpObj.total_std_unit;
+                        decimal std_matl_unit_times_actl_matl_qty = NewDM_RMBreakdownFinishedGoodsSpObj.std_matl_unit * NewDM_RMBreakdownFinishedGoodsSpObj.actl_matl_qty;
+                        decimal pi_resin_unit_times_actl_matl_qty = NewDM_RMBreakdownFinishedGoodsSpObj.pi_resin_unit * NewDM_RMBreakdownFinishedGoodsSpObj.actl_matl_qty;
+                        decimal std_process_unit_times_actl_matl_qty = NewDM_RMBreakdownFinishedGoodsSpObj.std_process_unit * NewDM_RMBreakdownFinishedGoodsSpObj.actl_matl_qty;
+                        decimal pi_hidden_unit_times_actl_matl_qty = NewDM_RMBreakdownFinishedGoodsSpObj.pi_hidden_unit * NewDM_RMBreakdownFinishedGoodsSpObj.actl_matl_qty;
+                        decimal __sf_lbr_unit_plus_fg_lbr_unit___times_actl_matl_qty = (NewDM_RMBreakdownFinishedGoodsSpObj.sf_lbr_unit + NewDM_RMBreakdownFinishedGoodsSpObj.fg_lbr_unit) * NewDM_RMBreakdownFinishedGoodsSpObj.actl_matl_qty;
+                        decimal __sf_ovhd_unit_plus_fg_ovhd_unit___times_actl_matl_qty = (NewDM_RMBreakdownFinishedGoodsSpObj.sf_ovhd_unit + NewDM_RMBreakdownFinishedGoodsSpObj.fg_ovhd_unit) * NewDM_RMBreakdownFinishedGoodsSpObj.actl_matl_qty;
+                        decimal total_std_unit_timesactl_matl_qty = NewDM_RMBreakdownFinishedGoodsSpObj.total_std_unit * NewDM_RMBreakdownFinishedGoodsSpObj.actl_matl_qty;
+                        decimal matl_unit_cost_php = NewDM_RMBreakdownFinishedGoodsSpObj.matl_unit_cost_php;
+                        decimal matl_landed_cost_php = NewDM_RMBreakdownFinishedGoodsSpObj.matl_landed_cost_php;
+                        decimal pi_resin_php = NewDM_RMBreakdownFinishedGoodsSpObj.pi_resin_php;
+                        decimal pi_fg_process_php = NewDM_RMBreakdownFinishedGoodsSpObj.pi_fg_process_php;
+                        decimal pi_hidden_profit_php = NewDM_RMBreakdownFinishedGoodsSpObj.pi_hidden_profit_php;
+                        decimal sf_lbr_cost_php_plus_fg_lbr_cost_php = NewDM_RMBreakdownFinishedGoodsSpObj.sf_lbr_cost_php + NewDM_RMBreakdownFinishedGoodsSpObj.fg_lbr_cost_php;
+                        decimal sf_ovhd_cost_php_plus_fg_ovhd_cost_php = NewDM_RMBreakdownFinishedGoodsSpObj.sf_ovhd_cost_php + NewDM_RMBreakdownFinishedGoodsSpObj.fg_ovhd_cost_php;
+                        decimal total_actl_unit = NewDM_RMBreakdownFinishedGoodsSpObj.total_actl_unit;
+                        decimal matl_unit_cost_php_times_actl_matl_qty = NewDM_RMBreakdownFinishedGoodsSpObj.matl_unit_cost_php * NewDM_RMBreakdownFinishedGoodsSpObj.actl_matl_qty;
+                        decimal matl_landed_cost_php_times_actl_matl_qty = NewDM_RMBreakdownFinishedGoodsSpObj.matl_landed_cost_php * NewDM_RMBreakdownFinishedGoodsSpObj.actl_matl_qty;
+                        decimal pi_resin_php_times_actl_matl_qty = NewDM_RMBreakdownFinishedGoodsSpObj.pi_resin_php * NewDM_RMBreakdownFinishedGoodsSpObj.actl_matl_qty;
+                        decimal pi_fg_process_php_times_actl_matl_qty = NewDM_RMBreakdownFinishedGoodsSpObj.pi_fg_process_php * NewDM_RMBreakdownFinishedGoodsSpObj.actl_matl_qty;
+                        decimal pi_hidden_profit_php_times_actl_matl_qty = NewDM_RMBreakdownFinishedGoodsSpObj.pi_hidden_profit_php * NewDM_RMBreakdownFinishedGoodsSpObj.actl_matl_qty;
+                        decimal __sf_lbr_cost_php_plus_fg_lbr_cost_php___times_actl_matl_qty = (NewDM_RMBreakdownFinishedGoodsSpObj.sf_lbr_cost_php + NewDM_RMBreakdownFinishedGoodsSpObj.fg_lbr_cost_php) * NewDM_RMBreakdownFinishedGoodsSpObj.actl_matl_qty;
+                        decimal __sf_ovhd_cost_php_plus_fg_ovhd_cost_php___times_actl_matl_qty = (NewDM_RMBreakdownFinishedGoodsSpObj.sf_ovhd_cost_php + NewDM_RMBreakdownFinishedGoodsSpObj.fg_ovhd_cost_php) * NewDM_RMBreakdownFinishedGoodsSpObj.actl_matl_qty;
+                        decimal total_actl_unit_times_actl_matl_qty = NewDM_RMBreakdownFinishedGoodsSpObj.total_actl_unit * NewDM_RMBreakdownFinishedGoodsSpObj.actl_matl_qty;
+                        decimal total_std_unit_minus_total_actl_unit = NewDM_RMBreakdownFinishedGoodsSpObj.total_std_unit - NewDM_RMBreakdownFinishedGoodsSpObj.total_actl_unit;
+                        decimal total_std_unit_minus_nolanded_actl_unit = NewDM_RMBreakdownFinishedGoodsSpObj.total_std_unit - NewDM_RMBreakdownFinishedGoodsSpObj.nolanded_actl_unit;
+                        decimal __total_std_unit_times_actl_matl_qty___minus___total_actl_unit_times_actl_matl_qty__ = (NewDM_RMBreakdownFinishedGoodsSpObj.total_std_unit * NewDM_RMBreakdownFinishedGoodsSpObj.actl_matl_qty) - (NewDM_RMBreakdownFinishedGoodsSpObj.total_actl_unit * NewDM_RMBreakdownFinishedGoodsSpObj.actl_matl_qty);
+
+
+                        UsageSheet.Cells[sheetsRowUsage, 6].Value = std_matl_unit;
+                        UsageSheet.Cells[sheetsRowUsage, 6].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 7].Value = pi_resin_unit;
+                        UsageSheet.Cells[sheetsRowUsage, 7].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 8].Value = std_process_unit;
+                        UsageSheet.Cells[sheetsRowUsage, 8].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 9].Value = pi_hidden_unit;
+                        UsageSheet.Cells[sheetsRowUsage, 9].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 10].Value = sf_lbr_unit_plus_fg_lbr_unit;
+                        UsageSheet.Cells[sheetsRowUsage, 10].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 11].Value = sf_ovhd_unit_plus_fg_ovhd_unit;
+                        UsageSheet.Cells[sheetsRowUsage, 11].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 12].Value = total_std_unit;
+                        UsageSheet.Cells[sheetsRowUsage, 12].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 13].Value = std_matl_unit_times_actl_matl_qty;
+                        UsageSheet.Cells[sheetsRowUsage, 13].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 14].Value = pi_resin_unit_times_actl_matl_qty;
+                        UsageSheet.Cells[sheetsRowUsage, 14].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 15].Value = std_process_unit_times_actl_matl_qty;
+                        UsageSheet.Cells[sheetsRowUsage, 15].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 16].Value = pi_hidden_unit_times_actl_matl_qty;
+                        UsageSheet.Cells[sheetsRowUsage, 16].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 17].Value = __sf_lbr_unit_plus_fg_lbr_unit___times_actl_matl_qty;
+                        UsageSheet.Cells[sheetsRowUsage, 17].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 18].Value = __sf_ovhd_unit_plus_fg_ovhd_unit___times_actl_matl_qty;
+                        UsageSheet.Cells[sheetsRowUsage, 18].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 29].Value = total_std_unit_timesactl_matl_qty;
+                        UsageSheet.Cells[sheetsRowUsage, 29].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 20].Value = matl_unit_cost_php;
+                        UsageSheet.Cells[sheetsRowUsage, 20].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 21].Value = matl_landed_cost_php;
+                        UsageSheet.Cells[sheetsRowUsage, 21].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 22].Value = pi_resin_php;
+                        UsageSheet.Cells[sheetsRowUsage, 22].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 23].Value = pi_fg_process_php;
+                        UsageSheet.Cells[sheetsRowUsage, 23].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 24].Value = pi_hidden_profit_php;
+                        UsageSheet.Cells[sheetsRowUsage, 24].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 25].Value = sf_lbr_cost_php_plus_fg_lbr_cost_php;
+                        UsageSheet.Cells[sheetsRowUsage, 25].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 26].Value = sf_ovhd_cost_php_plus_fg_ovhd_cost_php;
+                        UsageSheet.Cells[sheetsRowUsage, 26].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 27].Value = total_actl_unit;
+                        UsageSheet.Cells[sheetsRowUsage, 27].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 28].Value = matl_unit_cost_php_times_actl_matl_qty;
+                        UsageSheet.Cells[sheetsRowUsage, 28].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 29].Value = matl_landed_cost_php_times_actl_matl_qty;
+                        UsageSheet.Cells[sheetsRowUsage, 29].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 30].Value = pi_resin_php_times_actl_matl_qty;
+                        UsageSheet.Cells[sheetsRowUsage, 30].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 31].Value = pi_fg_process_php_times_actl_matl_qty;
+                        UsageSheet.Cells[sheetsRowUsage, 31].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 32].Value = pi_hidden_profit_php_times_actl_matl_qty;
+                        UsageSheet.Cells[sheetsRowUsage, 32].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 33].Value = __sf_lbr_cost_php_plus_fg_lbr_cost_php___times_actl_matl_qty;
+                        UsageSheet.Cells[sheetsRowUsage, 33].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 34].Value = __sf_ovhd_cost_php_plus_fg_ovhd_cost_php___times_actl_matl_qty;
+                        UsageSheet.Cells[sheetsRowUsage, 34].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 35].Value = total_actl_unit_times_actl_matl_qty;
+                        UsageSheet.Cells[sheetsRowUsage, 35].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 36].Value = total_std_unit_minus_total_actl_unit;
+                        UsageSheet.Cells[sheetsRowUsage, 36].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 37].Value = total_std_unit_minus_nolanded_actl_unit;
+                        UsageSheet.Cells[sheetsRowUsage, 37].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 38].Value = __total_std_unit_times_actl_matl_qty___minus___total_actl_unit_times_actl_matl_qty__;
+                        UsageSheet.Cells[sheetsRowUsage, 38].Style.WrapText = false;
+
+                        sheetsRowUsage++;
+
+                    }
+                    #endregion
+
+                    #region RM Breakdown for Sales Report
+                    ExcelWorksheet UsageSheetSales = excelPackage.Workbook.Worksheets["RM Breakdown for Sales Report"];
+                    int sheetsRowUsageSales = 8;
+                    UsageSheetSales.Cells["C4"].Value = StartDate;
+                    UsageSheetSales.Cells["C5"].Value = EndDate;
+                    foreach (var NewDM_RMBreakdownFinishedGoodsSpObjSales in NewDM_RMBreakdownFinishedGoodsSpListSales)
+                    {
+                        if (sheetsRowUsageSales < NewDM_RMBreakdownFinishedGoodsSpListSales.ToList().Count + 7)
+                        {
+                            UsageSheetSales.InsertRow((sheetsRowUsageSales + 1), 1);
+                            UsageSheetSales.Cells[sheetsRowUsageSales, 1, sheetsRowUsageSales, 100].Copy(UsageSheetSales.Cells[(sheetsRowUsageSales + 1), 1, (sheetsRowUsageSales + 1), 1]);
+                        }
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 1].Value = NewDM_RMBreakdownFinishedGoodsSpObjSales.PONum;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 1].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 2].Value = NewDM_RMBreakdownFinishedGoodsSpObjSales.Item;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 2].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 3].Value = NewDM_RMBreakdownFinishedGoodsSpObjSales.matl;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 3].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 4].Value = NewDM_RMBreakdownFinishedGoodsSpObjSales.matl_desc;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 4].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 5].Value = NewDM_RMBreakdownFinishedGoodsSpObjSales.actl_matl_qty;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 5].Style.WrapText = false;
+
+                        decimal std_matl_unitSales = NewDM_RMBreakdownFinishedGoodsSpObjSales.std_matl_unit;
+                        decimal pi_resin_unitSales = NewDM_RMBreakdownFinishedGoodsSpObjSales.pi_resin_unit;
+                        decimal std_process_unitSales = NewDM_RMBreakdownFinishedGoodsSpObjSales.std_process_unit;
+                        decimal pi_hidden_unitSales = NewDM_RMBreakdownFinishedGoodsSpObjSales.pi_hidden_unit;
+                        decimal sf_lbr_unit_plus_fg_lbr_unitSales = NewDM_RMBreakdownFinishedGoodsSpObjSales.sf_lbr_unit + NewDM_RMBreakdownFinishedGoodsSpObjSales.fg_lbr_unit;
+                        decimal sf_ovhd_unit_plus_fg_ovhd_unitSales = NewDM_RMBreakdownFinishedGoodsSpObjSales.sf_ovhd_unit + NewDM_RMBreakdownFinishedGoodsSpObjSales.fg_ovhd_unit;
+                        decimal total_std_unitSales = NewDM_RMBreakdownFinishedGoodsSpObjSales.total_std_unit;
+                        decimal std_matl_unit_times_actl_matl_qtySales = NewDM_RMBreakdownFinishedGoodsSpObjSales.std_matl_unit * NewDM_RMBreakdownFinishedGoodsSpObjSales.actl_matl_qty;
+                        decimal pi_resin_unit_times_actl_matl_qtySales = NewDM_RMBreakdownFinishedGoodsSpObjSales.pi_resin_unit * NewDM_RMBreakdownFinishedGoodsSpObjSales.actl_matl_qty;
+                        decimal std_process_unit_times_actl_matl_qtySales = NewDM_RMBreakdownFinishedGoodsSpObjSales.std_process_unit * NewDM_RMBreakdownFinishedGoodsSpObjSales.actl_matl_qty;
+                        decimal pi_hidden_unit_times_actl_matl_qtySales = NewDM_RMBreakdownFinishedGoodsSpObjSales.pi_hidden_unit * NewDM_RMBreakdownFinishedGoodsSpObjSales.actl_matl_qty;
+                        decimal __sf_lbr_unit_plus_fg_lbr_unit___times_actl_matl_qtySales = (NewDM_RMBreakdownFinishedGoodsSpObjSales.sf_lbr_unit + NewDM_RMBreakdownFinishedGoodsSpObjSales.fg_lbr_unit) * NewDM_RMBreakdownFinishedGoodsSpObjSales.actl_matl_qty;
+                        decimal __sf_ovhd_unit_plus_fg_ovhd_unit___times_actl_matl_qtySales = (NewDM_RMBreakdownFinishedGoodsSpObjSales.sf_ovhd_unit + NewDM_RMBreakdownFinishedGoodsSpObjSales.fg_ovhd_unit) * NewDM_RMBreakdownFinishedGoodsSpObjSales.actl_matl_qty;
+                        decimal total_std_unit_timesactl_matl_qtySales = NewDM_RMBreakdownFinishedGoodsSpObjSales.total_std_unit * NewDM_RMBreakdownFinishedGoodsSpObjSales.actl_matl_qty;
+                        decimal matl_unit_cost_phpSales = NewDM_RMBreakdownFinishedGoodsSpObjSales.matl_unit_cost_php;
+                        decimal matl_landed_cost_phpSales = NewDM_RMBreakdownFinishedGoodsSpObjSales.matl_landed_cost_php;
+                        decimal pi_resin_phpSales = NewDM_RMBreakdownFinishedGoodsSpObjSales.pi_resin_php;
+                        decimal pi_fg_process_phpSales = NewDM_RMBreakdownFinishedGoodsSpObjSales.pi_fg_process_php;
+                        decimal pi_hidden_profit_phpSales = NewDM_RMBreakdownFinishedGoodsSpObjSales.pi_hidden_profit_php;
+                        decimal sf_lbr_cost_php_plus_fg_lbr_cost_phpSales = NewDM_RMBreakdownFinishedGoodsSpObjSales.sf_lbr_cost_php + NewDM_RMBreakdownFinishedGoodsSpObjSales.fg_lbr_cost_php;
+                        decimal sf_ovhd_cost_php_plus_fg_ovhd_cost_phpSales = NewDM_RMBreakdownFinishedGoodsSpObjSales.sf_ovhd_cost_php + NewDM_RMBreakdownFinishedGoodsSpObjSales.fg_ovhd_cost_php;
+                        decimal total_actl_unitSales = NewDM_RMBreakdownFinishedGoodsSpObjSales.total_actl_unit;
+                        decimal matl_unit_cost_php_times_actl_matl_qtySales = NewDM_RMBreakdownFinishedGoodsSpObjSales.matl_unit_cost_php * NewDM_RMBreakdownFinishedGoodsSpObjSales.actl_matl_qty;
+                        decimal matl_landed_cost_php_times_actl_matl_qtySales = NewDM_RMBreakdownFinishedGoodsSpObjSales.matl_landed_cost_php * NewDM_RMBreakdownFinishedGoodsSpObjSales.actl_matl_qty;
+                        decimal pi_resin_php_times_actl_matl_qtySales = NewDM_RMBreakdownFinishedGoodsSpObjSales.pi_resin_php * NewDM_RMBreakdownFinishedGoodsSpObjSales.actl_matl_qty;
+                        decimal pi_fg_process_php_times_actl_matl_qtySales = NewDM_RMBreakdownFinishedGoodsSpObjSales.pi_fg_process_php * NewDM_RMBreakdownFinishedGoodsSpObjSales.actl_matl_qty;
+                        decimal pi_hidden_profit_php_times_actl_matl_qtySales = NewDM_RMBreakdownFinishedGoodsSpObjSales.pi_hidden_profit_php * NewDM_RMBreakdownFinishedGoodsSpObjSales.actl_matl_qty;
+                        decimal __sf_lbr_cost_php_plus_fg_lbr_cost_php___times_actl_matl_qtySales = (NewDM_RMBreakdownFinishedGoodsSpObjSales.sf_lbr_cost_php + NewDM_RMBreakdownFinishedGoodsSpObjSales.fg_lbr_cost_php) * NewDM_RMBreakdownFinishedGoodsSpObjSales.actl_matl_qty;
+                        decimal __sf_ovhd_cost_php_plus_fg_ovhd_cost_php___times_actl_matl_qtySales = (NewDM_RMBreakdownFinishedGoodsSpObjSales.sf_ovhd_cost_php + NewDM_RMBreakdownFinishedGoodsSpObjSales.fg_ovhd_cost_php) * NewDM_RMBreakdownFinishedGoodsSpObjSales.actl_matl_qty;
+                        decimal total_actl_unit_times_actl_matl_qtySales = NewDM_RMBreakdownFinishedGoodsSpObjSales.total_actl_unit * NewDM_RMBreakdownFinishedGoodsSpObjSales.actl_matl_qty;
+                        decimal total_std_unit_minus_total_actl_unitSales = NewDM_RMBreakdownFinishedGoodsSpObjSales.total_std_unit - NewDM_RMBreakdownFinishedGoodsSpObjSales.total_actl_unit;
+                        decimal total_std_unit_minus_nolanded_actl_unitSales = NewDM_RMBreakdownFinishedGoodsSpObjSales.total_std_unit - NewDM_RMBreakdownFinishedGoodsSpObjSales.nolanded_actl_unit;
+                        decimal __total_std_unit_times_actl_matl_qty___minus___total_actl_unit_times_actl_matl_qty__Sales = (NewDM_RMBreakdownFinishedGoodsSpObjSales.total_std_unit * NewDM_RMBreakdownFinishedGoodsSpObjSales.actl_matl_qty) - (NewDM_RMBreakdownFinishedGoodsSpObjSales.total_actl_unit * NewDM_RMBreakdownFinishedGoodsSpObjSales.actl_matl_qty);
+
+
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 6].Value = std_matl_unitSales;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 6].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 7].Value = pi_resin_unitSales;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 7].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 8].Value = std_process_unitSales;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 8].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 9].Value = pi_hidden_unitSales;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 9].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 10].Value = sf_lbr_unit_plus_fg_lbr_unitSales;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 10].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 11].Value = sf_ovhd_unit_plus_fg_ovhd_unitSales;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 11].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 12].Value = total_std_unitSales;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 12].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 13].Value = std_matl_unit_times_actl_matl_qtySales;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 13].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 14].Value = pi_resin_unit_times_actl_matl_qtySales;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 14].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 15].Value = std_process_unit_times_actl_matl_qtySales;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 15].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 16].Value = pi_hidden_unit_times_actl_matl_qtySales;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 16].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 17].Value = __sf_lbr_unit_plus_fg_lbr_unit___times_actl_matl_qtySales;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 17].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 18].Value = __sf_ovhd_unit_plus_fg_ovhd_unit___times_actl_matl_qtySales;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 18].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 29].Value = total_std_unit_timesactl_matl_qtySales;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 29].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 20].Value = matl_unit_cost_phpSales;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 20].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 21].Value = matl_landed_cost_phpSales;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 21].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 22].Value = pi_resin_phpSales;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 22].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 23].Value = pi_fg_process_phpSales;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 23].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 24].Value = pi_hidden_profit_phpSales;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 24].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 25].Value = sf_lbr_cost_php_plus_fg_lbr_cost_phpSales;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 25].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 26].Value = sf_ovhd_cost_php_plus_fg_ovhd_cost_phpSales;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 26].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 27].Value = total_actl_unitSales;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 27].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 28].Value = matl_unit_cost_php_times_actl_matl_qtySales;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 28].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 29].Value = matl_landed_cost_php_times_actl_matl_qtySales;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 29].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 30].Value = pi_resin_php_times_actl_matl_qtySales;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 30].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 31].Value = pi_fg_process_php_times_actl_matl_qtySales;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 31].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 32].Value = pi_hidden_profit_php_times_actl_matl_qtySales;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 32].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 33].Value = __sf_lbr_cost_php_plus_fg_lbr_cost_php___times_actl_matl_qtySales;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 33].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 34].Value = __sf_ovhd_cost_php_plus_fg_ovhd_cost_php___times_actl_matl_qtySales;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 34].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 35].Value = total_actl_unit_times_actl_matl_qtySales;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 35].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 36].Value = total_std_unit_minus_total_actl_unitSales;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 36].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 37].Value = total_std_unit_minus_nolanded_actl_unitSales;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 37].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 38].Value = __total_std_unit_times_actl_matl_qty___minus___total_actl_unit_times_actl_matl_qty__Sales;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 38].Style.WrapText = false;
+
+                        sheetsRowUsageSales++;
+
+                    }
+                    #endregion
+                    return File(excelPackage.GetAsByteArray(), "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet", Filename);
+                }
+            }
+            catch (Exception err)
+            {
+                string errmsg;
+                if (err.InnerException != null)
+                    errmsg = "An error occured: " + err.InnerException.ToString();
+                else
+                    errmsg = "An error occured: " + err.Message.ToString();
+                return null;
+            }
+        }
+        public ActionResult GenerateRMBreakdownPerJOReport()
+        {
+            var PONumber = Request["PONumber"].ToString();
+            var JONumber = Request["JONumber"].ToString();
+            List<RMBreakdownPerJOReport> RMBreakdownPerJOReportList = new List<RMBreakdownPerJOReport>();
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["LSPI803_App"].ConnectionString.ToString()))
+                {
+                    conn.Open();
+                    using (SqlCommand cmdSql = conn.CreateCommand())
+                    {
+
+                        cmdSql.CommandType = CommandType.StoredProcedure;
+                        cmdSql.CommandText = "LSP_Rpt_NewDM_RMBreakdownPerJOSp";
+                        cmdSql.Parameters.Clear();
+                        cmdSql.Parameters.AddWithValue("@JobOrder", JONumber);
+                        cmdSql.Parameters.AddWithValue("@PONumber", PONumber);
+                        cmdSql.Parameters.AddWithValue("@Quantity", DBNull.Value);
+                        cmdSql.CommandTimeout = 0;
+
+                        cmdSql.ExecuteNonQuery();
+                        using (SqlDataReader sdr = cmdSql.ExecuteReader())
+                        {
+                            while (sdr.Read())
+                            {
+                                RMBreakdownPerJOReportList.Add(new RMBreakdownPerJOReport
+                                {
+                                    JONum = sdr["JONum"].ToString(),
+                                    PONum = sdr["PONum"].ToString(),
+                                    matl = sdr["matl"].ToString(),
+                                    matl_desc = sdr["matl_desc"].ToString(),
+                                    subsequence = sdr["subsequence"].ToString(),
+                                    lot_no = sdr["lot_no"].ToString(),
+                                    Level = sdr["Level"].ToString() == "" ? 0 : Convert.ToInt32(sdr["Level"]),
+                                    sequence = sdr["sequence"].ToString() == "" ? 0 : Convert.ToInt32(sdr["sequence"]),
+                                    StdLbrHrs = String.IsNullOrEmpty(sdr["StdLbrHrs"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["StdLbrHrs"]),
+                                    ActlLbrHrs = String.IsNullOrEmpty(sdr["ActlLbrHrs"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["ActlLbrHrs"]),
+                                    std_matl_unit = String.IsNullOrEmpty(sdr["std_matl_unit"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["std_matl_unit"]),
+                                    std_process_unit = String.IsNullOrEmpty(sdr["std_process_unit"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["std_process_unit"]),
+                                    pi_resin_unit = String.IsNullOrEmpty(sdr["pi_resin_unit"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["pi_resin_unit"]),
+                                    pi_hidden_unit = String.IsNullOrEmpty(sdr["pi_hidden_unit"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["pi_hidden_unit"]),
+                                    sf_lbr_unit = String.IsNullOrEmpty(sdr["sf_lbr_unit"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["sf_lbr_unit"]),
+                                    sf_ovhd_unit = String.IsNullOrEmpty(sdr["sf_ovhd_unit"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["sf_ovhd_unit"]),
+                                    fg_lbr_unit = String.IsNullOrEmpty(sdr["fg_lbr_unit"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["fg_lbr_unit"]),
+                                    fg_ovhd_unit = String.IsNullOrEmpty(sdr["fg_ovhd_unit"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["fg_ovhd_unit"]),
+                                    total_std_unit = String.IsNullOrEmpty(sdr["total_std_unit"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["total_std_unit"]),
+                                    matl_qty = String.IsNullOrEmpty(sdr["matl_qty"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["matl_qty"]),
+                                    job_qty = String.IsNullOrEmpty(sdr["job_qty"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["job_qty"]),
+                                    job_matl_qty = String.IsNullOrEmpty(sdr["job_matl_qty"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["job_matl_qty"]),
+                                    actl_matl_qty = String.IsNullOrEmpty(sdr["actl_matl_qty"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["actl_matl_qty"]),
+                                    matl_unit_cost_php = String.IsNullOrEmpty(sdr["matl_unit_cost_php"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["matl_unit_cost_php"]),
+                                    matl_landed_cost_php = String.IsNullOrEmpty(sdr["matl_landed_cost_php"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["matl_landed_cost_php"]),
+                                    pi_fg_process_php = String.IsNullOrEmpty(sdr["pi_fg_process_php"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["pi_fg_process_php"]),
+                                    pi_resin_php = String.IsNullOrEmpty(sdr["pi_resin_php"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["pi_resin_php"]),
+                                    pi_hidden_profit_php = String.IsNullOrEmpty(sdr["pi_hidden_profit_php"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["pi_hidden_profit_php"]),
+                                    sf_lbr_cost_php = String.IsNullOrEmpty(sdr["sf_lbr_cost_php"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["sf_lbr_cost_php"]),
+                                    sf_ovhd_cost_php = String.IsNullOrEmpty(sdr["sf_ovhd_cost_php"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["sf_ovhd_cost_php"]),
+                                    fg_lbr_cost_php = String.IsNullOrEmpty(sdr["fg_lbr_cost_php"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["fg_lbr_cost_php"]),
+                                    fg_ovhd_cost_php = String.IsNullOrEmpty(sdr["fg_ovhd_cost_php"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["fg_ovhd_cost_php"]),
+                                    total_actl_unit = String.IsNullOrEmpty(sdr["total_actl_unit"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["total_actl_unit"]),
+                                    nolanded_actl_unit = String.IsNullOrEmpty(sdr["nolanded_actl_unit"].ToString()) == true ? 0 : Convert.ToDecimal(sdr["nolanded_actl_unit"]),
+                                });
+                            }
+
+                        }
+                    }
+                    conn.Close();
+                }
+                string filePath = "";
+                string Filename = "RMBreakdown_JONo_PONo.xlsx";
+                filePath = Path.Combine(Server.MapPath("~/Areas/Reports/Templates/") + "RMBreakdown_JONo_PONo_Template.xlsx");
+                FileInfo file = new FileInfo(filePath);
+                using (ExcelPackage excelPackage = new ExcelPackage(file))
+                {
+                    #region Header condition: WHERE Level = 0;
+                    ExcelWorksheet UsageSheet = excelPackage.Workbook.Worksheets["RM Breakdown per JO Report"];
+                    UsageSheet.Cells["B3"].Value = PONumber;
+                    UsageSheet.Cells["B4"].Value = JONumber;
+
+                    var Header = RMBreakdownPerJOReportList.Where(x => x.Level == 0).ToList().First();
+
+                    UsageSheet.Cells["C8"].Value = Header.std_matl_unit;
+                    UsageSheet.Cells["D8"].Value = Header.std_matl_unit * Header.actl_matl_qty;
+                    UsageSheet.Cells["E8"].Value = Header.matl_unit_cost_php;
+                    UsageSheet.Cells["F8"].Value = Header.matl_unit_cost_php * Header.actl_matl_qty;
+
+                    UsageSheet.Cells["C9"].Value = 0;
+                    UsageSheet.Cells["D9"].Value = 0;
+                    UsageSheet.Cells["E9"].Value = Header.matl_landed_cost_php;
+                    UsageSheet.Cells["F9"].Value = Header.matl_landed_cost_php * Header.actl_matl_qty;
+
+                    UsageSheet.Cells["C10"].Value = Header.pi_resin_unit;
+                    UsageSheet.Cells["D10"].Value = Header.pi_resin_unit * Header.actl_matl_qty;
+                    UsageSheet.Cells["E10"].Value = Header.pi_resin_php;
+                    UsageSheet.Cells["F10"].Value = Header.pi_resin_php * Header.actl_matl_qty;
+
+                    UsageSheet.Cells["C11"].Value = Header.std_process_unit;
+                    UsageSheet.Cells["D11"].Value = Header.std_process_unit * Header.actl_matl_qty;
+                    UsageSheet.Cells["E11"].Value = Header.pi_fg_process_php;
+                    UsageSheet.Cells["F11"].Value = Header.pi_fg_process_php * Header.actl_matl_qty;
+
+                    UsageSheet.Cells["C12"].Value = Header.pi_hidden_unit;
+                    UsageSheet.Cells["D12"].Value = Header.pi_hidden_unit * Header.actl_matl_qty;
+                    UsageSheet.Cells["E12"].Value = Header.pi_hidden_profit_php;
+                    UsageSheet.Cells["F12"].Value = Header.pi_hidden_profit_php * Header.actl_matl_qty;
+
+                    UsageSheet.Cells["C13"].Value = Header.sf_lbr_unit;
+                    UsageSheet.Cells["D13"].Value = Header.sf_lbr_unit * Header.actl_matl_qty;
+                    UsageSheet.Cells["E13"].Value = Header.sf_lbr_cost_php;
+                    UsageSheet.Cells["F13"].Value = Header.sf_lbr_cost_php * Header.actl_matl_qty;
+
+                    UsageSheet.Cells["C14"].Value = Header.sf_ovhd_unit;
+                    UsageSheet.Cells["D14"].Value = Header.sf_ovhd_unit * Header.actl_matl_qty;
+                    UsageSheet.Cells["E14"].Value = Header.sf_ovhd_cost_php;
+                    UsageSheet.Cells["F14"].Value = Header.sf_ovhd_cost_php * Header.actl_matl_qty;
+
+                    UsageSheet.Cells["C15"].Value = Header.StdLbrHrs;
+                    UsageSheet.Cells["D15"].Value = "";
+                    UsageSheet.Cells["E15"].Value = Header.ActlLbrHrs;
+                    UsageSheet.Cells["F15"].Value = "";
+
+                    UsageSheet.Cells["C16"].Value = Header.fg_lbr_unit;
+                    UsageSheet.Cells["D16"].Value = Header.fg_lbr_unit * Header.actl_matl_qty;
+                    UsageSheet.Cells["E16"].Value = Header.fg_lbr_cost_php;
+                    UsageSheet.Cells["F16"].Value = Header.fg_lbr_cost_php * Header.actl_matl_qty;
+
+                    UsageSheet.Cells["C17"].Value = Header.fg_ovhd_unit;
+                    UsageSheet.Cells["D17"].Value = Header.fg_ovhd_unit * Header.actl_matl_qty;
+                    UsageSheet.Cells["E17"].Value = Header.fg_ovhd_cost_php;
+                    UsageSheet.Cells["F17"].Value = Header.fg_ovhd_cost_php * Header.actl_matl_qty;
+
+                    UsageSheet.Cells["C18"].Value = Header.total_std_unit;
+                    UsageSheet.Cells["D18"].Value = Header.total_std_unit * Header.actl_matl_qty;
+                    UsageSheet.Cells["E18"].Value = Header.total_actl_unit;
+                    UsageSheet.Cells["F18"].Value = "";
+
+                    #endregion
+
+                    #region RM Breakdown for FG Report 
+                    var Details = RMBreakdownPerJOReportList.Where(x => x.Level != 0).ToList();
+                    int sheetsRowUsage = 24;
+                    foreach (var DetailsObj in Details)
+                    {
+                        if (sheetsRowUsage < Details.ToList().Count + 23)
+                        {
+                            UsageSheet.InsertRow((sheetsRowUsage + 1), 1);
+                            UsageSheet.Cells[sheetsRowUsage, 1, sheetsRowUsage, 100].Copy(UsageSheet.Cells[(sheetsRowUsage + 1), 1, (sheetsRowUsage + 1), 1]);
+                        }
+                        UsageSheet.Cells[sheetsRowUsage, 1].Value = DetailsObj.matl;
+                        UsageSheet.Cells[sheetsRowUsage, 1].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 2].Value = DetailsObj.matl_desc;
+                        UsageSheet.Cells[sheetsRowUsage, 2].Style.WrapText = false;
+
+                        decimal std_matl_unit = DetailsObj.std_matl_unit;
+                        decimal pi_resin_unit = DetailsObj.pi_resin_unit;
+                        decimal std_process_unit = DetailsObj.std_process_unit;
+                        decimal pi_hidden_unit = DetailsObj.pi_hidden_unit;
+                        decimal sf_lbr_unit_plus_fg_lbr_unit = DetailsObj.sf_lbr_unit + DetailsObj.fg_lbr_unit;
+                        decimal sf_ovhd_unit_plus_fg_ovhd_unit = DetailsObj.sf_ovhd_unit + DetailsObj.fg_ovhd_unit;
+                        decimal total_std_unit = DetailsObj.total_std_unit;
+                        decimal std_matl_unit_times_actl_matl_qty = DetailsObj.std_matl_unit * DetailsObj.actl_matl_qty;
+                        decimal pi_resin_unit_times_actl_matl_qty = DetailsObj.pi_resin_unit * DetailsObj.actl_matl_qty;
+                        decimal std_process_unit_times_actl_matl_qty = DetailsObj.std_process_unit * DetailsObj.actl_matl_qty;
+                        decimal pi_hidden_unit_times_actl_matl_qty = DetailsObj.pi_hidden_unit * DetailsObj.actl_matl_qty;
+                        decimal __sf_lbr_unit_plus_fg_lbr_unit___times_actl_matl_qty = (DetailsObj.sf_lbr_unit + DetailsObj.fg_lbr_unit) * DetailsObj.actl_matl_qty;
+                        decimal __sf_ovhd_unit_plus_fg_ovhd_unit___times_actl_matl_qty = (DetailsObj.sf_ovhd_unit + DetailsObj.fg_ovhd_unit) * DetailsObj.actl_matl_qty;
+                        decimal total_std_unit_timesactl_matl_qty = DetailsObj.total_std_unit * DetailsObj.actl_matl_qty;
+                        decimal matl_unit_cost_php = DetailsObj.matl_unit_cost_php;
+                        decimal matl_landed_cost_php = DetailsObj.matl_landed_cost_php;
+                        decimal pi_resin_php = DetailsObj.pi_resin_php;
+                        decimal pi_fg_process_php = DetailsObj.pi_fg_process_php;
+                        decimal pi_hidden_profit_php = DetailsObj.pi_hidden_profit_php;
+                        decimal sf_lbr_cost_php_plus_fg_lbr_cost_php = DetailsObj.sf_lbr_cost_php + DetailsObj.fg_lbr_cost_php;
+                        decimal sf_ovhd_cost_php_plus_fg_ovhd_cost_php = DetailsObj.sf_ovhd_cost_php + DetailsObj.fg_ovhd_cost_php;
+                        decimal total_actl_unit = DetailsObj.total_actl_unit;
+                        decimal matl_unit_cost_php_times_actl_matl_qty = DetailsObj.matl_unit_cost_php * DetailsObj.actl_matl_qty;
+                        decimal matl_landed_cost_php_times_actl_matl_qty = DetailsObj.matl_landed_cost_php * DetailsObj.actl_matl_qty;
+                        decimal pi_resin_php_times_actl_matl_qty = DetailsObj.pi_resin_php * DetailsObj.actl_matl_qty;
+                        decimal pi_fg_process_php_times_actl_matl_qty = DetailsObj.pi_fg_process_php * DetailsObj.actl_matl_qty;
+                        decimal pi_hidden_profit_php_times_actl_matl_qty = DetailsObj.pi_hidden_profit_php * DetailsObj.actl_matl_qty;
+                        decimal __sf_lbr_cost_php_plus_fg_lbr_cost_php___times_actl_matl_qty = (DetailsObj.sf_lbr_cost_php + DetailsObj.fg_lbr_cost_php) * DetailsObj.actl_matl_qty;
+                        decimal __sf_ovhd_cost_php_plus_fg_ovhd_cost_php___times_actl_matl_qty = (DetailsObj.sf_ovhd_cost_php + DetailsObj.fg_ovhd_cost_php) * DetailsObj.actl_matl_qty;
+                        decimal total_actl_unit_times_actl_matl_qty = DetailsObj.total_actl_unit * DetailsObj.actl_matl_qty;
+                        decimal total_std_unit_minus_total_actl_unit = DetailsObj.total_std_unit - DetailsObj.total_actl_unit;
+                        decimal total_std_unit_minus_nolanded_actl_unit = DetailsObj.total_std_unit - DetailsObj.nolanded_actl_unit;
+                        decimal __total_std_unit_times_actl_matl_qty___minus___total_actl_unit_times_actl_matl_qty__ = (DetailsObj.total_std_unit * DetailsObj.actl_matl_qty) - (DetailsObj.total_actl_unit * DetailsObj.actl_matl_qty);
+
+
+                        UsageSheet.Cells[sheetsRowUsage, 3].Value = DetailsObj.actl_matl_qty;
+                        UsageSheet.Cells[sheetsRowUsage, 3].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 4].Value = std_matl_unit;
+                        UsageSheet.Cells[sheetsRowUsage, 4].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 5].Value = pi_resin_unit;
+                        UsageSheet.Cells[sheetsRowUsage, 5].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 6].Value = std_process_unit;
+                        UsageSheet.Cells[sheetsRowUsage, 6].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 7].Value = pi_hidden_unit;
+                        UsageSheet.Cells[sheetsRowUsage, 7].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 8].Value = sf_lbr_unit_plus_fg_lbr_unit;
+                        UsageSheet.Cells[sheetsRowUsage, 8].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 9].Value = sf_ovhd_unit_plus_fg_ovhd_unit;
+                        UsageSheet.Cells[sheetsRowUsage, 9].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 10].Value = total_std_unit;
+                        UsageSheet.Cells[sheetsRowUsage, 10].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 11].Value = std_matl_unit_times_actl_matl_qty;
+                        UsageSheet.Cells[sheetsRowUsage, 11].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 12].Value = pi_resin_unit_times_actl_matl_qty;
+                        UsageSheet.Cells[sheetsRowUsage, 12].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 13].Value = std_process_unit_times_actl_matl_qty;
+                        UsageSheet.Cells[sheetsRowUsage, 13].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 14].Value = pi_hidden_unit_times_actl_matl_qty;
+                        UsageSheet.Cells[sheetsRowUsage, 14].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 15].Value = __sf_lbr_unit_plus_fg_lbr_unit___times_actl_matl_qty;
+                        UsageSheet.Cells[sheetsRowUsage, 15].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 16].Value = __sf_ovhd_unit_plus_fg_ovhd_unit___times_actl_matl_qty;
+                        UsageSheet.Cells[sheetsRowUsage, 16].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 17].Value = total_std_unit_timesactl_matl_qty;
+                        UsageSheet.Cells[sheetsRowUsage, 17].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 18].Value = matl_unit_cost_php;
+                        UsageSheet.Cells[sheetsRowUsage, 18].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 29].Value = matl_landed_cost_php;
+                        UsageSheet.Cells[sheetsRowUsage, 29].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 20].Value = pi_resin_php;
+                        UsageSheet.Cells[sheetsRowUsage, 20].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 21].Value = pi_fg_process_php;
+                        UsageSheet.Cells[sheetsRowUsage, 21].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 22].Value = pi_hidden_profit_php;
+                        UsageSheet.Cells[sheetsRowUsage, 22].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 23].Value = sf_lbr_cost_php_plus_fg_lbr_cost_php;
+                        UsageSheet.Cells[sheetsRowUsage, 23].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 24].Value = sf_ovhd_cost_php_plus_fg_ovhd_cost_php;
+                        UsageSheet.Cells[sheetsRowUsage, 24].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 25].Value = total_actl_unit;
+                        UsageSheet.Cells[sheetsRowUsage, 25].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 26].Value = matl_unit_cost_php_times_actl_matl_qty;
+                        UsageSheet.Cells[sheetsRowUsage, 26].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 27].Value = matl_landed_cost_php_times_actl_matl_qty;
+                        UsageSheet.Cells[sheetsRowUsage, 27].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 28].Value = pi_resin_php_times_actl_matl_qty;
+                        UsageSheet.Cells[sheetsRowUsage, 28].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 29].Value = pi_fg_process_php_times_actl_matl_qty;
+                        UsageSheet.Cells[sheetsRowUsage, 29].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 30].Value = pi_hidden_profit_php_times_actl_matl_qty;
+                        UsageSheet.Cells[sheetsRowUsage, 30].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 31].Value = __sf_lbr_cost_php_plus_fg_lbr_cost_php___times_actl_matl_qty;
+                        UsageSheet.Cells[sheetsRowUsage, 31].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 32].Value = __sf_ovhd_cost_php_plus_fg_ovhd_cost_php___times_actl_matl_qty;
+                        UsageSheet.Cells[sheetsRowUsage, 32].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 33].Value = total_actl_unit_times_actl_matl_qty;
+                        UsageSheet.Cells[sheetsRowUsage, 33].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 34].Value = total_std_unit_minus_total_actl_unit;
+                        UsageSheet.Cells[sheetsRowUsage, 34].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 35].Value = total_std_unit_minus_nolanded_actl_unit;
+                        UsageSheet.Cells[sheetsRowUsage, 35].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 36].Value = __total_std_unit_times_actl_matl_qty___minus___total_actl_unit_times_actl_matl_qty__;
+                        UsageSheet.Cells[sheetsRowUsage, 36].Style.WrapText = false;
+
+                        sheetsRowUsage++;
+
                     }
                     #endregion
                     return File(excelPackage.GetAsByteArray(), "application/vnd.openxmlformatsofficedocument.spreadsheetml.sheet", Filename);

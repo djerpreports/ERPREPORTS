@@ -215,6 +215,35 @@
                 $("#btnPrint").prop("disabled", false);
             }
         });
+        $("#JONumber").change(function () {
+            var JONumber = $(this).val() || "";
+            
+            if (JONumber != "") {
+                var arrJO = JONumber.split("-");
+                var isFormatCorrect = arrJO.length == 2;
+                if (isFormatCorrect) {
+                    var JOPrefix = arrJO[0];
+                    var JOSuffix = arrJO[1];
+                    if (JOSuffix.length) {
+                        var JONumberLn = JOPrefix.length;
+                        var remainingCount = 9 - JONumberLn;
+
+                        var newJONumber = JOPrefix + "-" + padLeadingZeros(JOSuffix, remainingCount);
+                        $("#JONumber").val(newJONumber.toUpperCase());
+                    } else {
+                        $("#btnPrint").prop("disabled", true);
+                    }
+                } else {
+                    $("#btnPrint").prop("disabled", true);
+                }
+            }
+
+            function padLeadingZeros(num, size) {
+                var s = num + "";
+                while (s.length < size) s = "0" + s;
+                return s;
+            }
+        });
         $("#ProductCode,#TransactionDate").change(function () {
             var TransactionDate = $("#TransactionDate").val() || "";
             var ProductCode = $("#ProductCode").val() || "";
