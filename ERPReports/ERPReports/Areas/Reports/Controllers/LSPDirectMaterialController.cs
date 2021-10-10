@@ -3736,7 +3736,8 @@ namespace ERPReports.Areas.Reports.Controllers
                     conn.Close();
                 }
                 string filePath = "";
-                string Filename = "RMBreakdown_FGandSales_MonthYear.xlsx";
+                string MonthYear = DateTime.Parse(StartDate).ToString("MMMyyyy");
+                string Filename = "RMBreakdown_FGandSales_" + MonthYear + ".xlsx";
                 filePath = Path.Combine(Server.MapPath("~/Areas/Reports/Templates/") + "RMBreakdown_FGandSales_MonthYear_Template.xlsx");
                 FileInfo file = new FileInfo(filePath);
                 using (ExcelPackage excelPackage = new ExcelPackage(file))
@@ -3825,8 +3826,8 @@ namespace ERPReports.Areas.Reports.Controllers
                         UsageSheet.Cells[sheetsRowUsage, 17].Style.WrapText = false;
                         UsageSheet.Cells[sheetsRowUsage, 18].Value = __sf_ovhd_unit_plus_fg_ovhd_unit___times_actl_matl_qty;
                         UsageSheet.Cells[sheetsRowUsage, 18].Style.WrapText = false;
-                        UsageSheet.Cells[sheetsRowUsage, 29].Value = total_std_unit_timesactl_matl_qty;
-                        UsageSheet.Cells[sheetsRowUsage, 29].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 19].Value = total_std_unit_timesactl_matl_qty;
+                        UsageSheet.Cells[sheetsRowUsage, 19].Style.WrapText = false;
                         UsageSheet.Cells[sheetsRowUsage, 20].Value = matl_unit_cost_php;
                         UsageSheet.Cells[sheetsRowUsage, 20].Style.WrapText = false;
                         UsageSheet.Cells[sheetsRowUsage, 21].Value = matl_landed_cost_php;
@@ -3955,8 +3956,8 @@ namespace ERPReports.Areas.Reports.Controllers
                         UsageSheetSales.Cells[sheetsRowUsageSales, 17].Style.WrapText = false;
                         UsageSheetSales.Cells[sheetsRowUsageSales, 18].Value = __sf_ovhd_unit_plus_fg_ovhd_unit___times_actl_matl_qtySales;
                         UsageSheetSales.Cells[sheetsRowUsageSales, 18].Style.WrapText = false;
-                        UsageSheetSales.Cells[sheetsRowUsageSales, 29].Value = total_std_unit_timesactl_matl_qtySales;
-                        UsageSheetSales.Cells[sheetsRowUsageSales, 29].Style.WrapText = false;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 19].Value = total_std_unit_timesactl_matl_qtySales;
+                        UsageSheetSales.Cells[sheetsRowUsageSales, 19].Style.WrapText = false;
                         UsageSheetSales.Cells[sheetsRowUsageSales, 20].Value = matl_unit_cost_phpSales;
                         UsageSheetSales.Cells[sheetsRowUsageSales, 20].Style.WrapText = false;
                         UsageSheetSales.Cells[sheetsRowUsageSales, 21].Value = matl_landed_cost_phpSales;
@@ -4083,7 +4084,15 @@ namespace ERPReports.Areas.Reports.Controllers
                     conn.Close();
                 }
                 string filePath = "";
-                string Filename = "RMBreakdown_JONo_PONo.xlsx";
+                string fileNameSuffix = "";
+                if (JONumber != "" && PONumber != "")
+                    fileNameSuffix = JONumber + "_" + PONumber;
+                else if (JONumber != "" && PONumber == "")
+                    fileNameSuffix = JONumber;
+                else if (JONumber == "" && PONumber != "")
+                    fileNameSuffix = PONumber;
+
+                string Filename = "RMBreakdown_" + fileNameSuffix + ".xlsx";
                 filePath = Path.Combine(Server.MapPath("~/Areas/Reports/Templates/") + "RMBreakdown_JONo_PONo_Template.xlsx");
                 FileInfo file = new FileInfo(filePath);
                 using (ExcelPackage excelPackage = new ExcelPackage(file))
@@ -4148,7 +4157,8 @@ namespace ERPReports.Areas.Reports.Controllers
                     UsageSheet.Cells["C18"].Value = Header.total_std_unit;
                     UsageSheet.Cells["D18"].Value = Header.total_std_unit * Header.actl_matl_qty;
                     UsageSheet.Cells["E18"].Value = Header.total_actl_unit;
-                    UsageSheet.Cells["F18"].Value = "";
+                    UsageSheet.Cells["F18"].Value = Header.total_actl_unit * Header.actl_matl_qty
+;
 
                     #endregion
 
@@ -4234,8 +4244,8 @@ namespace ERPReports.Areas.Reports.Controllers
                         UsageSheet.Cells[sheetsRowUsage, 17].Style.WrapText = false;
                         UsageSheet.Cells[sheetsRowUsage, 18].Value = matl_unit_cost_php;
                         UsageSheet.Cells[sheetsRowUsage, 18].Style.WrapText = false;
-                        UsageSheet.Cells[sheetsRowUsage, 29].Value = matl_landed_cost_php;
-                        UsageSheet.Cells[sheetsRowUsage, 29].Style.WrapText = false;
+                        UsageSheet.Cells[sheetsRowUsage, 19].Value = matl_landed_cost_php;
+                        UsageSheet.Cells[sheetsRowUsage, 19].Style.WrapText = false;
                         UsageSheet.Cells[sheetsRowUsage, 20].Value = pi_resin_php;
                         UsageSheet.Cells[sheetsRowUsage, 20].Style.WrapText = false;
                         UsageSheet.Cells[sheetsRowUsage, 21].Value = pi_fg_process_php;
