@@ -1333,7 +1333,8 @@ namespace ERPReports.Areas.Reports.Controllers
                                 {
                                     FGTransType = sdr["FGTransType"].ToString(),
                                     TransDate = sdr["TransDate"].ToString(),
-                                    PONum = sdr["PONum"].ToString() + sdr["FGTransType"].ToString(),
+                                    //PONum = sdr["PONum"].ToString() + sdr["FGTransType"].ToString(),
+                                    PONum = sdr["PONum"].ToString(),
                                     CustomerName = sdr["CustomerName"].ToString(),
                                     JobOrder = sdr["JobOrder"].ToString() + sdr["JobSuffix"].ToString(),
                                     Item = sdr["Item"].ToString(),
@@ -1560,11 +1561,14 @@ namespace ERPReports.Areas.Reports.Controllers
                     #endregion
                     #region FINISHEDGOODS NOT FINISHED GOODS 
                     int sheetsRowNotFinishedGoods = sheetsRowFinishedGoods + 2;
+                    int HeaderTitle = sheetsRowFinishedGoods + 1;
+                    int notFGGroupCounter = 0;
                     foreach (var LSP_Rpt_DM_FinishedGoodsSalesReportObjList in LSP_Rpt_DM_FinishedGoodsSalesReportList_GroupByTransTpeNotFinishedGood)
                     {
-                        FINISHEDGOODS.Cells["A" + (sheetsRowNotFinishedGoods - 1)].Value = LSP_Rpt_DM_FinishedGoodsSalesReportObjList.Key.ToString();
-                        FINISHEDGOODS.Cells[sheetsRowNotFinishedGoods - 1, 1].Style.WrapText = false;
-
+                        FINISHEDGOODS.Cells["A" + (sheetsRowNotFinishedGoods-1)].Value = LSP_Rpt_DM_FinishedGoodsSalesReportObjList.Key.ToString();
+                        FINISHEDGOODS.Cells[sheetsRowNotFinishedGoods-1, 1].Style.WrapText = false;
+                        //sheetsRowNotFinishedGoods++;
+                        
                         string FGTransType = "";
                         string TransDate = "";
                         string PONum = "";
@@ -1593,6 +1597,7 @@ namespace ERPReports.Areas.Reports.Controllers
                         decimal StdUnitCost_PHPminusActlUnitCost_PHP = 0;
                         decimal StdUnitCost_PHPminus__ActlUnitCost_PHPminusActlLandedCost_PHP__ = 0;
                         decimal __StdUnitCost_PHPxQtyCompleted__minus__ActlUnitCost_PHPxQtyCompleted__ = 0;
+                        int notFGRowCounter = 0;
                         foreach (var LSP_Rpt_DM_FinishedGoodsSalesReportObj in LSP_Rpt_DM_FinishedGoodsSalesReportObjList)
                         {
                             FGTransType = LSP_Rpt_DM_FinishedGoodsSalesReportObj.FGTransType;
@@ -1645,11 +1650,13 @@ namespace ERPReports.Areas.Reports.Controllers
                             Total_StdUnitCost_PHPminus__ActlUnitCost_PHPminusActlLandedCost_PHP__ += LSP_Rpt_DM_FinishedGoodsSalesReportObj.StdUnitCost_PHP - (LSP_Rpt_DM_FinishedGoodsSalesReportObj.ActlUnitCost_PHP - LSP_Rpt_DM_FinishedGoodsSalesReportObj.ActlLandedCost_PHP);
                             Total___StdUnitCost_PHPxQtyCompleted__minus__ActlUnitCost_PHPxQtyCompleted__ += (LSP_Rpt_DM_FinishedGoodsSalesReportObj.StdUnitCost_PHP * LSP_Rpt_DM_FinishedGoodsSalesReportObj.QtyCompleted) - (LSP_Rpt_DM_FinishedGoodsSalesReportObj.ActlUnitCost_PHP * LSP_Rpt_DM_FinishedGoodsSalesReportObj.QtyCompleted);
 
-                            if (sheetsRowNotFinishedGoods < CurrentDataCount)
+                            if (notFGRowCounter < LSP_Rpt_DM_FinishedGoodsSalesReportObjList.Count()-1)
                             {
                                 FINISHEDGOODS.InsertRow((sheetsRowNotFinishedGoods + 1), 1);
                                 FINISHEDGOODS.Cells[sheetsRowNotFinishedGoods, 1, sheetsRowNotFinishedGoods, 100].Copy(FINISHEDGOODS.Cells[(sheetsRowNotFinishedGoods + 1), 1, (sheetsRowNotFinishedGoods + 1), 1]);
                             }
+                            notFGRowCounter++;
+
                             FINISHEDGOODS.Cells[sheetsRowNotFinishedGoods, 1].Value = DateTime.Parse(TransDate).ToString("MM/dd/yyyy");
                             FINISHEDGOODS.Cells[sheetsRowNotFinishedGoods, 1].Style.WrapText = false;
                             FINISHEDGOODS.Cells[sheetsRowNotFinishedGoods, 2].Value = PONum;
@@ -1707,11 +1714,21 @@ namespace ERPReports.Areas.Reports.Controllers
                             FINISHEDGOODS.Cells[sheetsRowNotFinishedGoods, 27].Style.WrapText = false;
                             sheetsRowNotFinishedGoods++;
                         }
-
+                        if (notFGGroupCounter < LSP_Rpt_DM_FinishedGoodsSalesReportList_GroupByTransTpeNotFinishedGood.Count() - 1)
+                        {
+                            FINISHEDGOODS.Cells[sheetsRowNotFinishedGoods - 1, 1, sheetsRowNotFinishedGoods - 1, 100].Copy(FINISHEDGOODS.Cells[(sheetsRowNotFinishedGoods), 1, (sheetsRowNotFinishedGoods), 1]);
+                            FINISHEDGOODS.InsertRow((sheetsRowNotFinishedGoods), 1);
+                            FINISHEDGOODS.Cells[HeaderTitle - 1, 1, HeaderTitle - 1, 100].Copy(FINISHEDGOODS.Cells[(sheetsRowNotFinishedGoods), 1, (sheetsRowNotFinishedGoods), 1]);
+                            FINISHEDGOODS.InsertRow((sheetsRowNotFinishedGoods + 1), 1);
+                            FINISHEDGOODS.Cells[HeaderTitle, 1, HeaderTitle, 100].Copy(FINISHEDGOODS.Cells[(sheetsRowNotFinishedGoods + 1), 1, (sheetsRowNotFinishedGoods + 1), 1]);
+                            sheetsRowNotFinishedGoods += 2;
+                        }
+                        notFGGroupCounter++;
                     }
                     #endregion
                     #region FINISHED GOODS TOTAL
-
+                    FINISHEDGOODS.InsertRow((sheetsRowNotFinishedGoods), 1);
+                    FINISHEDGOODS.Cells[HeaderTitle - 1, 1, HeaderTitle - 1, 100].Copy(FINISHEDGOODS.Cells[(sheetsRowNotFinishedGoods), 1, (sheetsRowNotFinishedGoods), 1]);
                     sheetsRowNotFinishedGoods++;
                     FINISHEDGOODS.Cells[sheetsRowNotFinishedGoods, 9].Value = Convert.ToDecimal(Total_QtyCompleted);
                     FINISHEDGOODS.Cells[sheetsRowNotFinishedGoods, 9].Style.WrapText = false;
@@ -1780,6 +1797,7 @@ namespace ERPReports.Areas.Reports.Controllers
                     decimal GrandTotalFamily_StdUnitCost_PHPminus__ActlUnitCost_PHPminusActlLandedCost_PHP__ = 0;
                     decimal GrandTotalFamily___StdUnitCost_PHPxQtyCompleted__minus__ActlUnitCost_PHPxQtyCompleted__ = 0;
                     CurrentDataCount = CurrentDataCount + LSP_Rpt_DM_FinishedGoodsSalesReportList_GroubyFamily.Count + 3;
+                    int familyCounter = 0;
                     foreach (var LSP_Rpt_DM_FinishedGoodsSalesReportListObj_GroubyFamily in LSP_Rpt_DM_FinishedGoodsSalesReportList_GroubyFamily)
                     {
                         string Family = "";
@@ -1804,6 +1822,7 @@ namespace ERPReports.Areas.Reports.Controllers
                         decimal TotalFamily_StdUnitCost_PHPminusActlUnitCost_PHP = 0;
                         decimal TotalFamily_StdUnitCost_PHPminus__ActlUnitCost_PHPminusActlLandedCost_PHP__ = 0;
                         decimal TotalFamily___StdUnitCost_PHPxQtyCompleted__minus__ActlUnitCost_PHPxQtyCompleted__ = 0;
+                        
                         foreach (var LSP_Rpt_DM_FinishedGoodsSalesReportObj_GroubyFamily in LSP_Rpt_DM_FinishedGoodsSalesReportListObj_GroubyFamily)
                         {
 
@@ -1851,12 +1870,12 @@ namespace ERPReports.Areas.Reports.Controllers
                             GrandTotalFamily___StdUnitCost_PHPxQtyCompleted__minus__ActlUnitCost_PHPxQtyCompleted__ += (LSP_Rpt_DM_FinishedGoodsSalesReportObj_GroubyFamily.StdUnitCost_PHP * LSP_Rpt_DM_FinishedGoodsSalesReportObj_GroubyFamily.QtyCompleted) - (LSP_Rpt_DM_FinishedGoodsSalesReportObj_GroubyFamily.ActlUnitCost_PHP * LSP_Rpt_DM_FinishedGoodsSalesReportObj_GroubyFamily.QtyCompleted);
                         }
 
-                        if (sheetsRowFamily < CurrentDataCount)
+                        if (familyCounter < LSP_Rpt_DM_FinishedGoodsSalesReportList_GroubyFamily.Count()-1)
                         {
                             FINISHEDGOODS.InsertRow((sheetsRowFamily + 1), 1);
                             FINISHEDGOODS.Cells[sheetsRowFamily, 1, sheetsRowFamily, 100].Copy(FINISHEDGOODS.Cells[(sheetsRowFamily + 1), 1, (sheetsRowFamily + 1), 1]);
                         }
-
+                        familyCounter++;
                         FINISHEDGOODS.Cells[sheetsRowFamily, 7].Value = Family;
                         FINISHEDGOODS.Cells[sheetsRowFamily, 7].Style.WrapText = false;
                         FINISHEDGOODS.Cells[sheetsRowFamily, 8].Value = FamilyDesc;
@@ -1968,6 +1987,7 @@ namespace ERPReports.Areas.Reports.Controllers
                     decimal GrandTotalProductCode_StdUnitCost_PHPminus__ActlUnitCost_PHPminusActlLandedCost_PHP__ = 0;
                     decimal GrandTotalProductCode___StdUnitCost_PHPxQtyCompleted__minus__ActlUnitCost_PHPxQtyCompleted__ = 0;
                     CurrentDataCount = CurrentDataCount + LSP_Rpt_DM_FinishedGoodsSalesReportList_GroubyProductCode.Count + 4;
+                    int pCodeCounter = 0;
                     foreach (var LSP_Rpt_DM_FinishedGoodsSalesReportListObj_GroubyProductCode in LSP_Rpt_DM_FinishedGoodsSalesReportList_GroubyProductCode)
                     {
                         string ProductCode = "";
@@ -1991,6 +2011,7 @@ namespace ERPReports.Areas.Reports.Controllers
                         decimal TotalProductCode_StdUnitCost_PHPminusActlUnitCost_PHP = 0;
                         decimal TotalProductCode_StdUnitCost_PHPminus__ActlUnitCost_PHPminusActlLandedCost_PHP__ = 0;
                         decimal TotalProductCode___StdUnitCost_PHPxQtyCompleted__minus__ActlUnitCost_PHPxQtyCompleted__ = 0;
+                        
                         foreach (var LSP_Rpt_DM_FinishedGoodsSalesReportObj_GroubyProductCode in LSP_Rpt_DM_FinishedGoodsSalesReportListObj_GroubyProductCode)
                         {
 
@@ -2037,12 +2058,12 @@ namespace ERPReports.Areas.Reports.Controllers
                             GrandTotalProductCode___StdUnitCost_PHPxQtyCompleted__minus__ActlUnitCost_PHPxQtyCompleted__ += (LSP_Rpt_DM_FinishedGoodsSalesReportObj_GroubyProductCode.StdUnitCost_PHP * LSP_Rpt_DM_FinishedGoodsSalesReportObj_GroubyProductCode.QtyCompleted) - (LSP_Rpt_DM_FinishedGoodsSalesReportObj_GroubyProductCode.ActlUnitCost_PHP * LSP_Rpt_DM_FinishedGoodsSalesReportObj_GroubyProductCode.QtyCompleted);
                         }
 
-                        if (sheetsRowProductCode < CurrentDataCount)
+                        if (pCodeCounter < LSP_Rpt_DM_FinishedGoodsSalesReportList_GroubyProductCode.Count()-1)
                         {
                             FINISHEDGOODS.InsertRow((sheetsRowProductCode + 1), 1);
                             FINISHEDGOODS.Cells[sheetsRowProductCode, 1, sheetsRowProductCode, 100].Copy(FINISHEDGOODS.Cells[(sheetsRowProductCode + 1), 1, (sheetsRowProductCode + 1), 1]);
                         }
-
+                        pCodeCounter++;
                         FINISHEDGOODS.Cells[sheetsRowProductCode, 8].Value = ProductCode.Replace("FG-", "");
                         FINISHEDGOODS.Cells[sheetsRowProductCode, 8].Style.WrapText = false;
 

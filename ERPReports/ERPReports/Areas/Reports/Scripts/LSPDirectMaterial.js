@@ -158,9 +158,11 @@
         $("#StartDate").datepicker({
             todayHighlight: true,
             autoclose: true,
+            format: 'MM dd, yyyy',
         });
         $("#StartDate").change(function () {
-            var minDate = new Date($(this).val());
+            var formattedStartDate = $F($(this).val()).formatDate("mm/dd/yyyy");
+            var minDate = new Date(formattedStartDate);
             var lastDay = new Date(minDate.getFullYear(), minDate.getMonth() + 1, 0);
             minDate.setDate(minDate.getDate())
             $("#EndDate").prop("disabled", false).val('');
@@ -170,11 +172,13 @@
                 endDate: lastDay,
                 todayHighlight: true,
                 autoclose: true,
+                format: 'MM dd, yyyy',
             });
         });
         $("#TransactionDate").datepicker({
             todayHighlight: true,
             autoclose: true,
+            format: 'MM dd, yyyy',
         });
         $("#btnPrint").click(function (e) {
             var isValid = true;
