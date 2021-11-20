@@ -37,3 +37,8 @@ fg_lbr_cost_php		Decimal
 fg_ovhd_cost_php	Decimal
 total_actl_unit		Decimal
 nolanded_actl_unit	Decimal
+
+**Header condition: WHERE Level = 0;
+**Detail conditon: WEHRE Level <> 0
+
+JO : 19-0002507, 19-0000558

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-
-namespace ERPReports.Areas.Reports.Models
+﻿namespace ERPReports.Areas.Reports.Models
 {
     public class DMAndLaborPercentageReport
     {
@@ -96,57 +91,58 @@ namespace ERPReports.Areas.Reports.Models
     }
     public class FinishedGoods_Sales_SampleJO
     {
-      public string TransDate { get; set; }
-      public string Item { get; set; }
-	  public string ItemDesc { get; set; }
-      public string ProductCode { get; set; }
-	  public string Family { get; set; }
-      public string FamilyDesc { get; set; }
-	  public string PONum { get; set; }
-	  public string LotNo { get; set; }
-      public string JobOrder { get; set; }
-	  public string JobSuffix { get; set; }
-      public string CONum { get; set; }
-	  public string COLine { get; set; }
-      public string CustNum { get; set; }
-	  public string ShipToCust { get; set; }
-      public string CustomerName { get; set; }
-	  public decimal QtyShipped { get; set; }
-      public decimal SalesPrice { get; set; }
-	  public decimal SalesPriceConv { get; set; }
-      public decimal StdMatlCost_PHP { get; set; }
-	  public decimal StdLandedCost_PHP { get; set; }
-      public decimal StdResinCost_PHP { get; set; }
-	  public decimal StdPIProcess_PHP { get; set; }
-      public decimal StdHiddenProfit_PHP { get; set; }
-	  public decimal StdSFAdded_PHP { get; set; }
-      public decimal StdFGAdded_PHP { get; set; }
-	  public decimal StdUnitCost_PHP { get; set; }
-      public decimal ActlMatlUnitCost_PHP { get; set; }
-	  public decimal ActlLandedCost_PHP { get; set; }
-      public decimal ActlResinCost_PHP { get; set; }
-	  public decimal ActlPIProcess_PHP { get; set; }
-      public decimal ActlHiddenProfit_PHP { get; set; }
-	  public decimal ActlSFAdded_PHP { get; set; }
-      public decimal ActlFGAdded_PHP { get; set; }
-	  public decimal ActlUnitCost_PHP { get; set; }
-      public string ShipCategory { get; set; }
-	  public string Recoverable { get; set; }
-      public string JobRemarks { get; set; }
+        public string TransDate { get; set; }
+        public string Item { get; set; }
+        public string ItemDesc { get; set; }
+        public string ProductCode { get; set; }
+        public string Family { get; set; }
+        public string FamilyDesc { get; set; }
+        public string PONum { get; set; }
+        public string LotNo { get; set; }
+        public string JobOrder { get; set; }
+        public string JobSuffix { get; set; }
+        public string CONum { get; set; }
+        public string COLine { get; set; }
+        public string CustNum { get; set; }
+        public string ShipToCust { get; set; }
+        public string CustomerName { get; set; }
+        public decimal QtyShipped { get; set; }
+        public decimal SalesPrice { get; set; }
+        public decimal SalesPriceConv { get; set; }
+        public decimal StdMatlCost_PHP { get; set; }
+        public decimal StdLandedCost_PHP { get; set; }
+        public decimal StdResinCost_PHP { get; set; }
+        public decimal StdPIProcess_PHP { get; set; }
+        public decimal StdHiddenProfit_PHP { get; set; }
+        public decimal StdSFAdded_PHP { get; set; }
+        public decimal StdFGAdded_PHP { get; set; }
+        public decimal StdUnitCost_PHP { get; set; }
+        public decimal ActlMatlUnitCost_PHP { get; set; }
+        public decimal ActlLandedCost_PHP { get; set; }
+        public decimal ActlResinCost_PHP { get; set; }
+        public decimal ActlPIProcess_PHP { get; set; }
+        public decimal ActlHiddenProfit_PHP { get; set; }
+        public decimal ActlSFAdded_PHP { get; set; }
+        public decimal ActlFGAdded_PHP { get; set; }
+        public decimal ActlUnitCost_PHP { get; set; }
+        public string ShipCategory { get; set; }
+        public string Recoverable { get; set; }
+        public string JobRemarks { get; set; }
     }
     public class SalesSummary
     {
-      public string inv_date { get; set; } 
-      public string inv_num { get; set; } 
-      public string ship_to_cust { get; set; } 
-      public string inv_desc { get; set; } 
-      public decimal amount { get; set; } 
-      public decimal price { get; set; } 
-      public decimal amount_php { get; set; } 
-      public decimal exch_rate { get; set; } 
-      public decimal eng_design { get; set; } 
+        public string inv_date { get; set; }
+        public string inv_num { get; set; }
+        public string ship_to_cust { get; set; }
+        public string inv_desc { get; set; }
+        public decimal amount { get; set; }
+        public decimal price { get; set; }
+        public decimal amount_php { get; set; }
+        public decimal exch_rate { get; set; }
+        public decimal eng_design { get; set; }
     }
-    public class RMBeginningBalanceReport {
+    public class RMBeginningBalanceReport
+    {
         public string product_code { get; set; }
         public string item { get; set; }
         public string description { get; set; }
@@ -174,17 +170,17 @@ namespace ERPReports.Areas.Reports.Models
         public string reason_code { get; set; }
         public string reason_desc { get; set; }
         public decimal qty { get; set; }
-        public decimal usage_matl { get; set; } 
-        public decimal usage_landed { get; set; } 
+        public decimal usage_matl { get; set; }
+        public decimal usage_landed { get; set; }
         public string item { get; set; }
         public string item_desc { get; set; }
         public string product_code { get; set; }
         public string lot { get; set; }
         public string ref_num { get; set; }
         public int ref_line { get; set; }
-        public decimal invty_matl_cost { get; set; } 
-        public decimal invty_landed_cost { get; set; } 
-        public decimal safety_matl_cost { get; set; } 
+        public decimal invty_matl_cost { get; set; }
+        public decimal invty_landed_cost { get; set; }
+        public decimal safety_matl_cost { get; set; }
         public string report_group { get; set; }
         public decimal usage_M1 { get; set; }
         public decimal usage_L1 { get; set; }
@@ -239,5 +235,70 @@ namespace ERPReports.Areas.Reports.Models
         public decimal L_MAX_3Months { get; set; }
 
     }
-
+    public class NewDM_RMBreakdownFinishedGoodsSp
+    {
+        public string PONum { get; set; }
+        public string Item { get; set; }
+        public string matl { get; set; }
+        public string matl_desc { get; set; }
+        public int actl_matl_qty { get; set; }
+        public decimal std_matl_unit { get; set; }
+        public decimal pi_resin_unit { get; set; }
+        public decimal std_process_unit { get; set; }
+        public decimal pi_hidden_unit { get; set; }
+        public decimal sf_lbr_unit { get; set; }
+        public decimal fg_lbr_unit { get; set; }
+        public decimal sf_ovhd_unit { get; set; }
+        public decimal fg_ovhd_unit { get; set; }
+        public decimal total_std_unit { get; set; }
+        public decimal matl_unit_cost_php { get; set; }
+        public decimal matl_landed_cost_php { get; set; }
+        public decimal pi_resin_php { get; set; }
+        public decimal pi_fg_process_php { get; set; }
+        public decimal pi_hidden_profit_php { get; set; }
+        public decimal sf_lbr_cost_php { get; set; }
+        public decimal fg_lbr_cost_php { get; set; }
+        public decimal sf_ovhd_cost_php { get; set; }
+        public decimal fg_ovhd_cost_php { get; set; }
+        public decimal total_actl_unit { get; set; }
+        public decimal nolanded_actl_unit { get; set; }
+        public string JONum { get; set; }
+    }
+    public class RMBreakdownPerJOReport
+    {
+        public string JONum { get; set; }
+        public string PONum { get; set; }
+        public string matl { get; set; }
+        public string matl_desc { get; set; }
+        public int Level { get; set; }
+        public int sequence { get; set; }
+        public decimal StdLbrHrs { get; set; }
+        public decimal ActlLbrHrs { get; set; }
+        public decimal std_matl_unit { get; set; }
+        public decimal std_process_unit { get; set; }
+        public decimal pi_resin_unit { get; set; }
+        public decimal pi_hidden_unit { get; set; }
+        public decimal sf_lbr_unit { get; set; }
+        public decimal sf_ovhd_unit { get; set; }
+        public decimal fg_lbr_unit { get; set; }
+        public decimal fg_ovhd_unit { get; set; }
+        public decimal total_std_unit { get; set; }
+        public string subsequence { get; set; }
+        public string lot_no { get; set; }
+        public decimal matl_qty { get; set; }
+        public decimal job_qty { get; set; }
+        public decimal job_matl_qty { get; set; }
+        public decimal actl_matl_qty { get; set; }
+        public decimal matl_unit_cost_php { get; set; }
+        public decimal matl_landed_cost_php { get; set; }
+        public decimal pi_fg_process_php { get; set; }
+        public decimal pi_resin_php { get; set; }
+        public decimal pi_hidden_profit_php { get; set; }
+        public decimal sf_lbr_cost_php { get; set; }
+        public decimal sf_ovhd_cost_php { get; set; }
+        public decimal fg_lbr_cost_php { get; set; }
+        public decimal fg_ovhd_cost_php { get; set; }
+        public decimal total_actl_unit { get; set; }
+        public decimal nolanded_actl_unit { get; set; }
+    }
 }
