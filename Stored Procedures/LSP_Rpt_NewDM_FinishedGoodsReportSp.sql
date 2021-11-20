@@ -1,7 +1,7 @@
 --ALTER PROCEDURE LSP_Rpt_NewDM_FinishedGoodsReportSp (
 DECLARE
-	@StartDate				DateType = '05/01/2020'
-  , @EndDate				DateType = '05/31/2020'
+	@StartDate				DateType = 'September 1, 2020'
+  , @EndDate				DateType = 'September 30, 2020'
 --) AS
 
 BEGIN

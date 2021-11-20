@@ -1,7 +1,7 @@
 --ALTER PROCEDURE LSP_Rpt_NewDM_RMBreakdownPerJOSp (
 DECLARE
-	@JobOrder				NVARCHAR(20) = '20-0000558'--'19-0002507'
-  , @PONumber				NVARCHAR(20) = ''
+	@JobOrder				NVARCHAR(20) = ''--'19-0002507'
+  , @PONumber				NVARCHAR(20) = '407350'
   , @Quantity				INT			 = NULL
 --) AS
 BEGIN
@@ -106,7 +106,7 @@ BEGIN
 		   @JobOrder = ISNULL(NULLIF(@JobOrder,''), job)
 		 , @PONumber = ISNULL(NULLIF(@PONumber,''), Uf_ponum)
 		 , @JobSuffix = suffix
-		 , @JobDate = job_date
+		 --, @JobDate = job_date
 		 , @JobItem = item
 		 , @JobQtyRelease = ISNULL(@Quantity, qty_complete) --qty_released
 		 
@@ -114,29 +114,44 @@ BEGIN
 	WHERE job = @JobOrder
 	   OR Uf_ponum = @PONumber
 
-	SELECT @FGStdLbrHrs = SUM(js.run_lbr_hrs * jt.qty_complete)
-		 , @FGActLbrHrs = SUM(ISNULL(jt.a_hrs,0))
-	FROM jobtran AS jt 
-			JOIN job AS j 
-				ON jt.job = j.job 
-				  AND jt.suffix = j.suffix 
-			JOIN  item AS i 
-				ON j.item = i.item 
+	SELECT @JobDate = MAX(trans_date)
+	FROM matltran 
+	WHERE ref_num = @JobOrder 
+	  AND trans_type = 'F'
+
+	--SELECT @FGStdLbrHrs = SUM(js.run_lbr_hrs * jt.qty_complete)
+	--	 , @FGActLbrHrs = SUM(ISNULL(jt.a_hrs,0))
+	--FROM jobtran AS jt 
+	--		JOIN job AS j 
+	--			ON jt.job = j.job 
+	--			  AND jt.suffix = j.suffix 
+	--		JOIN  item AS i 
+	--			ON j.item = i.item 
+	--		JOIN  jrt_sch AS js 
+	--			ON i.job = js.job 
+	--			  AND i.suffix = js.suffix 
+	--			  AND jt.oper_num = js.oper_num
+	--WHERE j.job = @JobOrder
+
+	SELECT @FGStdLbrHrs = SUM(js.run_lbr_hrs * @JobQtyRelease)
+		 , @FGActLbrHrs = SUM(js.run_lbr_hrs * @JobQtyRelease)
+	FROM item AS i 				
 			JOIN  jrt_sch AS js 
 				ON i.job = js.job 
 				  AND i.suffix = js.suffix 
-				  AND jt.oper_num = js.oper_num
-	WHERE j.job = @JobOrder
+				  --AND jt.oper_num = js.oper_num
+	WHERE i.item = @JobItem
 		   
 	--SELECT @JobOrder, @PONumber
 	--	 , @JobSuffix
 	--	 , @JobDate
 	--	 , @JobItem
 	--	 , @JobQtyRelease
-
+	
 	INSERT INTO #BOMStdCost
 	EXEC dbo.LSP_DM_StdCost_GetCurrentMatlCostingSp @JobItem, @JobDate
 	
+	--select * from #BOMStdCost
 	--SELECT @JobOrder, @JobSuffix, @JobItem, @JobDate, @JobQtyRelease
 
 	INSERT INTO #DMActualCost
@@ -324,18 +339,18 @@ BEGIN
 		 , ISNULL(dbo.LSP_fn_GetCurrencyConversion(ac.trans_date,'USD','PHP', std.pi_process_cost), 0) AS std_process_unit
 		 , ISNULL(dbo.LSP_fn_GetCurrencyConversion(ac.trans_date,'USD','PHP', std.pi_resin_cost), 0) AS pi_resin_unit
 		 , ISNULL(dbo.LSP_fn_GetCurrencyConversion(ac.trans_date,'USD','PHP', std.pi_hidden_profit), 0) AS pi_hidden_unit
-		 , ISNULL(dbo.LSP_fn_GetCurrencyConversion(ac.trans_date,'USD','PHP', std.sf_labr_cost), 0) AS sf_lbr_unit
-		 , ISNULL(dbo.LSP_fn_GetCurrencyConversion(ac.trans_date,'USD','PHP', std.sf_ovhd_cost), 0) AS sf_ovhd_unit
-		 , ISNULL(dbo.LSP_fn_GetCurrencyConversion(ac.trans_date,'USD','PHP', std.fg_labr_cost), 0) AS fg_lbr_unit
-		 , ISNULL(dbo.LSP_fn_GetCurrencyConversion(ac.trans_date,'USD','PHP', std.fg_ovhd_cost), 0) AS fg_ovhd_unit
+		 , ISNULL(std.sf_labr_cost, 0) AS sf_lbr_unit
+		 , ISNULL(std.sf_ovhd_cost, 0) AS sf_ovhd_unit
+		 , ISNULL(std.fg_labr_cost, 0) AS fg_lbr_unit
+		 , ISNULL(std.fg_ovhd_cost, 0) AS fg_ovhd_unit
 		 , ( ISNULL(dbo.LSP_fn_GetCurrencyConversion(ac.trans_date,'USD','PHP', std.matl_unit_cost), 0)
 			 + ISNULL(dbo.LSP_fn_GetCurrencyConversion(ac.trans_date,'USD','PHP', std.pi_process_cost), 0)
 			 + ISNULL(dbo.LSP_fn_GetCurrencyConversion(ac.trans_date,'USD','PHP', std.pi_resin_cost), 0)
 			 + ISNULL(dbo.LSP_fn_GetCurrencyConversion(ac.trans_date,'USD','PHP', std.pi_hidden_profit), 0)
-			 + ISNULL(dbo.LSP_fn_GetCurrencyConversion(ac.trans_date,'USD','PHP', std.sf_labr_cost), 0)
-			 + ISNULL(dbo.LSP_fn_GetCurrencyConversion(ac.trans_date,'USD','PHP', std.sf_ovhd_cost), 0)
-			 + ISNULL(dbo.LSP_fn_GetCurrencyConversion(ac.trans_date,'USD','PHP', std.fg_labr_cost), 0)
-			 + ISNULL(dbo.LSP_fn_GetCurrencyConversion(ac.trans_date,'USD','PHP', std.fg_ovhd_cost), 0) 
+			 + ISNULL(std.sf_labr_cost, 0)
+			 + ISNULL(std.sf_ovhd_cost, 0)
+			 + ISNULL(std.fg_labr_cost, 0)
+			 + ISNULL(std.fg_ovhd_cost, 0) 
 		  ) AS total_std_unit
 		--/**********
 		 , ISNULL(ac.[Level], 0) AS [Level]

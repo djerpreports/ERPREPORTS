@@ -6,8 +6,7 @@ CREATE PROCEDURE LSP_GetSlowMovingAnalysisReportRemarksSp (
 
 BEGIN
 
-	IF OBJECT_ID('tempdb..#Level1Parent')
-	 IS NOT NULL
+	IF OBJECT_ID('tempdb..#Level1Parent') IS NOT NULL
 		DROP TABLE #Level1Parent
 	
 	DECLARE
