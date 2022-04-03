@@ -2332,11 +2332,13 @@ namespace ERPReports.Areas.Reports.Controllers
                                     JobRemarks = FinishedGoodsGroupSales_SampleJOObj.JobRemarks;
                                     if (FinishedGoodsGroupSales_SampleJOObj.Recoverable == "0")
                                     {
-                                        Recoverable = "YES";
+                                        //Recoverable = "YES";
+                                        Recoverable = "NO";
                                     }
                                     else
                                     {
-                                        Recoverable = "NO";
+                                        //Recoverable = "NO";
+                                        Recoverable = "YES";
                                     }
                                 }
                                 SalesSheets.Cells[salesSheetsRow, 9].Value = Convert.ToDecimal(QtyShipped);
@@ -3573,7 +3575,13 @@ namespace ERPReports.Areas.Reports.Controllers
                         UsageSheet.Cells[sheetsRowUsage, 54].Style.WrapText = false;
                         UsageSheet.Cells[sheetsRowUsage, 55].Value = (InventoryTurnOverReport_NewGroupObj.MAX_3Months + InventoryTurnOverReport_NewGroupObj.L_MAX_3Months + InventoryTurnOverReport_NewGroupObj.safety_matl_cost);
                         UsageSheet.Cells[sheetsRowUsage, 55].Style.WrapText = false;
-                        UsageSheet.Cells[sheetsRowUsage, 56].Value = ((InventoryTurnOverReport_NewGroupObj.invty_matl_cost + InventoryTurnOverReport_NewGroupObj.invty_landed_cost) / (InventoryTurnOverReport_NewGroupObj.MAX_3Months + InventoryTurnOverReport_NewGroupObj.L_MAX_3Months)) * 3;
+                        var valMaybeZero = (InventoryTurnOverReport_NewGroupObj.MAX_3Months + InventoryTurnOverReport_NewGroupObj.L_MAX_3Months) ;
+                        if (valMaybeZero == 0) {
+                            UsageSheet.Cells[sheetsRowUsage, 56].Value = 0;
+                        } else {
+                            UsageSheet.Cells[sheetsRowUsage, 56].Value = ((InventoryTurnOverReport_NewGroupObj.invty_matl_cost + InventoryTurnOverReport_NewGroupObj.invty_landed_cost) / (InventoryTurnOverReport_NewGroupObj.MAX_3Months + InventoryTurnOverReport_NewGroupObj.L_MAX_3Months)) * 3;
+                        }
+                        
                         UsageSheet.Cells[sheetsRowUsage, 56].Style.WrapText = false;
                         UsageSheet.Cells[sheetsRowUsage, 57].Value = (InventoryTurnOverReport_NewGroupObj.invty_matl_cost + InventoryTurnOverReport_NewGroupObj.invty_landed_cost) - (InventoryTurnOverReport_NewGroupObj.MAX_3Months + InventoryTurnOverReport_NewGroupObj.L_MAX_3Months + InventoryTurnOverReport_NewGroupObj.safety_matl_cost);
                         UsageSheet.Cells[sheetsRowUsage, 57].Style.WrapText = false;
