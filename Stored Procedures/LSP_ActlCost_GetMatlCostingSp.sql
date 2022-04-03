@@ -248,7 +248,7 @@ BEGIN
 		END
 	/****FOR ISSUED JOB MATERIALS WHERE ITEM IS FG ****/
 	ELSE IF @matl_item LIKE 'FG-%'
-	BEGIN
+	BEGIN	
 	
 		IF EXISTS (SELECT * FROM job WHERE job = @matl_lot)
 		BEGIN

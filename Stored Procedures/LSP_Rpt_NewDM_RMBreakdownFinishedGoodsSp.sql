@@ -1,8 +1,8 @@
-CREATE PROCEDURE LSP_Rpt_NewDM_RMBreakdownFinishedGoodsSp (
---DECLARE
-	@StartDate				DateType --= '05/01/2020'
-  , @EndDate				DateType --= '05/31/2020'
-) AS
+--CREATE PROCEDURE LSP_Rpt_NewDM_RMBreakdownFinishedGoodsSp (
+DECLARE
+	@StartDate				DateType = '05/01/2020'
+  , @EndDate				DateType = '05/31/2020'
+--) AS
 BEGIN
 
 	IF OBJECT_ID('tempdb..#RMBreakDownFG') IS NOT NULL
